@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - tools/BiasRepresentation.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tools</a> - BiasRepresentation.h<span style="font-size: 80%;"> (source / <a href="BiasRepresentation.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2012-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #ifndef __PLUMED_tools_BiasRepresentation_h
+<span class="lineNum">      23 </span>            : #define __PLUMED_tools_BiasRepresentation_h
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : #include &quot;Exception.h&quot;
+<span class="lineNum">      26 </span>            : #include &lt;memory&gt;
+<span class="lineNum">      27 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace PLMD {
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : class Value;
+<span class="lineNum">      32 </span>            : class Grid;
+<span class="lineNum">      33 </span>            : class IFile;
+<span class="lineNum">      34 </span>            : class KernelFunctions;
+<span class="lineNum">      35 </span>            : class Communicator;
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : //+PLUMEDOC INTERNAL biasrepresentation
+<span class="lineNum">      38 </span>            : /*
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : */
+<span class="lineNum">      41 </span>            : //+ENDPLUMEDOC
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span>            : /// this class implements a general purpose class that aims to
+<span class="lineNum">      44 </span>            : /// provide a Grid/list
+<a name="45"><span class="lineNum">      45 </span>            : /// transparently add gaussians to a bias</a>
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span><span class="lineCov">         11 : class BiasRepresentation {</span>
+<span class="lineNum">      48 </span>            : public:
+<span class="lineNum">      49 </span>            :   /// create a bias representation from a list of pointer to values
+<span class="lineNum">      50 </span>            :   BiasRepresentation(const std::vector&lt;Value*&gt; &amp; tmpvalues, Communicator &amp;cc  );
+<span class="lineNum">      51 </span>            :   /// create a bias using explicit sigma in input (needed for histogram building)
+<span class="lineNum">      52 </span>            :   BiasRepresentation(const std::vector&lt;Value*&gt; &amp; tmpvalues, Communicator &amp;cc,  const std::vector&lt;double&gt; &amp; sigma);
+<span class="lineNum">      53 </span>            :   /// create a bias containing a grid representation
+<span class="lineNum">      54 </span>            :   BiasRepresentation(const std::vector&lt;Value*&gt; &amp; tmpvalues, Communicator &amp;cc, const std::vector&lt;std::string&gt; &amp;  gmin, const std::vector&lt;std::string&gt; &amp; gmax,
+<span class="lineNum">      55 </span>            :                      const std::vector&lt;unsigned&gt; &amp; nbin, bool doInt, double lowI_, double uppI_);
+<span class="lineNum">      56 </span>            :   /// create a histogram with grid representation and sigmas in input
+<span class="lineNum">      57 </span>            :   BiasRepresentation(const std::vector&lt;Value*&gt; &amp; tmpvalues, Communicator &amp;cc, const std::vector&lt;std::string&gt; &amp; gmin, const std::vector&lt;std::string&gt; &amp; gmax, const std::vector&lt;unsigned&gt; &amp; nbin, const std::vector&lt;double&gt; &amp; sigma);
+<span class="lineNum">      58 </span>            :   /// retrieve the number of dimension of the representation
+<span class="lineNum">      59 </span>            :   unsigned      getNumberOfDimensions();
+<span class="lineNum">      60 </span>            :   /// add the grid to the representation
+<span class="lineNum">      61 </span>            :   void          addGrid(const std::vector&lt;std::string&gt; &amp; gmin, const std::vector&lt;std::string&gt; &amp; gmax, const std::vector&lt;unsigned&gt; &amp; nbin );
+<span class="lineNum">      62 </span>            :   /// push a kernel on the representation (includes widths and height)
+<span class="lineNum">      63 </span>            :   void          pushKernel( IFile * ff);
+<span class="lineNum">      64 </span>            :   /// set the flag that rescales the free energy to the bias
+<span class="lineNum">      65 </span>            :   void          setRescaledToBias(bool rescaled);
+<span class="lineNum">      66 </span>            :   /// check if the representation is rescaled to the bias
+<span class="lineNum">      67 </span>            :   const bool &amp;      isRescaledToBias();
+<span class="lineNum">      68 </span>            :   /// check if the sigma values are already provided (in case of a histogram representation with input sigmas)
+<span class="lineNum">      69 </span>            :   bool          hasSigmaInInput();
+<span class="lineNum">      70 </span>            :   /// get the names of the variables
+<span class="lineNum">      71 </span>            :   std::vector&lt;std::string&gt; getNames();
+<span class="lineNum">      72 </span>            :   /// get the pointer to the values
+<span class="lineNum">      73 </span>            :   const std::vector&lt;Value*&gt; &amp; getPtrToValues();
+<span class="lineNum">      74 </span>            :   /// get the number of kernels contained in the representation
+<span class="lineNum">      75 </span>            :   int           getNumberOfKernels();
+<span class="lineNum">      76 </span>            :   /// get the name of the i-th value
+<span class="lineNum">      77 </span>            :   const std::string &amp; getName(unsigned i);
+<span class="lineNum">      78 </span>            :   /// get a pointer to a specific value
+<span class="lineNum">      79 </span>            :   Value*        getPtrToValue(unsigned i);
+<span class="lineNum">      80 </span>            :   /// get the pointer to the grid
+<span class="lineNum">      81 </span>            :   Grid*         getGridPtr();
+<span class="lineNum">      82 </span>            :   /// get a new histogram point from a file
+<span class="lineNum">      83 </span>            :   std::unique_ptr&lt;KernelFunctions&gt; readFromPoint(IFile *ifile);
+<span class="lineNum">      84 </span>            :   /// get an automatic min/max from the set so to know how to configure the grid
+<span class="lineNum">      85 </span>            :   void getMinMaxBin(std::vector&lt;double&gt; &amp;vmin, std::vector&lt;double&gt; &amp;vmax, std::vector&lt;unsigned&gt; &amp;vbin);
+<span class="lineNum">      86 </span>            :   /// clear the representation (grid included)
+<span class="lineNum">      87 </span>            :   void clear();
+<span class="lineNum">      88 </span>            : private:
+<span class="lineNum">      89 </span>            :   int ndim;
+<span class="lineNum">      90 </span>            :   bool hasgrid;
+<span class="lineNum">      91 </span>            :   bool rescaledToBias;
+<span class="lineNum">      92 </span>            :   bool doInt_;
+<span class="lineNum">      93 </span>            :   double lowI_;
+<span class="lineNum">      94 </span>            :   double uppI_;
+<span class="lineNum">      95 </span>            :   std::vector&lt;Value*&gt; values;
+<span class="lineNum">      96 </span>            :   std::vector&lt;std::string&gt; names;
+<span class="lineNum">      97 </span>            :   std::vector&lt;std::unique_ptr&lt;KernelFunctions&gt;&gt; hills;
+<span class="lineNum">      98 </span>            :   std::vector&lt;double&gt; biasf;
+<span class="lineNum">      99 </span>            :   std::vector&lt;double&gt; histosigma;
+<span class="lineNum">     100 </span>            :   Communicator&amp; mycomm;
+<span class="lineNum">     101 </span>            :   std::unique_ptr&lt;Grid&gt; BiasGrid_;
+<span class="lineNum">     102 </span>            : };
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            : }
+<span class="lineNum">     105 </span>            : 
+<span class="lineNum">     106 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

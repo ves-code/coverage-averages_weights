@@ -1,0 +1,480 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - tools/Stopwatch.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tools</a> - Stopwatch.h<span style="font-size: 80%;"> (source / <a href="Stopwatch.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">63</td>
+            <td class="headerCovTableEntry">65</td>
+            <td class="headerCovTableEntryHi">96.9 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2012-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #ifndef __PLUMED_tools_Stopwatch_h
+<span class="lineNum">      23 </span>            : #define __PLUMED_tools_Stopwatch_h
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : #include &quot;Exception.h&quot;
+<span class="lineNum">      26 </span>            : #include &lt;string&gt;
+<span class="lineNum">      27 </span>            : #include &lt;unordered_map&gt;
+<span class="lineNum">      28 </span>            : #include &lt;iosfwd&gt;
+<span class="lineNum">      29 </span>            : #include &lt;chrono&gt;
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : namespace PLMD {
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : /**
+<span class="lineNum">      34 </span>            : \ingroup TOOLBOX
+<span class="lineNum">      35 </span>            : Class implementing stopwatch to time execution.
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : Each instance of this class is a container which
+<span class="lineNum">      38 </span>            : can keep track of several named stopwatches at
+<span class="lineNum">      39 </span>            : the same time. Access to the stopwatches
+<span class="lineNum">      40 </span>            : is obtained using start(), stop(), pause() methods,
+<span class="lineNum">      41 </span>            : giving as a parameter the name of the specific stopwatch.
+<span class="lineNum">      42 </span>            : Also an empty string can be used (un-named stopwatch).
+<span class="lineNum">      43 </span>            : Finally, all the times can be logged using &lt;&lt; operator
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : \verbatim
+<span class="lineNum">      46 </span>            : #include &quot;Stopwatch.h&quot;
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : int main(){
+<span class="lineNum">      49 </span>            :   Stopwatch sw;
+<span class="lineNum">      50 </span>            :   sw.start();
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span>            :   sw.start(&quot;initialization&quot;);
+<span class="lineNum">      53 </span>            : // do initialization ...
+<span class="lineNum">      54 </span>            :   sw.stop(&quot;initialization&quot;);
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            :   for(int i=0;i&lt;100;i++){
+<span class="lineNum">      57 </span>            :     sw.start(&quot;loop&quot;);
+<span class="lineNum">      58 </span>            : // do calculation
+<span class="lineNum">      59 </span>            :     sw.stop(&quot;loop&quot;);
+<span class="lineNum">      60 </span>            :   }
+<span class="lineNum">      61 </span>            : 
+<span class="lineNum">      62 </span>            :   sw.stop();
+<span class="lineNum">      63 </span>            :   return 0;
+<span class="lineNum">      64 </span>            : }
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : \endverbatim
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : Using pause a stopwatch can be put on hold until
+<span class="lineNum">      69 </span>            : the next start:
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : \verbatim
+<span class="lineNum">      72 </span>            : #include &quot;Stopwatch.h&quot;
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span>            : int main(){
+<span class="lineNum">      75 </span>            :   Stopwatch sw;
+<span class="lineNum">      76 </span>            :   sw.start();
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            :   sw.start(&quot;initialization&quot;);
+<span class="lineNum">      79 </span>            : // do initialization ...
+<span class="lineNum">      80 </span>            :   sw.stop(&quot;initialization&quot;);
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :   for(int i=0;i&lt;100;i++){
+<span class="lineNum">      83 </span>            :     sw.start(&quot;loop&quot;);
+<span class="lineNum">      84 </span>            : // do calculation
+<span class="lineNum">      85 </span>            :     sw.pause(&quot;loop&quot;);
+<span class="lineNum">      86 </span>            : // here goes something that we do not want to include
+<span class="lineNum">      87 </span>            :     sw.start(&quot;loop&quot;);
+<span class="lineNum">      88 </span>            : // do calculation
+<span class="lineNum">      89 </span>            :     sw.stop(&quot;loop&quot;);
+<span class="lineNum">      90 </span>            :   }
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span>            :   sw.stop();
+<span class="lineNum">      93 </span>            :   return 0;
+<span class="lineNum">      94 </span>            : }
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            : \endverbatim
+<span class="lineNum">      97 </span>            : 
+<span class="lineNum">      98 </span>            : Notice that as of PLUMED 2.5 it is possible to use a slightly modified
+<span class="lineNum">      99 </span>            : interface that allow for exception safety. In pratice,
+<span class="lineNum">     100 </span>            : one can replace a pair of calls to Stopwatch::start() and Stopwatch::stop()
+<span class="lineNum">     101 </span>            : with a single call to Stopwatch::startStop(). This call will return an object
+<span class="lineNum">     102 </span>            : that, when goes out of scope, will stop the timer.
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span>            : \notice The exception safety interace is highly recommended since it allows
+<span class="lineNum">     105 </span>            : to make sure that stopwatches are started and stopped consistently.
+<span class="lineNum">     106 </span>            : 
+<span class="lineNum">     107 </span>            : For instance the following
+<span class="lineNum">     108 </span>            : code
+<span class="lineNum">     109 </span>            : \verbatim
+<span class="lineNum">     110 </span>            :   {
+<span class="lineNum">     111 </span>            :     sw.start(&quot;A&quot;);
+<span class="lineNum">     112 </span>            :   // any code
+<span class="lineNum">     113 </span>            :     sw.stop(&quot;A&quot;);
+<span class="lineNum">     114 </span>            :   }
+<span class="lineNum">     115 </span>            : \endverbatim
+<span class="lineNum">     116 </span>            : can be replaced with
+<span class="lineNum">     117 </span>            : \verbatim
+<span class="lineNum">     118 </span>            :   {
+<span class="lineNum">     119 </span>            :     auto sww=sw.startStop(&quot;A&quot;);
+<span class="lineNum">     120 </span>            :   // any code
+<span class="lineNum">     121 </span>            : 
+<span class="lineNum">     122 </span>            :   // stopwatch is stopped when sww goes out of scope
+<span class="lineNum">     123 </span>            :   }
+<span class="lineNum">     124 </span>            : \endverbatim
+<span class="lineNum">     125 </span>            : Similarly, Stopwatch::startPause() can be used to replace a pair of
+<span class="lineNum">     126 </span>            : Stopwatch::start() and Stopwatch::pause().
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            : The older syntax (explicitly calling `Stopwatch::start()` and `Stopwatch::pause()`) is still
+<span class="lineNum">     129 </span>            : allowed for backward compatibility.
+<span class="lineNum">     130 </span>            : 
+<span class="lineNum">     131 </span>            : Notice that the returned object is of type `Stopwatch::Handler`.
+<span class="lineNum">     132 </span>            : You might be willing to explicitly declare a `Stopwatch::Handler` (instead of using `auto`)
+<span class="lineNum">     133 </span>            : when you want to conditionally start the stopwatch. For instance:
+<span class="lineNum">     134 </span>            : \verbatim
+<span class="lineNum">     135 </span>            :   {
+<span class="lineNum">     136 </span>            :     Stopwatch::Handler handler;
+<span class="lineNum">     137 </span>            :     if(you_want_to_time_this) handler=sw.startStop();
+<span class="lineNum">     138 </span>            :     ... do something ...
+<span class="lineNum">     139 </span>            :   }
+<span class="lineNum">     140 </span>            :   // in case it was started, the stopwatch will stop here, at the end of the block
+<span class="lineNum">     141 </span>            :   // in case it was not started, nothing will happen
+<span class="lineNum">     142 </span>            : \endverbatim
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            : A `Stopwatch::Handler` can not be copied but it can be moved (it behaves like a unique_ptr).
+<span class="lineNum">     145 </span>            : Moving it explicitly allows one to transfer it to another `Stopwatch::Handler` with a different scope.
+<span class="lineNum">     146 </span>            : For instance, in case you want to conditionally stop the stopwatch you might use something like this:
+<span class="lineNum">     147 </span>            : \verbatim
+<span class="lineNum">     148 </span>            :   {
+<span class="lineNum">     149 </span>            :     Stopwatch::Handler handler;
+<span class="lineNum">     150 </span>            :     if(you_want_to_time_this) handler=sw.startStop();
+<span class="lineNum">     151 </span>            :     ... do something ...
+<span class="lineNum">     152 </span>            :     if(you_want_to_stop_here) auto h2=std::move(handler);
+<span class="lineNum">     153 </span>            :     // the previous instruction moves handler to h2 that is then destroyed, stopping the watch
+<span class="lineNum">     154 </span>            :     // notice that if the stop was not started it will not stop.
+<span class="lineNum">     155 </span>            :     ... do something else ...
+<span class="lineNum">     156 </span>            :   }
+<span class="lineNum">     157 </span>            :   // in case it is running, the stopwatch will stop here, at the end of the block
+<span class="lineNum">     158 </span>            : \endverbatim
+<span class="lineNum">     159 </span>            : 
+<span class="lineNum">     160 </span>            : Finally, notice that in order to write the timers on an output file when the
+<span class="lineNum">     161 </span>            : Stopwatch is destroyed, one can store a reference to a PLMD::Log by passing it
+<span class="lineNum">     162 </span>            : to the Stopwatch constructor.
+<span class="lineNum">     163 </span>            : This will make sure timers are written also in case of a premature end.
+<span class="lineNum">     164 </span>            : */
+<span class="lineNum">     165 </span>            : 
+<span class="lineNum">     166 </span>            : class Log;
+<span class="lineNum">     167 </span>            : 
+<span class="lineNum">     168 </span>            : class Stopwatch {
+<a name="169"><span class="lineNum">     169 </span>            : /// Simple function returning an empty string.</a>
+<span class="lineNum">     170 </span>            : /// Used to simplify Stopwatch interface.
+<span class="lineNum">     171 </span><span class="lineCov">     418648 :   static const std::string &amp; emptyString() {</span>
+<span class="lineNum">     172 </span><span class="lineCov">     418648 :     static std::string s;</span>
+<span class="lineNum">     173 </span><span class="lineCov">     418648 :     return s;</span>
+<span class="lineNum">     174 </span>            :   }
+<span class="lineNum">     175 </span>            : 
+<span class="lineNum">     176 </span>            : public:
+<span class="lineNum">     177 </span>            : /// Forward declaration
+<span class="lineNum">     178 </span>            :   class Watch;
+<span class="lineNum">     179 </span>            : /// Auxiliary class for handling exception-safe start/pause and start/stop.
+<span class="lineNum">     180 </span>            :   class Handler {
+<span class="lineNum">     181 </span>            :     Watch* watch=nullptr;
+<span class="lineNum">     182 </span>            :     /// stop (true) or pause (false).
+<span class="lineNum">     183 </span>            :     /// might be changed to an enum if clearer.
+<span class="lineNum">     184 </span>            :     bool stop=false;
+<span class="lineNum">     185 </span>            :     /// Private constructor.
+<span class="lineNum">     186 </span>            :     /// This is kept private to avoid misuse. Handler objects should
+<span class="lineNum">     187 </span>            :     /// only be created using startPause() or startStop().
+<span class="lineNum">     188 </span>            :     /// stop is required to know if the destructor should stop or pause the watch.
+<span class="lineNum">     189 </span>            :     Handler(Watch* watch,bool stop);
+<span class="lineNum">     190 </span>            :     /// Allows usage of private constructor
+<span class="lineNum">     191 </span>            :     friend class Stopwatch;
+<span class="lineNum">     192 </span>            :   public:
+<span class="lineNum">     193 </span>            :     /// Default constructor
+<span class="lineNum">     194 </span>            :     Handler() = default;
+<span class="lineNum">     195 </span>            :     /// Default copy constructor is deleted (not copyable)
+<span class="lineNum">     196 </span>            :     Handler(const Handler &amp; handler) = delete;
+<span class="lineNum">     197 </span>            :     /// Default copy assignment is deleted (not copyable)
+<span class="lineNum">     198 </span>            :     Handler &amp; operator=(const Handler &amp; handler) = delete;
+<span class="lineNum">     199 </span>            :     /// Move constructor.
+<span class="lineNum">     200 </span>            :     Handler(Handler &amp;&amp; handler) noexcept;
+<span class="lineNum">     201 </span>            :     /// Move assignemnt.
+<span class="lineNum">     202 </span>            :     Handler &amp; operator=(Handler &amp;&amp; handler) noexcept;
+<span class="lineNum">     203 </span>            :     /// Destructor either stops or pauses the watch
+<span class="lineNum">     204 </span>            :     ~Handler();
+<span class="lineNum">     205 </span>            :   };
+<span class="lineNum">     206 </span>            : 
+<a name="207"><span class="lineNum">     207 </span>            : /// Class to store a single stopwatch.</a>
+<span class="lineNum">     208 </span>            : /// Class Stopwatch contains a collection of them
+<span class="lineNum">     209 </span><span class="lineCov">       7325 :   class Watch {</span>
+<span class="lineNum">     210 </span>            : /// Instant in time when Watch was started last time
+<span class="lineNum">     211 </span>            :     std::chrono::time_point&lt;std::chrono::high_resolution_clock&gt; lastStart;
+<span class="lineNum">     212 </span>            : /// Total accumulated time, in nanoseconds
+<span class="lineNum">     213 </span>            :     long long int total = 0;
+<span class="lineNum">     214 </span>            : /// Accumulated time for this lap, in nanoseconds
+<span class="lineNum">     215 </span>            :     long long int lap = 0;
+<span class="lineNum">     216 </span>            : /// Slowest lap so far, in nanoseconds
+<span class="lineNum">     217 </span>            :     long long int max = 0;
+<span class="lineNum">     218 </span>            : /// Fastest lap so far, in nanoseconds
+<span class="lineNum">     219 </span>            :     long long int min = 0;
+<span class="lineNum">     220 </span>            : /// Total number of cycles
+<span class="lineNum">     221 </span>            :     unsigned cycles = 0;
+<span class="lineNum">     222 </span>            : /// count how many times Watch was started (+1) or stopped/paused (-1).
+<span class="lineNum">     223 </span>            :     unsigned running = 0;
+<span class="lineNum">     224 </span>            :     enum class State {started, stopped, paused};
+<span class="lineNum">     225 </span>            : /// keep track of state
+<span class="lineNum">     226 </span>            :     State state = State::stopped;
+<span class="lineNum">     227 </span>            : /// Allows access to internal data
+<span class="lineNum">     228 </span>            :     friend class Stopwatch;
+<span class="lineNum">     229 </span>            :   public:
+<span class="lineNum">     230 </span>            : /// start the watch
+<span class="lineNum">     231 </span>            :     Watch &amp; start();
+<span class="lineNum">     232 </span>            : /// stop the watch
+<span class="lineNum">     233 </span>            :     Watch &amp; stop();
+<span class="lineNum">     234 </span>            : /// pause the watch
+<span class="lineNum">     235 </span>            :     Watch &amp; pause();
+<span class="lineNum">     236 </span>            : /// returns a start-stop handler
+<span class="lineNum">     237 </span>            :     Handler startStop();
+<span class="lineNum">     238 </span>            : /// returns a start-pause handler
+<span class="lineNum">     239 </span>            :     Handler startPause();
+<span class="lineNum">     240 </span>            :   };
+<span class="lineNum">     241 </span>            : 
+<span class="lineNum">     242 </span>            : private:
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span>            : /// Pointer to a log file.
+<span class="lineNum">     245 </span>            : /// If set, the stopwatch is logged in its destructor.
+<span class="lineNum">     246 </span>            :   Log*mylog=nullptr;
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            : /// List of watches.
+<span class="lineNum">     249 </span>            : /// Each watch is labeled with a string.
+<span class="lineNum">     250 </span>            :   std::unordered_map&lt;std::string,Watch&gt; watches;
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span>            : /// Log over stream os.
+<span class="lineNum">     253 </span>            :   std::ostream&amp; log(std::ostream&amp; os)const;
+<span class="lineNum">     254 </span>            : 
+<a name="255"><span class="lineNum">     255 </span>            : public:</a>
+<span class="lineNum">     256 </span>            : // Constructor.
+<span class="lineNum">     257 </span><span class="lineCov">        680 :   explicit Stopwatch() = default;</span>
+<span class="lineNum">     258 </span>            : // Constructor.
+<span class="lineNum">     259 </span>            : // When destructing, stopwatch is logged.
+<a name="260"><span class="lineNum">     260 </span>            : // Make sure that log survives stopwatch. Typically, it should be declared earlier, in order</a>
+<span class="lineNum">     261 </span>            : // to be destroyed later.
+<span class="lineNum">     262 </span><span class="lineCov">       2524 :   Stopwatch(Log&amp;log): mylog(&amp;log) {}</span>
+<span class="lineNum">     263 </span>            : // Destructor.
+<span class="lineNum">     264 </span>            :   ~Stopwatch();
+<span class="lineNum">     265 </span>            : /// Start timer named &quot;name&quot;
+<span class="lineNum">     266 </span><span class="lineCov">       2720 :   Stopwatch&amp; start(const std::string&amp;name=emptyString());</span>
+<span class="lineNum">     267 </span>            : /// Stop timer named &quot;name&quot;
+<span class="lineNum">     268 </span>            :   Stopwatch&amp; stop(const std::string&amp;name=emptyString());
+<span class="lineNum">     269 </span>            : /// Pause timer named &quot;name&quot;
+<span class="lineNum">     270 </span>            :   Stopwatch&amp; pause(const std::string&amp;name=emptyString());
+<span class="lineNum">     271 </span>            : /// Dump all timers on an ostream
+<span class="lineNum">     272 </span>            :   friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp;,const Stopwatch&amp;);
+<span class="lineNum">     273 </span>            : /// Start with exception safety, then stop.
+<span class="lineNum">     274 </span>            : /// Starts the Stopwatch and returns an object that, when goes out of scope,
+<span class="lineNum">     275 </span>            : /// stops the watch. This allows Stopwatch to be started and stopped in
+<span class="lineNum">     276 </span>            : /// an exception safe manner.
+<span class="lineNum">     277 </span><span class="lineCov">     416007 :   Handler startStop(const std::string&amp;name=emptyString());</span>
+<span class="lineNum">     278 </span>            : /// Start with exception safety, then pause.
+<span class="lineNum">     279 </span>            : /// Starts the Stopwatch and returns an object that, when goes out of scope,
+<span class="lineNum">     280 </span>            : /// pauses the watch. This allows Stopwatch to be started and paused in
+<span class="lineNum">     281 </span>            : /// an exception safe manner.
+<span class="lineNum">     282 </span>            :   Handler startPause(const std::string&amp;name=emptyString());
+<span class="lineNum">     283 </span>            : };
+<a name="284"><span class="lineNum">     284 </span>            : </a>
+<span class="lineNum">     285 </span>            : inline
+<span class="lineNum">     286 </span><span class="lineCov">     695037 : Stopwatch::Handler::Handler(Watch* watch,bool stop) :</span>
+<span class="lineNum">     287 </span>            :   watch(watch),
+<span class="lineNum">     288 </span><span class="lineCov">     695037 :   stop(stop)</span>
+<span class="lineNum">     289 </span>            : {
+<span class="lineNum">     290 </span><span class="lineCov">     695037 :   watch-&gt;start();</span>
+<span class="lineNum">     291 </span><span class="lineCov">     695037 : }</span>
+<a name="292"><span class="lineNum">     292 </span>            : </a>
+<span class="lineNum">     293 </span>            : inline
+<span class="lineNum">     294 </span><span class="lineCov">    1389068 : Stopwatch::Handler::~Handler() {</span>
+<span class="lineNum">     295 </span><span class="lineCov">    1389068 :   if(watch) {</span>
+<span class="lineNum">     296 </span><span class="lineCov">     695037 :     if(stop) watch-&gt;stop();</span>
+<span class="lineNum">     297 </span><span class="lineCov">     416007 :     else watch-&gt;pause();</span>
+<span class="lineNum">     298 </span>            :   }
+<span class="lineNum">     299 </span><span class="lineCov">    1389068 : }</span>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<span class="lineNum">     301 </span>            : inline
+<span class="lineNum">     302 </span><span class="lineCov">       1360 : Stopwatch&amp; Stopwatch::start(const std::string &amp; name) {</span>
+<span class="lineNum">     303 </span><span class="lineCov">       1360 :   watches[name].start();</span>
+<span class="lineNum">     304 </span><span class="lineCov">       1360 :   return *this;</span>
+<span class="lineNum">     305 </span>            : }
+<a name="306"><span class="lineNum">     306 </span>            : </a>
+<span class="lineNum">     307 </span>            : inline
+<span class="lineNum">     308 </span><span class="lineCov">        680 : Stopwatch&amp; Stopwatch::stop(const std::string &amp; name) {</span>
+<span class="lineNum">     309 </span><span class="lineCov">        680 :   watches[name].stop();</span>
+<span class="lineNum">     310 </span><span class="lineCov">        680 :   return *this;</span>
+<span class="lineNum">     311 </span>            : }
+<a name="312"><span class="lineNum">     312 </span>            : </a>
+<span class="lineNum">     313 </span>            : inline
+<span class="lineNum">     314 </span><span class="lineCov">        680 : Stopwatch&amp; Stopwatch::pause(const std::string &amp; name) {</span>
+<span class="lineNum">     315 </span><span class="lineCov">        680 :   watches[name].pause();</span>
+<span class="lineNum">     316 </span><span class="lineCov">        680 :   return *this;</span>
+<span class="lineNum">     317 </span>            : }
+<a name="318"><span class="lineNum">     318 </span>            : </a>
+<span class="lineNum">     319 </span>            : inline
+<span class="lineNum">     320 </span><span class="lineCov">     279030 : Stopwatch::Handler Stopwatch::startStop(const std::string&amp;name) {</span>
+<span class="lineNum">     321 </span><span class="lineCov">     279030 :   return watches[name].startStop();</span>
+<span class="lineNum">     322 </span>            : }
+<a name="323"><span class="lineNum">     323 </span>            : </a>
+<span class="lineNum">     324 </span>            : inline
+<span class="lineNum">     325 </span><span class="lineCov">     416007 : Stopwatch::Handler Stopwatch::startPause(const std::string&amp;name) {</span>
+<span class="lineNum">     326 </span><span class="lineCov">     416007 :   return watches[name].startPause();</span>
+<span class="lineNum">     327 </span>            : }
+<span class="lineNum">     328 </span>            : 
+<span class="lineNum">     329 </span>            : inline
+<span class="lineNum">     330 </span>            : Stopwatch::Handler::Handler(Handler &amp;&amp; handler) noexcept :
+<span class="lineNum">     331 </span>            :   watch(handler.watch),
+<span class="lineNum">     332 </span>            :   stop(handler.stop)
+<span class="lineNum">     333 </span>            : {
+<span class="lineNum">     334 </span>            :   handler.watch=nullptr;
+<span class="lineNum">     335 </span>            : }
+<a name="336"><span class="lineNum">     336 </span>            : </a>
+<span class="lineNum">     337 </span>            : inline
+<span class="lineNum">     338 </span><span class="lineCov">       3493 : Stopwatch::Handler &amp; Stopwatch::Handler::operator=(Handler &amp;&amp; handler) noexcept {</span>
+<span class="lineNum">     339 </span><span class="lineCov">       3493 :   if(this!=&amp;handler) {</span>
+<span class="lineNum">     340 </span><span class="lineCov">       3493 :     if(watch) {</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :       if(stop) watch-&gt;stop();</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :       else watch-&gt;pause();</span>
+<span class="lineNum">     343 </span>            :     }
+<span class="lineNum">     344 </span>            : // cppcheck complains about this:
+<span class="lineNum">     345 </span>            : // cppcheck-suppress uselessAssignmentPtrArg
+<span class="lineNum">     346 </span><span class="lineCov">       3493 :     watch=handler.watch;</span>
+<span class="lineNum">     347 </span><span class="lineCov">       3493 :     stop=handler.stop;</span>
+<span class="lineNum">     348 </span><span class="lineCov">       3493 :     handler.watch=nullptr;</span>
+<span class="lineNum">     349 </span>            :   }
+<span class="lineNum">     350 </span><span class="lineCov">       3493 :   return *this;</span>
+<span class="lineNum">     351 </span>            : }
+<a name="352"><span class="lineNum">     352 </span>            : </a>
+<span class="lineNum">     353 </span>            : inline
+<span class="lineNum">     354 </span><span class="lineCov">     697120 : Stopwatch::Watch &amp; Stopwatch::Watch::start() {</span>
+<span class="lineNum">     355 </span><span class="lineCov">     697120 :   state=State::started;</span>
+<span class="lineNum">     356 </span><span class="lineCov">     697120 :   running++;</span>
+<span class="lineNum">     357 </span><span class="lineCov">     697120 :   lastStart=std::chrono::high_resolution_clock::now();</span>
+<span class="lineNum">     358 </span><span class="lineCov">     697120 :   return *this;</span>
+<span class="lineNum">     359 </span>            : }
+<a name="360"><span class="lineNum">     360 </span>            : </a>
+<span class="lineNum">     361 </span>            : inline
+<span class="lineNum">     362 </span><span class="lineCov">     280433 : Stopwatch::Watch &amp; Stopwatch::Watch::stop() {</span>
+<span class="lineNum">     363 </span><span class="lineCov">     280433 :   pause();</span>
+<span class="lineNum">     364 </span><span class="lineCov">     280433 :   state=State::stopped;</span>
+<span class="lineNum">     365 </span><span class="lineCov">     280433 :   cycles++;</span>
+<span class="lineNum">     366 </span><span class="lineCov">     280433 :   total+=lap;</span>
+<span class="lineNum">     367 </span><span class="lineCov">     280433 :   if(lap&gt;max)max=lap;</span>
+<span class="lineNum">     368 </span><span class="lineCov">     280433 :   if(min&gt;lap || cycles==1)min=lap;</span>
+<span class="lineNum">     369 </span><span class="lineCov">     280433 :   lap=0;</span>
+<span class="lineNum">     370 </span><span class="lineCov">     280433 :   return *this;</span>
+<span class="lineNum">     371 </span>            : }
+<a name="372"><span class="lineNum">     372 </span>            : </a>
+<span class="lineNum">     373 </span>            : inline
+<span class="lineNum">     374 </span><span class="lineCov">     697022 : Stopwatch::Watch &amp; Stopwatch::Watch::pause() {</span>
+<span class="lineNum">     375 </span><span class="lineCov">     697022 :   state=State::paused;</span>
+<span class="lineNum">     376 </span>            : // In case of an internal bug (non matching start stop within the startStop or startPause interface)
+<span class="lineNum">     377 </span>            : // this assertion could fail in a destructor.
+<span class="lineNum">     378 </span>            : // If this happens, the program should crash immediately
+<span class="lineNum">     379 </span><span class="lineCov">     697022 :   plumed_assert(running&gt;0) &lt;&lt; &quot;Non matching start/pause or start/stop commands in a Stopwatch&quot;;</span>
+<span class="lineNum">     380 </span><span class="lineCov">     697022 :   running--;</span>
+<span class="lineNum">     381 </span>            : // notice: with exception safety the following might be converted to a plain error.
+<span class="lineNum">     382 </span>            : // I leave it like this for now:
+<span class="lineNum">     383 </span><span class="lineCov">     697022 :   if(running!=0) return *this;</span>
+<span class="lineNum">     384 </span><span class="lineCov">     696971 :   auto t=std::chrono::duration_cast&lt;std::chrono::nanoseconds&gt;(std::chrono::high_resolution_clock::now()-lastStart);</span>
+<span class="lineNum">     385 </span><span class="lineCov">     696971 :   lap+=t.count();</span>
+<span class="lineNum">     386 </span><span class="lineCov">     696971 :   return *this;</span>
+<span class="lineNum">     387 </span>            : }
+<a name="388"><span class="lineNum">     388 </span>            : </a>
+<span class="lineNum">     389 </span>            : inline
+<span class="lineNum">     390 </span><span class="lineCov">     279030 : Stopwatch::Handler Stopwatch::Watch::startStop() {</span>
+<span class="lineNum">     391 </span><span class="lineCov">     279030 :   return Handler( this,true );</span>
+<span class="lineNum">     392 </span>            : }
+<a name="393"><span class="lineNum">     393 </span>            : </a>
+<span class="lineNum">     394 </span>            : inline
+<span class="lineNum">     395 </span><span class="lineCov">     416007 : Stopwatch::Handler Stopwatch::Watch::startPause() {</span>
+<span class="lineNum">     396 </span><span class="lineCov">     416007 :   return Handler( this,false );</span>
+<span class="lineNum">     397 </span>            : }
+<span class="lineNum">     398 </span>            : 
+<span class="lineNum">     399 </span>            : 
+<span class="lineNum">     400 </span>            : }
+<span class="lineNum">     401 </span>            : 
+<span class="lineNum">     402 </span>            : 
+<span class="lineNum">     403 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

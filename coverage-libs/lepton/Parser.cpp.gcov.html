@@ -1,0 +1,520 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage (other modules) - lepton/Parser.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">lepton</a> - Parser.cpp<span style="font-size: 80%;"> (source / <a href="Parser.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage (other modules)</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">175</td>
+            <td class="headerCovTableEntry">207</td>
+            <td class="headerCovTableEntryMed">84.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:58</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntry">17</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">       3 </span>            :  *                                   Lepton                                   *
+<span class="lineNum">       4 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">       5 </span>            :  * This is part of the Lepton expression parser originating from              *
+<span class="lineNum">       6 </span>            :  * Simbios, the NIH National Center for Physics-Based Simulation of           *
+<span class="lineNum">       7 </span>            :  * Biological Structures at Stanford, funded under the NIH Roadmap for        *
+<span class="lineNum">       8 </span>            :  * Medical Research, grant U54 GM072970. See https://simtk.org.               *
+<span class="lineNum">       9 </span>            :  *                                                                            *
+<span class="lineNum">      10 </span>            :  * Portions copyright (c) 2013-2016 Stanford University and the Authors.      *
+<span class="lineNum">      11 </span>            :  * Authors: Peter Eastman                                                     *
+<span class="lineNum">      12 </span>            :  * Contributors:                                                              *
+<span class="lineNum">      13 </span>            :  *                                                                            *
+<span class="lineNum">      14 </span>            :  * Permission is hereby granted, free of charge, to any person obtaining a    *
+<span class="lineNum">      15 </span>            :  * copy of this software and associated documentation files (the &quot;Software&quot;), *
+<span class="lineNum">      16 </span>            :  * to deal in the Software without restriction, including without limitation  *
+<span class="lineNum">      17 </span>            :  * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+<span class="lineNum">      18 </span>            :  * and/or sell copies of the Software, and to permit persons to whom the      *
+<span class="lineNum">      19 </span>            :  * Software is furnished to do so, subject to the following conditions:       *
+<span class="lineNum">      20 </span>            :  *                                                                            *
+<span class="lineNum">      21 </span>            :  * The above copyright notice and this permission notice shall be included in *
+<span class="lineNum">      22 </span>            :  * all copies or substantial portions of the Software.                        *
+<span class="lineNum">      23 </span>            :  *                                                                            *
+<span class="lineNum">      24 </span>            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+<span class="lineNum">      25 </span>            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   *
+<span class="lineNum">      26 </span>            :  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    *
+<span class="lineNum">      27 </span>            :  * THE AUTHORS, CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,    *
+<span class="lineNum">      28 </span>            :  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
+<span class="lineNum">      29 </span>            :  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
+<span class="lineNum">      30 </span>            :  * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
+<span class="lineNum">      31 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">      32 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      33 </span>            : /* -------------------------------------------------------------------------- *
+<span class="lineNum">      34 </span>            :  *                                   lepton                                   *
+<span class="lineNum">      35 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">      36 </span>            :  * This is part of the lepton expression parser originating from              *
+<span class="lineNum">      37 </span>            :  * Simbios, the NIH National Center for Physics-Based Simulation of           *
+<span class="lineNum">      38 </span>            :  * Biological Structures at Stanford, funded under the NIH Roadmap for        *
+<span class="lineNum">      39 </span>            :  * Medical Research, grant U54 GM072970. See https://simtk.org.               *
+<span class="lineNum">      40 </span>            :  *                                                                            *
+<span class="lineNum">      41 </span>            :  * Portions copyright (c) 2009-2015 Stanford University and the Authors.      *
+<span class="lineNum">      42 </span>            :  * Authors: Peter Eastman                                                     *
+<span class="lineNum">      43 </span>            :  * Contributors:                                                              *
+<span class="lineNum">      44 </span>            :  *                                                                            *
+<span class="lineNum">      45 </span>            :  * Permission is hereby granted, free of charge, to any person obtaining a    *
+<span class="lineNum">      46 </span>            :  * copy of this software and associated documentation files (the &quot;Software&quot;), *
+<span class="lineNum">      47 </span>            :  * to deal in the Software without restriction, including without limitation  *
+<span class="lineNum">      48 </span>            :  * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+<span class="lineNum">      49 </span>            :  * and/or sell copies of the Software, and to permit persons to whom the      *
+<span class="lineNum">      50 </span>            :  * Software is furnished to do so, subject to the following conditions:       *
+<span class="lineNum">      51 </span>            :  *                                                                            *
+<span class="lineNum">      52 </span>            :  * The above copyright notice and this permission notice shall be included in *
+<span class="lineNum">      53 </span>            :  * all copies or substantial portions of the Software.                        *
+<span class="lineNum">      54 </span>            :  *                                                                            *
+<span class="lineNum">      55 </span>            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+<span class="lineNum">      56 </span>            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   *
+<span class="lineNum">      57 </span>            :  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    *
+<span class="lineNum">      58 </span>            :  * THE AUTHORS, CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,    *
+<span class="lineNum">      59 </span>            :  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
+<span class="lineNum">      60 </span>            :  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
+<span class="lineNum">      61 </span>            :  * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
+<span class="lineNum">      62 </span>            :  * -------------------------------------------------------------------------- */
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : #include &quot;Parser.h&quot;
+<span class="lineNum">      65 </span>            : #include &quot;CustomFunction.h&quot;
+<span class="lineNum">      66 </span>            : #include &quot;Exception.h&quot;
+<span class="lineNum">      67 </span>            : #include &quot;ExpressionTreeNode.h&quot;
+<span class="lineNum">      68 </span>            : #include &quot;Operation.h&quot;
+<span class="lineNum">      69 </span>            : #include &quot;ParsedExpression.h&quot;
+<span class="lineNum">      70 </span>            : #include &lt;cctype&gt;
+<span class="lineNum">      71 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">      72 </span>            : 
+<span class="lineNum">      73 </span>            : namespace PLMD {
+<span class="lineNum">      74 </span>            : using namespace lepton;
+<span class="lineNum">      75 </span>            : using namespace std;
+<span class="lineNum">      76 </span>            : 
+<span class="lineNum">      77 </span>            : namespace lepton {
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineCov">       1805 : static const string Digits = &quot;0123456789&quot;;</span>
+<span class="lineNum">      80 </span><span class="lineCov">       1805 : static const string Operators = &quot;+-*/^&quot;;</span>
+<span class="lineNum">      81 </span>            : static const bool LeftAssociative[] = {true, true, true, true, false};
+<span class="lineNum">      82 </span>            : static const int Precedence[] = {0, 0, 1, 1, 3};
+<span class="lineNum">      83 </span>            : static const Operation::Id OperationId[] = {Operation::ADD, Operation::SUBTRACT, Operation::MULTIPLY, Operation::DIVIDE, Operation::POWER};
+<span class="lineNum">      84 </span>            : 
+<a name="85"><span class="lineNum">      85 </span>            : }</a>
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span><span class="lineCov">      99654 : class lepton::ParseToken {</span>
+<span class="lineNum">      88 </span>            : public:
+<a name="89"><span class="lineNum">      89 </span>            :     enum Type {Number, Operator, Variable, Function, LeftParen, RightParen, Comma, Whitespace};</a>
+<span class="lineNum">      90 </span>            : 
+<a name="91"><span class="lineNum">      91 </span><span class="lineCov">      14325 :     ParseToken(string text, Type type) : text(text), type(type) {</span></a>
+<span class="lineNum">      92 </span><span class="lineCov">      14325 :     }</span>
+<span class="lineNum">      93 </span><span class="lineCov">      35547 :     const string&amp; getText() const {</span>
+<a name="94"><span class="lineNum">      94 </span><span class="lineCov">      35547 :         return text;</span></a>
+<span class="lineNum">      95 </span>            :     }
+<span class="lineNum">      96 </span><span class="lineCov">      44566 :     Type getType() const {</span>
+<span class="lineNum">      97 </span><span class="lineCov">      44566 :         return type;</span>
+<span class="lineNum">      98 </span>            :     }
+<span class="lineNum">      99 </span>            : private:
+<span class="lineNum">     100 </span>            :     string text;
+<span class="lineNum">     101 </span>            :     Type type;
+<a name="102"><span class="lineNum">     102 </span>            : };</a>
+<span class="lineNum">     103 </span>            : 
+<span class="lineNum">     104 </span><span class="lineCov">          4 : string Parser::trim(const string&amp; expression) {</span>
+<span class="lineNum">     105 </span>            :     // Remove leading and trailing spaces.
+<span class="lineNum">     106 </span>            :     
+<span class="lineNum">     107 </span>            :     int start, end;
+<span class="lineNum">     108 </span><span class="lineCov">          4 :     for (start = 0; start &lt; (int) expression.size() &amp;&amp; isspace(expression[start]); start++)</span>
+<span class="lineNum">     109 </span>            :         ;
+<span class="lineNum">     110 </span><span class="lineCov">          4 :     for (end = (int) expression.size()-1; end &gt; start &amp;&amp; isspace(expression[end]); end--)</span>
+<span class="lineNum">     111 </span>            :         ;
+<span class="lineNum">     112 </span><span class="lineCov">          4 :     if (start == end &amp;&amp; isspace(expression[end]))</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :         return &quot;&quot;;</span>
+<span class="lineNum">     114 </span><span class="lineCov">          4 :     return expression.substr(start, end-start+1);</span>
+<a name="115"><span class="lineNum">     115 </span>            : }</a>
+<span class="lineNum">     116 </span>            : 
+<span class="lineNum">     117 </span><span class="lineCov">      14325 : ParseToken Parser::getNextToken(const string&amp; expression, int start) {</span>
+<span class="lineNum">     118 </span><span class="lineCov">      14325 :     char c = expression[start];</span>
+<span class="lineNum">     119 </span><span class="lineCov">      14325 :     if (c == '(')</span>
+<span class="lineNum">     120 </span><span class="lineCov">        619 :         return ParseToken(&quot;(&quot;, ParseToken::LeftParen);</span>
+<span class="lineNum">     121 </span><span class="lineCov">      13706 :     if (c == ')')</span>
+<span class="lineNum">     122 </span><span class="lineCov">       2103 :         return ParseToken(&quot;)&quot;, ParseToken::RightParen);</span>
+<span class="lineNum">     123 </span><span class="lineCov">      11603 :     if (c == ',')</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :         return ParseToken(&quot;,&quot;, ParseToken::Comma);</span>
+<span class="lineNum">     125 </span><span class="lineCov">      11603 :     if (Operators.find(c) != string::npos)</span>
+<span class="lineNum">     126 </span><span class="lineCov">       4668 :         return ParseToken(string(1, c), ParseToken::Operator);</span>
+<span class="lineNum">     127 </span><span class="lineCov">       6935 :     if (isspace(c)) {</span>
+<span class="lineNum">     128 </span>            :         // White space
+<span class="lineNum">     129 </span>            : 
+<span class="lineNum">     130 </span><span class="lineCov">         44 :         for (int pos = start+1; pos &lt; (int) expression.size(); pos++) {</span>
+<span class="lineNum">     131 </span><span class="lineCov">         37 :             if (!isspace(expression[pos]))</span>
+<span class="lineNum">     132 </span><span class="lineCov">         23 :                 return ParseToken(expression.substr(start, pos-start), ParseToken::Whitespace);</span>
+<span class="lineNum">     133 </span>            :         }
+<span class="lineNum">     134 </span><span class="lineCov">          7 :         return ParseToken(expression.substr(start, string::npos), ParseToken::Whitespace);</span>
+<span class="lineNum">     135 </span>            :     }
+<span class="lineNum">     136 </span><span class="lineCov">       6905 :     if (c == '.' || Digits.find(c) != string::npos) {</span>
+<span class="lineNum">     137 </span>            :         // A number
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineCov">       2565 :         bool foundDecimal = (c == '.');</span>
+<span class="lineNum">     140 </span><span class="lineCov">       2565 :         bool foundExp = false;</span>
+<span class="lineNum">     141 </span>            :         int pos;
+<span class="lineNum">     142 </span><span class="lineCov">       9165 :         for (pos = start+1; pos &lt; (int) expression.size(); pos++) {</span>
+<span class="lineNum">     143 </span><span class="lineCov">       8941 :             c = expression[pos];</span>
+<span class="lineNum">     144 </span><span class="lineCov">       8941 :             if (Digits.find(c) != string::npos)</span>
+<span class="lineNum">     145 </span><span class="lineCov">       4486 :                 continue;</span>
+<span class="lineNum">     146 </span><span class="lineCov">       4455 :             if (c == '.' &amp;&amp; !foundDecimal) {</span>
+<span class="lineNum">     147 </span><span class="lineCov">       2114 :                 foundDecimal = true;</span>
+<span class="lineNum">     148 </span><span class="lineCov">       2114 :                 continue;</span>
+<span class="lineNum">     149 </span>            :             }
+<span class="lineNum">     150 </span><span class="lineCov">       2341 :             if ((c == 'e' || c == 'E') &amp;&amp; !foundExp) {</span>
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :                 foundExp = true;</span>
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 if (pos &lt; (int) expression.size()-1 &amp;&amp; (expression[pos+1] == '-' || expression[pos+1] == '+'))</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :                     pos++;</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 continue;</span>
+<span class="lineNum">     155 </span>            :             }
+<span class="lineNum">     156 </span><span class="lineCov">       2341 :             break;</span>
+<span class="lineNum">     157 </span>            :         }
+<span class="lineNum">     158 </span><span class="lineCov">       2565 :         return ParseToken(expression.substr(start, pos-start), ParseToken::Number);</span>
+<span class="lineNum">     159 </span>            :     }
+<span class="lineNum">     160 </span>            : 
+<span class="lineNum">     161 </span>            :     // A variable, function, or left parenthesis
+<span class="lineNum">     162 </span>            : 
+<span class="lineNum">     163 </span><span class="lineCov">      12587 :     for (int pos = start; pos &lt; (int) expression.size(); pos++) {</span>
+<span class="lineNum">     164 </span><span class="lineCov">      12459 :         c = expression[pos];</span>
+<span class="lineNum">     165 </span><span class="lineCov">      12459 :         if (c == '(')</span>
+<span class="lineNum">     166 </span><span class="lineCov">       1484 :             return ParseToken(expression.substr(start, pos-start+1), ParseToken::Function);</span>
+<span class="lineNum">     167 </span><span class="lineCov">      10975 :         if (Operators.find(c) != string::npos || c == ',' || c == ')' || isspace(c))</span>
+<span class="lineNum">     168 </span><span class="lineCov">       2728 :             return ParseToken(expression.substr(start, pos-start), ParseToken::Variable);</span>
+<span class="lineNum">     169 </span>            :     }
+<span class="lineNum">     170 </span><span class="lineCov">        128 :     return ParseToken(expression.substr(start, string::npos), ParseToken::Variable);</span>
+<a name="171"><span class="lineNum">     171 </span>            : }</a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineCov">        778 : vector&lt;ParseToken&gt; Parser::tokenize(const string&amp; expression) {</span>
+<span class="lineNum">     174 </span><span class="lineCov">        778 :     vector&lt;ParseToken&gt; tokens;</span>
+<span class="lineNum">     175 </span><span class="lineCov">        778 :     int pos = 0;</span>
+<span class="lineNum">     176 </span><span class="lineCov">      15881 :     while (pos &lt; (int) expression.size()) {</span>
+<span class="lineNum">     177 </span><span class="lineCov">      14325 :         ParseToken token = getNextToken(expression, pos);</span>
+<span class="lineNum">     178 </span><span class="lineCov">      14325 :         if (token.getType() != ParseToken::Whitespace)</span>
+<span class="lineNum">     179 </span><span class="lineCov">      14295 :             tokens.push_back(token);</span>
+<span class="lineNum">     180 </span><span class="lineCov">      14325 :         pos += (int) token.getText().size();</span>
+<span class="lineNum">     181 </span><span class="lineCov">      14325 :     }</span>
+<span class="lineNum">     182 </span><span class="lineCov">        778 :     return tokens;</span>
+<a name="183"><span class="lineNum">     183 </span>            : }</a>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span><span class="lineCov">        776 : ParsedExpression Parser::parse(const string&amp; expression) {</span>
+<span class="lineNum">     186 </span><span class="lineCov">        776 :     return parse(expression, map&lt;string, CustomFunction*&gt;());</span>
+<a name="187"><span class="lineNum">     187 </span>            : }</a>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineCov">        776 : ParsedExpression Parser::parse(const string&amp; expression, const map&lt;string, CustomFunction*&gt;&amp; customFunctions) {</span>
+<span class="lineNum">     190 </span>            :     try {
+<span class="lineNum">     191 </span>            :         // First split the expression into subexpressions.
+<span class="lineNum">     192 </span>            : 
+<span class="lineNum">     193 </span><span class="lineCov">        776 :         string primaryExpression = expression;</span>
+<span class="lineNum">     194 </span><span class="lineCov">       1552 :         vector&lt;string&gt; subexpressions;</span>
+<span class="lineNum">     195 </span>            :         while (true) {
+<span class="lineNum">     196 </span><span class="lineCov">        778 :             string::size_type pos = primaryExpression.find_last_of(';');</span>
+<span class="lineNum">     197 </span><span class="lineCov">        778 :             if (pos == string::npos)</span>
+<span class="lineNum">     198 </span><span class="lineCov">        776 :                 break;</span>
+<span class="lineNum">     199 </span><span class="lineCov">          2 :             string sub = trim(primaryExpression.substr(pos+1));</span>
+<span class="lineNum">     200 </span><span class="lineCov">          2 :             if (sub.size() &gt; 0)</span>
+<span class="lineNum">     201 </span><span class="lineCov">          2 :                 subexpressions.push_back(sub);</span>
+<span class="lineNum">     202 </span><span class="lineCov">          2 :             primaryExpression = primaryExpression.substr(0, pos);</span>
+<span class="lineNum">     203 </span><span class="lineCov">          2 :         }</span>
+<span class="lineNum">     204 </span>            : 
+<span class="lineNum">     205 </span>            :         // Parse the subexpressions.
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineCov">       1552 :         map&lt;string, ExpressionTreeNode&gt; subexpDefs;</span>
+<span class="lineNum">     208 </span><span class="lineCov">        778 :         for (int i = 0; i &lt; (int) subexpressions.size(); i++) {</span>
+<span class="lineNum">     209 </span><span class="lineCov">          2 :             string::size_type equalsPos = subexpressions[i].find('=');</span>
+<span class="lineNum">     210 </span><span class="lineCov">          2 :             if (equalsPos == string::npos)</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :                 throw Exception(&quot;subexpression does not specify a name&quot;);</span>
+<span class="lineNum">     212 </span><span class="lineCov">          2 :             string name = trim(subexpressions[i].substr(0, equalsPos));</span>
+<span class="lineNum">     213 </span><span class="lineCov">          2 :             if (name.size() == 0)</span>
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :                 throw Exception(&quot;subexpression does not specify a name&quot;);</span>
+<span class="lineNum">     215 </span><span class="lineCov">          4 :             vector&lt;ParseToken&gt; tokens = tokenize(subexpressions[i].substr(equalsPos+1));</span>
+<span class="lineNum">     216 </span><span class="lineCov">          2 :             int pos = 0;</span>
+<span class="lineNum">     217 </span><span class="lineCov">          2 :             subexpDefs[name] = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);</span>
+<span class="lineNum">     218 </span><span class="lineCov">          2 :             if (pos != tokens.size())</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :                 throw Exception(&quot;unexpected text at end of subexpression: &quot;+tokens[pos].getText());</span>
+<span class="lineNum">     220 </span><span class="lineCov">          2 :         }</span>
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :         // Now parse the primary expression.
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineCov">       1552 :         vector&lt;ParseToken&gt; tokens = tokenize(primaryExpression);</span>
+<span class="lineNum">     225 </span><span class="lineCov">        776 :         int pos = 0;</span>
+<span class="lineNum">     226 </span><span class="lineCov">       1548 :         ExpressionTreeNode result = parsePrecedence(tokens, pos, customFunctions, subexpDefs, 0);</span>
+<span class="lineNum">     227 </span><span class="lineCov">        772 :         if (pos != tokens.size())</span>
+<span class="lineNum">     228 </span><span class="lineCov">         14 :             throw Exception(&quot;unexpected text at end of expression: &quot;+tokens[pos].getText());</span>
+<span class="lineNum">     229 </span><span class="lineCov">       1534 :         return ParsedExpression(result);</span>
+<span class="lineNum">     230 </span>            :     }
+<span class="lineNum">     231 </span><span class="lineCov">         18 :     catch (Exception&amp; ex) {</span>
+<span class="lineNum">     232 </span><span class="lineCov">         18 :         throw Exception(&quot;Parse error in expression \&quot;&quot;+expression+&quot;\&quot;: &quot;+ex.what());</span>
+<span class="lineNum">     233 </span>            :     }
+<a name="234"><span class="lineNum">     234 </span>            : }</a>
+<span class="lineNum">     235 </span>            : 
+<span class="lineNum">     236 </span><span class="lineCov">       7549 : ExpressionTreeNode Parser::parsePrecedence(const vector&lt;ParseToken&gt;&amp; tokens, int&amp; pos, const map&lt;string, CustomFunction*&gt;&amp; customFunctions,</span>
+<span class="lineNum">     237 </span>            :             const map&lt;string, ExpressionTreeNode&gt;&amp; subexpressionDefs, int precedence) {
+<span class="lineNum">     238 </span><span class="lineCov">       7549 :     if (pos == tokens.size())</span>
+<span class="lineNum">     239 </span><span class="lineCov">          4 :         throw Exception(&quot;unexpected end of expression&quot;);</span>
+<span class="lineNum">     240 </span>            : 
+<span class="lineNum">     241 </span>            :     // Parse the next value (number, variable, function, parenthesized expression)
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span><span class="lineCov">       7545 :     ParseToken token = tokens[pos];</span>
+<span class="lineNum">     244 </span><span class="lineCov">       7545 :     ExpressionTreeNode result;</span>
+<span class="lineNum">     245 </span><span class="lineCov">       7545 :     if (token.getType() == ParseToken::Number) {</span>
+<span class="lineNum">     246 </span>            :         double value;
+<span class="lineNum">     247 </span><span class="lineCov">       2565 :         stringstream(token.getText()) &gt;&gt; value;</span>
+<span class="lineNum">     248 </span><span class="lineCov">       2565 :         result = ExpressionTreeNode(new Operation::Constant(value));</span>
+<span class="lineNum">     249 </span><span class="lineCov">       2565 :         pos++;</span>
+<span class="lineNum">     250 </span>            :     }
+<span class="lineNum">     251 </span><span class="lineCov">       4980 :     else if (token.getType() == ParseToken::Variable) {</span>
+<span class="lineNum">     252 </span><span class="lineCov">       2842 :         map&lt;string, ExpressionTreeNode&gt;::const_iterator subexp = subexpressionDefs.find(token.getText());</span>
+<span class="lineNum">     253 </span><span class="lineCov">       2842 :         if (subexp == subexpressionDefs.end()) {</span>
+<span class="lineNum">     254 </span><span class="lineCov">       2840 :             Operation* op = new Operation::Variable(token.getText());</span>
+<span class="lineNum">     255 </span><span class="lineCov">       2840 :             result = ExpressionTreeNode(op);</span>
+<span class="lineNum">     256 </span>            :         }
+<span class="lineNum">     257 </span>            :         else
+<span class="lineNum">     258 </span><span class="lineCov">          2 :             result = subexp-&gt;second;</span>
+<span class="lineNum">     259 </span><span class="lineCov">       2842 :         pos++;</span>
+<span class="lineNum">     260 </span>            :     }
+<span class="lineNum">     261 </span><span class="lineCov">       2138 :     else if (token.getType() == ParseToken::LeftParen) {</span>
+<span class="lineNum">     262 </span><span class="lineCov">        619 :         pos++;</span>
+<span class="lineNum">     263 </span><span class="lineCov">        619 :         result = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0);</span>
+<span class="lineNum">     264 </span><span class="lineCov">        619 :         if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen)</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :             throw Exception(&quot;unbalanced parentheses&quot;);</span>
+<span class="lineNum">     266 </span><span class="lineCov">        619 :         pos++;</span>
+<span class="lineNum">     267 </span>            :     }
+<span class="lineNum">     268 </span><span class="lineCov">       1519 :     else if (token.getType() == ParseToken::Function) {</span>
+<span class="lineNum">     269 </span><span class="lineCov">       1484 :         pos++;</span>
+<span class="lineNum">     270 </span><span class="lineCov">       1484 :         vector&lt;ExpressionTreeNode&gt; args;</span>
+<span class="lineNum">     271 </span>            :         bool moreArgs;
+<span class="lineNum">     272 </span><span class="lineCov">       1484 :         do {</span>
+<span class="lineNum">     273 </span><span class="lineCov">       1484 :             args.push_back(parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 0));</span>
+<span class="lineNum">     274 </span><span class="lineCov">       1484 :             moreArgs = (pos &lt; (int) tokens.size() &amp;&amp; tokens[pos].getType() == ParseToken::Comma);</span>
+<span class="lineNum">     275 </span><span class="lineCov">       1484 :             if (moreArgs)</span>
+<span class="lineNum">     276 </span><span class="lineNoCov">          0 :                 pos++;</span>
+<span class="lineNum">     277 </span>            :         } while (moreArgs);
+<span class="lineNum">     278 </span><span class="lineCov">       1484 :         if (pos == tokens.size() || tokens[pos].getType() != ParseToken::RightParen)</span>
+<span class="lineNum">     279 </span><span class="lineNoCov">          0 :             throw Exception(&quot;unbalanced parentheses&quot;);</span>
+<span class="lineNum">     280 </span><span class="lineCov">       1484 :         pos++;</span>
+<span class="lineNum">     281 </span><span class="lineCov">       1484 :         Operation* op = getFunctionOperation(token.getText(), customFunctions);</span>
+<span class="lineNum">     282 </span>            :         try {
+<span class="lineNum">     283 </span><span class="lineCov">       1484 :             result = ExpressionTreeNode(op, args);</span>
+<span class="lineNum">     284 </span>            :         }
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :         catch (...) {</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :             delete op;</span>
+<span class="lineNum">     287 </span><span class="lineNoCov">          0 :             throw;</span>
+<span class="lineNum">     288 </span><span class="lineCov">       1484 :         }</span>
+<span class="lineNum">     289 </span>            :     }
+<span class="lineNum">     290 </span><span class="lineCov">         35 :     else if (token.getType() == ParseToken::Operator &amp;&amp; token.getText() == &quot;-&quot;) {</span>
+<span class="lineNum">     291 </span><span class="lineCov">         35 :         pos++;</span>
+<span class="lineNum">     292 </span><span class="lineCov">         35 :         ExpressionTreeNode toNegate = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, 2);</span>
+<span class="lineNum">     293 </span><span class="lineCov">         35 :         result = ExpressionTreeNode(new Operation::Negate(), toNegate);</span>
+<span class="lineNum">     294 </span>            :     }
+<span class="lineNum">     295 </span>            :     else
+<span class="lineNum">     296 </span><span class="lineNoCov">          0 :         throw Exception(&quot;unexpected token: &quot;+token.getText());</span>
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            :     // Now deal with the next binary operator.
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span><span class="lineCov">      19723 :     while (pos &lt; (int) tokens.size() &amp;&amp; tokens[pos].getType() == ParseToken::Operator) {</span>
+<span class="lineNum">     301 </span><span class="lineCov">       6809 :         token = tokens[pos];</span>
+<span class="lineNum">     302 </span><span class="lineCov">       6809 :         int opIndex = (int) Operators.find(token.getText());</span>
+<span class="lineNum">     303 </span><span class="lineCov">       6809 :         int opPrecedence = Precedence[opIndex];</span>
+<span class="lineNum">     304 </span><span class="lineCov">       6809 :         if (opPrecedence &lt; precedence)</span>
+<span class="lineNum">     305 </span><span class="lineCov">       2176 :             return result;</span>
+<span class="lineNum">     306 </span><span class="lineCov">       4633 :         pos++;</span>
+<span class="lineNum">     307 </span><span class="lineCov">       4633 :         ExpressionTreeNode arg = parsePrecedence(tokens, pos, customFunctions, subexpressionDefs, LeftAssociative[opIndex] ? opPrecedence+1 : opPrecedence);</span>
+<span class="lineNum">     308 </span><span class="lineCov">       4633 :         Operation* op = getOperatorOperation(token.getText());</span>
+<span class="lineNum">     309 </span>            :         try {
+<span class="lineNum">     310 </span><span class="lineCov">       4633 :             result = ExpressionTreeNode(op, result, arg);</span>
+<span class="lineNum">     311 </span>            :         }
+<span class="lineNum">     312 </span><span class="lineNoCov">          0 :         catch (...) {</span>
+<span class="lineNum">     313 </span><span class="lineNoCov">          0 :             delete op;</span>
+<span class="lineNum">     314 </span><span class="lineNoCov">          0 :             throw;</span>
+<span class="lineNum">     315 </span>            :         }
+<span class="lineNum">     316 </span><span class="lineCov">       4633 :     }</span>
+<span class="lineNum">     317 </span><span class="lineCov">       5369 :     return result;</span>
+<a name="318"><span class="lineNum">     318 </span>            : }</a>
+<span class="lineNum">     319 </span>            : 
+<span class="lineNum">     320 </span><span class="lineCov">       4633 : Operation* Parser::getOperatorOperation(const std::string&amp; name) {</span>
+<span class="lineNum">     321 </span><span class="lineCov">       4633 :     switch (OperationId[Operators.find(name)]) {</span>
+<span class="lineNum">     322 </span>            :         case Operation::ADD:
+<span class="lineNum">     323 </span><span class="lineCov">        970 :             return new Operation::Add();</span>
+<span class="lineNum">     324 </span>            :         case Operation::SUBTRACT:
+<span class="lineNum">     325 </span><span class="lineCov">        831 :             return new Operation::Subtract();</span>
+<span class="lineNum">     326 </span>            :         case Operation::MULTIPLY:
+<span class="lineNum">     327 </span><span class="lineCov">       2235 :             return new Operation::Multiply();</span>
+<span class="lineNum">     328 </span>            :         case Operation::DIVIDE:
+<span class="lineNum">     329 </span><span class="lineCov">        415 :             return new Operation::Divide();</span>
+<span class="lineNum">     330 </span>            :         case Operation::POWER:
+<span class="lineNum">     331 </span><span class="lineCov">        182 :             return new Operation::Power();</span>
+<span class="lineNum">     332 </span>            :         default:
+<span class="lineNum">     333 </span><span class="lineNoCov">          0 :             throw Exception(&quot;unknown operator&quot;);</span>
+<span class="lineNum">     334 </span>            :     }
+<a name="335"><span class="lineNum">     335 </span>            : }</a>
+<span class="lineNum">     336 </span>            : 
+<span class="lineNum">     337 </span><span class="lineCov">       1484 : Operation* Parser::getFunctionOperation(const std::string&amp; name, const map&lt;string, CustomFunction*&gt;&amp; customFunctions) {</span>
+<span class="lineNum">     338 </span>            : 
+<span class="lineNum">     339 </span>            :     const static map&lt;string, Operation::Id&gt; opMap ={
+<span class="lineNum">     340 </span>            :         { &quot;sqrt&quot; , Operation::SQRT },
+<span class="lineNum">     341 </span>            :         { &quot;exp&quot; , Operation::EXP },
+<span class="lineNum">     342 </span>            :         { &quot;log&quot; , Operation::LOG },
+<span class="lineNum">     343 </span>            :         { &quot;sin&quot; , Operation::SIN },
+<span class="lineNum">     344 </span>            :         { &quot;cos&quot; , Operation::COS },
+<span class="lineNum">     345 </span>            :         { &quot;sec&quot; , Operation::SEC },
+<span class="lineNum">     346 </span>            :         { &quot;csc&quot; , Operation::CSC },
+<span class="lineNum">     347 </span>            :         { &quot;tan&quot; , Operation::TAN },
+<span class="lineNum">     348 </span>            :         { &quot;cot&quot; , Operation::COT },
+<span class="lineNum">     349 </span>            :         { &quot;asin&quot; , Operation::ASIN },
+<span class="lineNum">     350 </span>            :         { &quot;acos&quot; , Operation::ACOS },
+<span class="lineNum">     351 </span>            :         { &quot;atan&quot; , Operation::ATAN },
+<span class="lineNum">     352 </span>            :         { &quot;sinh&quot; , Operation::SINH },
+<span class="lineNum">     353 </span>            :         { &quot;cosh&quot; , Operation::COSH },
+<span class="lineNum">     354 </span>            :         { &quot;tanh&quot; , Operation::TANH },
+<span class="lineNum">     355 </span>            :         { &quot;erf&quot; , Operation::ERF },
+<span class="lineNum">     356 </span>            :         { &quot;erfc&quot; , Operation::ERFC },
+<span class="lineNum">     357 </span>            :         { &quot;step&quot; , Operation::STEP },
+<span class="lineNum">     358 </span>            :         { &quot;delta&quot; , Operation::DELTA },
+<span class="lineNum">     359 </span>            :         { &quot;square&quot; , Operation::SQUARE },
+<span class="lineNum">     360 </span>            :         { &quot;cube&quot;, Operation::CUBE },
+<span class="lineNum">     361 </span>            :         { &quot;recip&quot; , Operation::RECIPROCAL },
+<span class="lineNum">     362 </span>            :         { &quot;min&quot; , Operation::MIN },
+<span class="lineNum">     363 </span>            :         { &quot;max&quot; , Operation::MAX },
+<span class="lineNum">     364 </span>            :         { &quot;abs&quot; , Operation::ABS },
+<span class="lineNum">     365 </span>            :         { &quot;floor&quot; , Operation::FLOOR },
+<span class="lineNum">     366 </span>            :         { &quot;ceil&quot; , Operation::CEIL },
+<span class="lineNum">     367 </span>            :         { &quot;select&quot; , Operation::SELECT },
+<span class="lineNum">     368 </span><span class="lineCov">       1484 :     };</span>
+<span class="lineNum">     369 </span><span class="lineCov">       1484 :     string trimmed = name.substr(0, name.size()-1);</span>
+<span class="lineNum">     370 </span>            : 
+<span class="lineNum">     371 </span>            :     // First check custom functions.
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span><span class="lineCov">       1484 :     map&lt;string, CustomFunction*&gt;::const_iterator custom = customFunctions.find(trimmed);</span>
+<span class="lineNum">     374 </span><span class="lineCov">       1484 :     if (custom != customFunctions.end())</span>
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :         return new Operation::Custom(trimmed, custom-&gt;second-&gt;clone());</span>
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            :     // Now try standard functions.
+<span class="lineNum">     378 </span>            : 
+<span class="lineNum">     379 </span><span class="lineCov">       1484 :     map&lt;string, Operation::Id&gt;::const_iterator iter = opMap.find(trimmed);</span>
+<span class="lineNum">     380 </span><span class="lineCov">       1484 :     if (iter == opMap.end())</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :         throw Exception(&quot;unknown function: &quot;+trimmed);</span>
+<span class="lineNum">     382 </span><span class="lineCov">       1484 :     switch (iter-&gt;second) {</span>
+<span class="lineNum">     383 </span>            :         case Operation::SQRT:
+<span class="lineNum">     384 </span><span class="lineCov">         52 :             return new Operation::Sqrt();</span>
+<span class="lineNum">     385 </span>            :         case Operation::EXP:
+<span class="lineNum">     386 </span><span class="lineCov">         24 :             return new Operation::Exp();</span>
+<span class="lineNum">     387 </span>            :         case Operation::LOG:
+<span class="lineNum">     388 </span><span class="lineCov">          2 :             return new Operation::Log();</span>
+<span class="lineNum">     389 </span>            :         case Operation::SIN:
+<span class="lineNum">     390 </span><span class="lineCov">        110 :             return new Operation::Sin();</span>
+<span class="lineNum">     391 </span>            :         case Operation::COS:
+<span class="lineNum">     392 </span><span class="lineCov">       1259 :             return new Operation::Cos();</span>
+<span class="lineNum">     393 </span>            :         case Operation::SEC:
+<span class="lineNum">     394 </span><span class="lineCov">          2 :             return new Operation::Sec();</span>
+<span class="lineNum">     395 </span>            :         case Operation::CSC:
+<span class="lineNum">     396 </span><span class="lineCov">          2 :             return new Operation::Csc();</span>
+<span class="lineNum">     397 </span>            :         case Operation::TAN:
+<span class="lineNum">     398 </span><span class="lineCov">          2 :             return new Operation::Tan();</span>
+<span class="lineNum">     399 </span>            :         case Operation::COT:
+<span class="lineNum">     400 </span><span class="lineCov">          2 :             return new Operation::Cot();</span>
+<span class="lineNum">     401 </span>            :         case Operation::ASIN:
+<span class="lineNum">     402 </span><span class="lineCov">          2 :             return new Operation::Asin();</span>
+<span class="lineNum">     403 </span>            :         case Operation::ACOS:
+<span class="lineNum">     404 </span><span class="lineCov">          2 :             return new Operation::Acos();</span>
+<span class="lineNum">     405 </span>            :         case Operation::ATAN:
+<span class="lineNum">     406 </span><span class="lineCov">          2 :             return new Operation::Atan();</span>
+<span class="lineNum">     407 </span>            :         case Operation::SINH:
+<span class="lineNum">     408 </span><span class="lineCov">          2 :             return new Operation::Sinh();</span>
+<span class="lineNum">     409 </span>            :         case Operation::COSH:
+<span class="lineNum">     410 </span><span class="lineCov">          2 :             return new Operation::Cosh();</span>
+<span class="lineNum">     411 </span>            :         case Operation::TANH:
+<span class="lineNum">     412 </span><span class="lineCov">          2 :             return new Operation::Tanh();</span>
+<span class="lineNum">     413 </span>            :         case Operation::ERF:
+<span class="lineNum">     414 </span><span class="lineCov">          2 :             return new Operation::Erf();</span>
+<span class="lineNum">     415 </span>            :         case Operation::ERFC:
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :             return new Operation::Erfc();</span>
+<span class="lineNum">     417 </span>            :         case Operation::STEP:
+<span class="lineNum">     418 </span><span class="lineCov">          2 :             return new Operation::Step();</span>
+<span class="lineNum">     419 </span>            :         case Operation::DELTA:
+<span class="lineNum">     420 </span><span class="lineCov">          2 :             return new Operation::Delta();</span>
+<span class="lineNum">     421 </span>            :         case Operation::SQUARE:
+<span class="lineNum">     422 </span><span class="lineNoCov">          0 :             return new Operation::Square();</span>
+<span class="lineNum">     423 </span>            :         case Operation::CUBE:
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :             return new Operation::Cube();</span>
+<span class="lineNum">     425 </span>            :         case Operation::RECIPROCAL:
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :             return new Operation::Reciprocal();</span>
+<span class="lineNum">     427 </span>            :         case Operation::MIN:
+<span class="lineNum">     428 </span><span class="lineNoCov">          0 :             return new Operation::Min();</span>
+<span class="lineNum">     429 </span>            :         case Operation::MAX:
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :             return new Operation::Max();</span>
+<span class="lineNum">     431 </span>            :         case Operation::ABS:
+<span class="lineNum">     432 </span><span class="lineCov">         11 :             return new Operation::Abs();</span>
+<span class="lineNum">     433 </span>            :         case Operation::FLOOR:
+<span class="lineNum">     434 </span><span class="lineNoCov">          0 :             return new Operation::Floor();</span>
+<span class="lineNum">     435 </span>            :         case Operation::CEIL:
+<span class="lineNum">     436 </span><span class="lineNoCov">          0 :             return new Operation::Ceil();</span>
+<span class="lineNum">     437 </span>            :         case Operation::SELECT:
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :             return new Operation::Select();</span>
+<span class="lineNum">     439 </span>            :         default:
+<span class="lineNum">     440 </span><span class="lineNoCov">          0 :             throw Exception(&quot;unknown function&quot;);</span>
+<a name="441"><span class="lineNum">     441 </span><span class="lineCov">       1484 :     }</span></a>
+<span class="lineNum">     442 </span>            : }
+<span class="lineNum">     443 </span><span class="lineCov">       5415 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - analysis/LandmarkStaged.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">analysis</a> - LandmarkStaged.cpp<span style="font-size: 80%;"> (source / <a href="LandmarkStaged.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">7</td>
+            <td class="headerCovTableEntry">56</td>
+            <td class="headerCovTableEntryLo">12.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryLo">45.5 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2015-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #include &quot;LandmarkSelectionBase.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;core/ActionRegister.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;tools/Random.h&quot;
+<span class="lineNum">      25 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">      26 </span>            : 
+<span class="lineNum">      27 </span>            : //+PLUMEDOC LANDMARKS LANDMARK_SELECT_STAGED
+<span class="lineNum">      28 </span>            : /*
+<span class="lineNum">      29 </span>            : Select a set of landmarks using the staged algorithm.
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : \par Examples
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : */
+<span class="lineNum">      34 </span>            : //+ENDPLUMEDOC
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : namespace PLMD {
+<a name="38"><span class="lineNum">      38 </span>            : namespace analysis {</a>
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 : class LandmarkStaged : public LandmarkSelectionBase {</span>
+<span class="lineNum">      41 </span>            : private:
+<span class="lineNum">      42 </span>            :   unsigned seed;
+<span class="lineNum">      43 </span>            :   double gamma;
+<span class="lineNum">      44 </span>            : public:
+<span class="lineNum">      45 </span>            :   static void registerKeywords( Keywords&amp; keys );
+<span class="lineNum">      46 </span>            :   LandmarkStaged( const ActionOptions&amp; ao );
+<span class="lineNum">      47 </span>            :   void selectLandmarks();
+<a name="48"><span class="lineNum">      48 </span>            : };</a>
+<span class="lineNum">      49 </span>            : 
+<a name="50"><span class="lineNum">      50 </span><span class="lineCov">       5415 : PLUMED_REGISTER_ACTION(LandmarkStaged,&quot;LANDMARK_SELECT_STAGED&quot;)</span></a>
+<span class="lineNum">      51 </span>            : 
+<span class="lineNum">      52 </span><span class="lineCov">          1 : void LandmarkStaged::registerKeywords( Keywords&amp; keys ) {</span>
+<span class="lineNum">      53 </span><span class="lineCov">          1 :   LandmarkSelectionBase::registerKeywords(keys);</span>
+<span class="lineNum">      54 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;GAMMA&quot;,&quot;the gamma parameter to be used in weights&quot;);</span>
+<span class="lineNum">      55 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;SEED&quot;,&quot;1234&quot;,&quot;a random number seed&quot;);</span>
+<a name="56"><span class="lineNum">      56 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineNoCov">          0 : LandmarkStaged::LandmarkStaged( const ActionOptions&amp; ao ):</span>
+<span class="lineNum">      59 </span>            :   Action(ao),
+<span class="lineNum">      60 </span><span class="lineNoCov">          0 :   LandmarkSelectionBase(ao)</span>
+<span class="lineNum">      61 </span>            : {
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :   parse(&quot;SEED&quot;,seed); parse(&quot;GAMMA&quot;,gamma);</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :   log.printf(&quot;  probability of selecting voronoi polyhedra equal to exp(-weight/%f) \n&quot;, gamma );</span>
+<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 : void LandmarkStaged::selectLandmarks() {</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :   unsigned int n = getNumberOfDataPoints(); // The number of landmarks to pick</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   unsigned int N = my_input_data-&gt;getNumberOfDataPoints();  // The total number of frames we can choose from</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   unsigned int m = static_cast&lt;int&gt;( sqrt(n*N) );</span>
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :   std::vector&lt;unsigned&gt; fpslandmarks(m);</span>
+<span class="lineNum">      71 </span>            :   // Select first point at random
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :   Random random; random.setSeed(-seed); double rand=random.RandU01();</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   fpslandmarks[0] = std::floor( N*rand );</span>
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            :   // using FPS we want to find m landmarks where m = sqrt(nN)
+<span class="lineNum">      76 </span>            :   // Now find distance to all other points
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :   Matrix&lt;double&gt; distances( m, N );</span>
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   for(unsigned int i=0; i&lt;N; ++i) {</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :     distances(0,i) = my_input_data-&gt;getDissimilarity( fpslandmarks[0], i );</span>
+<span class="lineNum">      80 </span>            :   }
+<span class="lineNum">      81 </span>            : 
+<span class="lineNum">      82 </span>            :   // Now find all other landmarks
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   for(unsigned i=1; i&lt;m; ++i) {</span>
+<span class="lineNum">      84 </span>            :     // Find point that has the largest minimum distance from the landmarks selected thus far
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :     double maxd=0;</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :     for(unsigned j=0; j&lt;N; ++j) {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :       double mind=distances(0,j);</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :       for(unsigned k=1; k&lt;i; ++k) {</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :         if( distances(k,j)&lt;mind ) { mind=distances(k,j); }</span>
+<span class="lineNum">      90 </span>            :       }
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :       if( mind&gt;maxd ) { maxd=mind; fpslandmarks[i]=j; }</span>
+<span class="lineNum">      92 </span>            :     }
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :     for(unsigned k=0; k&lt;N; ++k) distances(i,k) = my_input_data-&gt;getDissimilarity( fpslandmarks[i], k );</span>
+<span class="lineNum">      94 </span>            :   }
+<span class="lineNum">      95 </span>            : 
+<span class="lineNum">      96 </span>            :   // Initial FPS selection of m landmarks completed
+<span class="lineNum">      97 </span>            :   // Now find voronoi weights of these m points
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   std::vector&lt;unsigned&gt; poly_assign( N );</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :   std::vector&lt;double&gt; weights( m, 0 );</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   voronoiAnalysis( fpslandmarks, weights, poly_assign );</span>
+<span class="lineNum">     101 </span>            : 
+<span class="lineNum">     102 </span>            :   //Calulate total weight of voronoi polyhedras
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :   double vweight=0; for(unsigned i=0; i&lt;m; i++) vweight += exp( -weights[i] / gamma );</span>
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :   std::vector&lt;bool&gt; selected(N, false); unsigned ncount=0;</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :   while ( ncount&lt;n) {</span>
+<span class="lineNum">     107 </span>            : //  generate random number and check which point it belongs to. select only it was not selected before
+<span class="lineNum">     108 </span><span class="lineNoCov">          0 :     double rand = vweight*random.RandU01();</span>
+<span class="lineNum">     109 </span><span class="lineNoCov">          0 :     double running_vweight=0;</span>
+<span class="lineNum">     110 </span><span class="lineNoCov">          0 :     for(unsigned jpoly=0; jpoly&lt;m; ++jpoly) {</span>
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :       running_vweight+=exp( -weights[jpoly] / gamma );</span>
+<span class="lineNum">     112 </span><span class="lineNoCov">          0 :       if( running_vweight&gt;=rand ) {</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :         double tweight=0;</span>
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 :         for(unsigned i=0; i&lt;poly_assign.size(); ++i) {</span>
+<span class="lineNum">     115 </span><span class="lineNoCov">          0 :           if( poly_assign[i]==jpoly ) tweight += getWeight( i );</span>
+<span class="lineNum">     116 </span>            :         }
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :         double rand_poly = tweight*random.RandU01();</span>
+<span class="lineNum">     118 </span><span class="lineNoCov">          0 :         double running_tweight=0;</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :         for(unsigned i=0; i&lt;N; ++i) {</span>
+<span class="lineNum">     120 </span><span class="lineNoCov">          0 :           if( poly_assign[i]==jpoly ) {</span>
+<span class="lineNum">     121 </span><span class="lineNoCov">          0 :             running_tweight += getWeight( i );</span>
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :             if( running_tweight&gt;=rand_poly &amp;&amp; !selected[i] ) {</span>
+<span class="lineNum">     123 </span><span class="lineNoCov">          0 :               selectFrame(i); selected[i]=true; ncount++; break;</span>
+<span class="lineNum">     124 </span><span class="lineNoCov">          0 :             } else if( running_tweight&gt;=rand_poly ) {</span>
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :               break;</span>
+<span class="lineNum">     126 </span>            :             }
+<span class="lineNum">     127 </span>            :           }
+<span class="lineNum">     128 </span>            :         }
+<span class="lineNum">     129 </span>            :       }
+<span class="lineNum">     130 </span>            :     }
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :   }</span>
+<span class="lineNum">     132 </span><span class="lineNoCov">          0 : }</span>
+<a name="133"><span class="lineNum">     133 </span>            : </a>
+<span class="lineNum">     134 </span>            : }
+<span class="lineNum">     135 </span><span class="lineCov">       5415 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

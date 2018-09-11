@@ -1,0 +1,334 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - tools/IFile.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tools</a> - IFile.cpp<span style="font-size: 80%;"> (source / <a href="IFile.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">147</td>
+            <td class="headerCovTableEntry">149</td>
+            <td class="headerCovTableEntryHi">98.7 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">20</td>
+            <td class="headerCovTableEntry">22</td>
+            <td class="headerCovTableEntryHi">90.9 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2012-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #include &quot;IFile.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Exception.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;core/Action.h&quot;
+<span class="lineNum">      25 </span>            : #include &quot;core/PlumedMain.h&quot;
+<span class="lineNum">      26 </span>            : #include &quot;core/Value.h&quot;
+<span class="lineNum">      27 </span>            : #include &quot;Communicator.h&quot;
+<span class="lineNum">      28 </span>            : #include &quot;Tools.h&quot;
+<span class="lineNum">      29 </span>            : #include &lt;cstdarg&gt;
+<span class="lineNum">      30 </span>            : #include &lt;cstring&gt;
+<span class="lineNum">      31 </span>            : #include &lt;cmath&gt;
+<span class="lineNum">      32 </span>            : 
+<span class="lineNum">      33 </span>            : #include &lt;iostream&gt;
+<span class="lineNum">      34 </span>            : #include &lt;string&gt;
+<span class="lineNum">      35 </span>            : #ifdef __PLUMED_HAS_ZLIB
+<span class="lineNum">      36 </span>            : #include &lt;zlib.h&gt;
+<span class="lineNum">      37 </span>            : #endif
+<span class="lineNum">      38 </span>            : 
+<a name="39"><span class="lineNum">      39 </span>            : namespace PLMD {</a>
+<span class="lineNum">      40 </span>            : 
+<span class="lineNum">      41 </span><span class="lineCov">   15720546 : size_t IFile::llread(char*ptr,size_t s) {</span>
+<span class="lineNum">      42 </span><span class="lineCov">   15720546 :   plumed_assert(fp);</span>
+<span class="lineNum">      43 </span>            :   size_t r;
+<span class="lineNum">      44 </span><span class="lineCov">   15720546 :   if(gzfp) {</span>
+<span class="lineNum">      45 </span>            : #ifdef __PLUMED_HAS_ZLIB
+<span class="lineNum">      46 </span><span class="lineCov">       3519 :     int rr=gzread(gzFile(gzfp),ptr,s);</span>
+<span class="lineNum">      47 </span><span class="lineCov">       3519 :     if(rr==0)   eof=true;</span>
+<span class="lineNum">      48 </span><span class="lineCov">       3519 :     if(rr&lt;0)    err=true;</span>
+<span class="lineNum">      49 </span><span class="lineCov">       3519 :     r=rr;</span>
+<span class="lineNum">      50 </span>            : #else
+<span class="lineNum">      51 </span>            :     plumed_merror(&quot;file &quot; + getPath() + &quot;: trying to use a gz file without zlib being linked&quot;);
+<span class="lineNum">      52 </span>            : #endif
+<span class="lineNum">      53 </span>            :   } else {
+<span class="lineNum">      54 </span><span class="lineCov">   15717027 :     r=fread(ptr,1,s,fp);</span>
+<span class="lineNum">      55 </span><span class="lineCov">   15717027 :     if(feof(fp))   eof=true;</span>
+<span class="lineNum">      56 </span><span class="lineCov">   15717027 :     if(ferror(fp)) err=true;</span>
+<span class="lineNum">      57 </span>            :   }
+<span class="lineNum">      58 </span><span class="lineCov">   15720546 :   return r;</span>
+<a name="59"><span class="lineNum">      59 </span>            : }</a>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineCov">     121495 : IFile&amp; IFile::advanceField() {</span>
+<span class="lineNum">      62 </span><span class="lineCov">     121495 :   plumed_assert(!inMiddleOfField);</span>
+<span class="lineNum">      63 </span><span class="lineCov">     121495 :   std::string line;</span>
+<span class="lineNum">      64 </span><span class="lineCov">     121495 :   bool done=false;</span>
+<span class="lineNum">      65 </span><span class="lineCov">     363910 :   while(!done) {</span>
+<span class="lineNum">      66 </span><span class="lineCov">     127221 :     getline(line);</span>
+<span class="lineNum">      67 </span><span class="lineCov">     127221 :     if(!*this) {return *this;}</span>
+<span class="lineNum">      68 </span><span class="lineCov">     120920 :     std::vector&lt;std::string&gt; words=Tools::getWords(line);</span>
+<span class="lineNum">      69 </span><span class="lineCov">     120920 :     if(words.size()&gt;=2 &amp;&amp; words[0]==&quot;#!&quot; &amp;&amp; words[1]==&quot;FIELDS&quot;) {</span>
+<span class="lineNum">      70 </span><span class="lineCov">        613 :       fields.clear();</span>
+<span class="lineNum">      71 </span><span class="lineCov">       3538 :       for(unsigned i=2; i&lt;words.size(); i++) {</span>
+<span class="lineNum">      72 </span><span class="lineCov">       2925 :         Field field;</span>
+<span class="lineNum">      73 </span><span class="lineCov">       2925 :         field.name=words[i];</span>
+<span class="lineNum">      74 </span><span class="lineCov">       2925 :         fields.push_back(field);</span>
+<span class="lineNum">      75 </span><span class="lineCov">       2925 :       }</span>
+<span class="lineNum">      76 </span><span class="lineCov">     120307 :     } else if(words.size()==4 &amp;&amp; words[0]==&quot;#!&quot; &amp;&amp; words[1]==&quot;SET&quot;) {</span>
+<span class="lineNum">      77 </span><span class="lineCov">       2868 :       Field field;</span>
+<span class="lineNum">      78 </span><span class="lineCov">       2868 :       field.name=words[2];</span>
+<span class="lineNum">      79 </span><span class="lineCov">       2868 :       field.value=words[3];</span>
+<span class="lineNum">      80 </span><span class="lineCov">       2868 :       field.constant=true;</span>
+<span class="lineNum">      81 </span><span class="lineCov">       2868 :       fields.push_back(field);</span>
+<span class="lineNum">      82 </span>            :     } else {
+<span class="lineNum">      83 </span><span class="lineCov">     117439 :       unsigned nf=0;</span>
+<span class="lineNum">      84 </span><span class="lineCov">     117439 :       for(unsigned i=0; i&lt;fields.size(); i++) if(!fields[i].constant) nf++;</span>
+<span class="lineNum">      85 </span><span class="lineCov">     117439 :       Tools::trimComments(line);</span>
+<span class="lineNum">      86 </span><span class="lineCov">     117439 :       words=Tools::getWords(line);</span>
+<span class="lineNum">      87 </span><span class="lineCov">     117439 :       if( words.size()==nf ) {</span>
+<span class="lineNum">      88 </span><span class="lineCov">     115194 :         unsigned j=0;</span>
+<span class="lineNum">      89 </span><span class="lineCov">    1458624 :         for(unsigned i=0; i&lt;fields.size(); i++) {</span>
+<span class="lineNum">      90 </span><span class="lineCov">    1343430 :           if(fields[i].constant) continue;</span>
+<span class="lineNum">      91 </span><span class="lineCov">     518719 :           fields[i].value=words[j];</span>
+<span class="lineNum">      92 </span><span class="lineCov">     518719 :           fields[i].read=false;</span>
+<span class="lineNum">      93 </span><span class="lineCov">     518719 :           j++;</span>
+<span class="lineNum">      94 </span>            :         }
+<span class="lineNum">      95 </span><span class="lineCov">     115194 :         done=true;</span>
+<span class="lineNum">      96 </span><span class="lineCov">       2245 :       } else if( !words.empty() ) {</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :         plumed_merror(&quot;file &quot; + getPath() + &quot;: mismatch between number of fields in file and expected number&quot;);</span>
+<span class="lineNum">      98 </span>            :       }
+<span class="lineNum">      99 </span>            :     }
+<span class="lineNum">     100 </span><span class="lineCov">     120920 :   }</span>
+<span class="lineNum">     101 </span><span class="lineCov">     115194 :   inMiddleOfField=true;</span>
+<span class="lineNum">     102 </span><span class="lineCov">     115194 :   return *this;</span>
+<a name="103"><span class="lineNum">     103 </span>            : }</a>
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span><span class="lineCov">        982 : IFile&amp; IFile::open(const std::string&amp;path) {</span>
+<span class="lineNum">     106 </span><span class="lineCov">        982 :   plumed_massert(!cloned,&quot;file &quot;+path+&quot; appears to be cloned&quot;);</span>
+<span class="lineNum">     107 </span><span class="lineCov">        982 :   eof=false;</span>
+<span class="lineNum">     108 </span><span class="lineCov">        982 :   err=false;</span>
+<span class="lineNum">     109 </span><span class="lineCov">        982 :   fp=NULL;</span>
+<span class="lineNum">     110 </span><span class="lineCov">        982 :   gzfp=NULL;</span>
+<span class="lineNum">     111 </span><span class="lineCov">        982 :   bool do_exist=FileExist(path);</span>
+<span class="lineNum">     112 </span><span class="lineCov">        982 :   plumed_massert(do_exist,&quot;file &quot; + path + &quot; cannot be found&quot;);</span>
+<span class="lineNum">     113 </span><span class="lineCov">        981 :   fp=std::fopen(const_cast&lt;char*&gt;(this-&gt;path.c_str()),&quot;r&quot;);</span>
+<span class="lineNum">     114 </span><span class="lineCov">        981 :   if(Tools::extension(this-&gt;path)==&quot;gz&quot;) {</span>
+<span class="lineNum">     115 </span>            : #ifdef __PLUMED_HAS_ZLIB
+<span class="lineNum">     116 </span><span class="lineCov">          6 :     gzfp=(void*)gzopen(const_cast&lt;char*&gt;(this-&gt;path.c_str()),&quot;r&quot;);</span>
+<span class="lineNum">     117 </span>            : #else
+<span class="lineNum">     118 </span>            :     plumed_merror(&quot;file &quot; + getPath() + &quot;: trying to use a gz file without zlib being linked&quot;);
+<span class="lineNum">     119 </span>            : #endif
+<span class="lineNum">     120 </span>            :   }
+<span class="lineNum">     121 </span><span class="lineCov">        981 :   if(plumed) plumed-&gt;insertFile(*this);</span>
+<span class="lineNum">     122 </span><span class="lineCov">        981 :   return *this;</span>
+<a name="123"><span class="lineNum">     123 </span>            : }</a>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span><span class="lineCov">      53824 : IFile&amp; IFile::scanFieldList(std::vector&lt;std::string&gt;&amp;s) {</span>
+<span class="lineNum">     126 </span><span class="lineCov">      53824 :   if(!inMiddleOfField) advanceField();</span>
+<span class="lineNum">     127 </span><span class="lineCov">      53824 :   if(!*this) return *this;</span>
+<span class="lineNum">     128 </span><span class="lineCov">      53748 :   s.clear();</span>
+<span class="lineNum">     129 </span><span class="lineCov">     650181 :   for(unsigned i=0; i&lt;fields.size(); i++)</span>
+<span class="lineNum">     130 </span><span class="lineCov">     596433 :     s.push_back(fields[i].name);</span>
+<span class="lineNum">     131 </span><span class="lineCov">      53748 :   return *this;</span>
+<a name="132"><span class="lineNum">     132 </span>            : }</a>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineCov">      53768 : bool IFile::FieldExist(const std::string&amp; s) {</span>
+<span class="lineNum">     135 </span><span class="lineCov">      53768 :   std::vector&lt;std::string&gt; slist;</span>
+<span class="lineNum">     136 </span><span class="lineCov">      53768 :   scanFieldList(slist);</span>
+<span class="lineNum">     137 </span><span class="lineCov">      53768 :   int mycount = (int) std::count(slist.begin(), slist.end(), s);</span>
+<span class="lineNum">     138 </span><span class="lineCov">      53768 :   if(mycount&gt;0) return true;</span>
+<span class="lineNum">     139 </span><span class="lineCov">      29066 :   else return false;</span>
+<a name="140"><span class="lineNum">     140 </span>            : }</a>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span><span class="lineCov">    1309959 : IFile&amp; IFile::scanField(const std::string&amp;name,std::string&amp;str) {</span>
+<span class="lineNum">     143 </span><span class="lineCov">    1309959 :   if(!inMiddleOfField) advanceField();</span>
+<span class="lineNum">     144 </span><span class="lineCov">    1309959 :   if(!*this) return *this;</span>
+<span class="lineNum">     145 </span><span class="lineCov">    1303734 :   unsigned i=findField(name);</span>
+<span class="lineNum">     146 </span><span class="lineCov">    1303734 :   str=fields[i].value;</span>
+<span class="lineNum">     147 </span><span class="lineCov">    1303734 :   fields[i].read=true;</span>
+<span class="lineNum">     148 </span><span class="lineCov">    1303734 :   return *this;</span>
+<a name="149"><span class="lineNum">     149 </span>            : }</a>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span><span class="lineCov">     496770 : IFile&amp; IFile::scanField(const std::string&amp;name,double &amp;x) {</span>
+<span class="lineNum">     152 </span><span class="lineCov">     496770 :   std::string str;</span>
+<span class="lineNum">     153 </span><span class="lineCov">     496770 :   scanField(name,str);</span>
+<span class="lineNum">     154 </span><span class="lineCov">     496770 :   if(*this) Tools::convert(str,x);</span>
+<span class="lineNum">     155 </span><span class="lineCov">     496770 :   return *this;</span>
+<a name="156"><span class="lineNum">     156 </span>            : }</a>
+<span class="lineNum">     157 </span>            : 
+<span class="lineNum">     158 </span><span class="lineCov">     204066 : IFile&amp; IFile::scanField(const std::string&amp;name,int &amp;x) {</span>
+<span class="lineNum">     159 </span><span class="lineCov">     204066 :   std::string str;</span>
+<span class="lineNum">     160 </span><span class="lineCov">     204066 :   scanField(name,str);</span>
+<span class="lineNum">     161 </span><span class="lineCov">     204066 :   if(*this) Tools::convert(str,x);</span>
+<span class="lineNum">     162 </span><span class="lineCov">     204066 :   return *this;</span>
+<a name="163"><span class="lineNum">     163 </span>            : }</a>
+<span class="lineNum">     164 </span>            : 
+<span class="lineNum">     165 </span><span class="lineCov">      14609 : IFile&amp; IFile::scanField(Value* val) {</span>
+<span class="lineNum">     166 </span><span class="lineCov">      14609 :   double ff=NAN; // this is to be sure a NAN value is replaced upon failure</span>
+<span class="lineNum">     167 </span><span class="lineCov">      14609 :   scanField(  val-&gt;getName(), ff );</span>
+<span class="lineNum">     168 </span><span class="lineCov">      14609 :   val-&gt;set( ff );</span>
+<span class="lineNum">     169 </span><span class="lineCov">      14609 :   if( FieldExist(&quot;min_&quot; + val-&gt;getName() ) ) {</span>
+<span class="lineNum">     170 </span><span class="lineCov">       6618 :     std::string min, max;</span>
+<span class="lineNum">     171 </span><span class="lineCov">       3309 :     scanField(&quot;min_&quot; + val-&gt;getName(), min );</span>
+<span class="lineNum">     172 </span><span class="lineCov">       3309 :     scanField(&quot;max_&quot; + val-&gt;getName(), max );</span>
+<span class="lineNum">     173 </span><span class="lineCov">       6618 :     val-&gt;setDomain( min, max );</span>
+<span class="lineNum">     174 </span>            :   } else {
+<span class="lineNum">     175 </span><span class="lineCov">      11300 :     val-&gt;setNotPeriodic();</span>
+<span class="lineNum">     176 </span>            :   }
+<span class="lineNum">     177 </span><span class="lineCov">      14609 :   return *this;</span>
+<a name="178"><span class="lineNum">     178 </span>            : }</a>
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span><span class="lineCov">     115199 : IFile&amp; IFile::scanField() {</span>
+<span class="lineNum">     181 </span><span class="lineCov">     115199 :   if(!ignoreFields) {</span>
+<span class="lineNum">     182 </span><span class="lineCov">    1286203 :     for(unsigned i=0; i&lt;fields.size(); i++) {</span>
+<span class="lineNum">     183 </span><span class="lineCov">    1185633 :       plumed_massert(fields[i].read,&quot;field &quot;+fields[i].name+&quot; was not read: all the fields need to be read otherwise you could miss important infos&quot; );</span>
+<span class="lineNum">     184 </span>            :     }
+<span class="lineNum">     185 </span>            :   }
+<span class="lineNum">     186 </span><span class="lineCov">     115199 :   inMiddleOfField=false;</span>
+<span class="lineNum">     187 </span><span class="lineCov">     115199 :   return *this;</span>
+<a name="188"><span class="lineNum">     188 </span>            : }</a>
+<span class="lineNum">     189 </span>            : 
+<span class="lineNum">     190 </span><span class="lineCov">       1211 : IFile::IFile():</span>
+<span class="lineNum">     191 </span>            :   inMiddleOfField(false),
+<span class="lineNum">     192 </span>            :   ignoreFields(false),
+<span class="lineNum">     193 </span><span class="lineCov">       1211 :   noEOL(false)</span>
+<span class="lineNum">     194 </span>            : {
+<a name="195"><span class="lineNum">     195 </span><span class="lineCov">       1211 : }</span></a>
+<span class="lineNum">     196 </span>            : 
+<span class="lineNum">     197 </span><span class="lineCov">       3921 : IFile::~IFile() {</span>
+<span class="lineNum">     198 </span><span class="lineCov">       1211 :   if(inMiddleOfField) std::cerr&lt;&lt;&quot;WARNING: IFile closed in the middle of reading. seems strange!\n&quot;;</span>
+<a name="199"><span class="lineNum">     199 </span><span class="lineCov">       2710 : }</span></a>
+<span class="lineNum">     200 </span>            : 
+<span class="lineNum">     201 </span><span class="lineCov">     250317 : IFile&amp; IFile::getline(std::string &amp;str) {</span>
+<span class="lineNum">     202 </span><span class="lineCov">     250317 :   char tmp=0;</span>
+<span class="lineNum">     203 </span><span class="lineCov">     250317 :   str=&quot;&quot;;</span>
+<span class="lineNum">     204 </span>            :   fpos_t pos;
+<span class="lineNum">     205 </span><span class="lineCov">     250317 :   fgetpos(fp,&amp;pos);</span>
+<span class="lineNum">     206 </span><span class="lineCov">   15970858 :   while(llread(&amp;tmp,1)==1 &amp;&amp; tmp &amp;&amp; tmp!='\n' &amp;&amp; tmp!='\r' &amp;&amp; !eof &amp;&amp; !err) {</span>
+<span class="lineNum">     207 </span><span class="lineCov">   15470224 :     str+=tmp;</span>
+<span class="lineNum">     208 </span>            :   }
+<span class="lineNum">     209 </span><span class="lineCov">     250317 :   if(tmp=='\r') {</span>
+<span class="lineNum">     210 </span><span class="lineCov">          5 :     llread(&amp;tmp,1);</span>
+<span class="lineNum">     211 </span><span class="lineCov">          5 :     plumed_massert(tmp=='\n',&quot;plumed only accepts \\n (unix) or \\r\\n (dos) new lines&quot;);</span>
+<span class="lineNum">     212 </span>            :   }
+<span class="lineNum">     213 </span><span class="lineCov">     250317 :   if(eof &amp;&amp; noEOL) {</span>
+<span class="lineNum">     214 </span><span class="lineCov">        643 :     if(str.length()&gt;0) eof=false;</span>
+<span class="lineNum">     215 </span><span class="lineCov">     249674 :   } else if(eof || err || tmp!='\n') {</span>
+<span class="lineNum">     216 </span><span class="lineCov">       6314 :     eof = true;</span>
+<span class="lineNum">     217 </span><span class="lineCov">       6314 :     str=&quot;&quot;;</span>
+<span class="lineNum">     218 </span><span class="lineCov">       6314 :     if(!err) fsetpos(fp,&amp;pos);</span>
+<span class="lineNum">     219 </span>            : // there was a fsetpos here that apparently is not necessary
+<span class="lineNum">     220 </span>            : //  fsetpos(fp,&amp;pos);
+<span class="lineNum">     221 </span>            : // I think it was necessary to have rewind working correctly
+<span class="lineNum">     222 </span>            : // after end of file. Since rewind is not used now anywhere,
+<span class="lineNum">     223 </span>            : // it should be ok not to reset position.
+<span class="lineNum">     224 </span>            : // This is necessary so that eof works properly for emacs files
+<span class="lineNum">     225 </span>            : // with no endline at end of file.
+<span class="lineNum">     226 </span>            :   }
+<span class="lineNum">     227 </span><span class="lineCov">     250317 :   return *this;</span>
+<a name="228"><span class="lineNum">     228 </span>            : }</a>
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span><span class="lineCov">    1303734 : unsigned IFile::findField(const std::string&amp;name)const {</span>
+<span class="lineNum">     231 </span>            :   unsigned i;
+<span class="lineNum">     232 </span><span class="lineCov">    1303734 :   for(i=0; i&lt;fields.size(); i++) if(fields[i].name==name) break;</span>
+<span class="lineNum">     233 </span><span class="lineCov">    1303734 :   if(i&gt;=fields.size()) {</span>
+<span class="lineNum">     234 </span><span class="lineNoCov">          0 :     plumed_merror(&quot;file &quot; + getPath() + &quot;: field &quot; + name + &quot; cannot be found&quot;);</span>
+<span class="lineNum">     235 </span>            :   }
+<span class="lineNum">     236 </span><span class="lineCov">    1303734 :   return i;</span>
+<a name="237"><span class="lineNum">     237 </span>            : }</a>
+<span class="lineNum">     238 </span>            : 
+<span class="lineNum">     239 </span><span class="lineCov">       6099 : void IFile::reset(bool reset) {</span>
+<span class="lineNum">     240 </span><span class="lineCov">       6099 :   eof = reset;</span>
+<span class="lineNum">     241 </span><span class="lineCov">       6099 :   err = reset;</span>
+<span class="lineNum">     242 </span><span class="lineCov">       6099 :   if(!reset &amp;&amp; fp) clearerr(fp);</span>
+<span class="lineNum">     243 </span>            : #ifdef __PLUMED_HAS_ZLIB
+<span class="lineNum">     244 </span><span class="lineCov">       6099 :   if(!reset &amp;&amp; gzfp) gzclearerr(gzFile(gzfp));</span>
+<span class="lineNum">     245 </span>            : #endif
+<span class="lineNum">     246 </span><span class="lineCov">       6099 :   return;</span>
+<a name="247"><span class="lineNum">     247 </span>            : }</a>
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span><span class="lineCov">       5739 : void IFile::allowIgnoredFields() {</span>
+<span class="lineNum">     250 </span><span class="lineCov">       5739 :   ignoreFields=true;</span>
+<a name="251"><span class="lineNum">     251 </span><span class="lineCov">       5739 : }</span></a>
+<span class="lineNum">     252 </span>            : 
+<span class="lineNum">     253 </span><span class="lineCov">        658 : void IFile::allowNoEOL() {</span>
+<span class="lineNum">     254 </span><span class="lineCov">        658 :   noEOL=true;</span>
+<a name="255"><span class="lineNum">     255 </span><span class="lineCov">        658 : }</span></a>
+<span class="lineNum">     256 </span>            : 
+<span class="lineNum">     257 </span><span class="lineCov">       5415 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

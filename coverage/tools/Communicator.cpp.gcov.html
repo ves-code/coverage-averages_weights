@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - tools/Communicator.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tools</a> - Communicator.cpp<span style="font-size: 80%;"> (source / <a href="Communicator.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">83</td>
+            <td class="headerCovTableEntry">101</td>
+            <td class="headerCovTableEntryMed">82.2 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">26</td>
+            <td class="headerCovTableEntry">31</td>
+            <td class="headerCovTableEntryMed">83.9 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2012-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #include &quot;Communicator.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;Exception.h&quot;
+<span class="lineNum">      24 </span>            : #include &lt;cstdlib&gt;
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : using namespace std;
+<span class="lineNum">      27 </span>            : 
+<a name="28"><span class="lineNum">      28 </span>            : namespace PLMD {</a>
+<span class="lineNum">      29 </span>            : 
+<span class="lineNum">      30 </span><span class="lineCov">      11062 : Communicator::Communicator()</span>
+<span class="lineNum">      31 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      32 </span><span class="lineCov">      11062 :   : communicator(MPI_COMM_SELF)</span>
+<span class="lineNum">      33 </span>            : #endif
+<span class="lineNum">      34 </span>            : {
+<span class="lineNum">      35 </span><span class="lineCov">      11062 : }</span>
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span>            : // cppcheck complains about this:
+<span class="lineNum">      38 </span>            : // Member variable 'Communicator::communicator' is not initialized in the constructor
+<a name="39"><span class="lineNum">      39 </span>            : // this is a false positive so I suppress it</a>
+<span class="lineNum">      40 </span>            : // cppcheck-suppress uninitMemberVar
+<span class="lineNum">      41 </span><span class="lineNoCov">          0 : Communicator::Communicator(const Communicator&amp;pc) {</span>
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 :   Set_comm(pc.communicator);</span>
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 : }</span>
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span>            : Communicator::Status Communicator::StatusIgnore;
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : // cppcheck complains about this:
+<span class="lineNum">      48 </span>            : // Member variable 'Communicator::communicator' is not assigned a value in 'Communicator::operator='
+<a name="49"><span class="lineNum">      49 </span>            : // this is a false positive so I suppress it</a>
+<span class="lineNum">      50 </span>            : // cppcheck-suppress operatorEqVarError
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 : Communicator&amp; Communicator::operator=(const Communicator&amp;pc) {</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :   if (this != &amp;pc) {</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :     Set_comm(pc.communicator);</span>
+<span class="lineNum">      54 </span>            :   }
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :   return *this;</span>
+<a name="56"><span class="lineNum">      56 </span>            : }</a>
+<span class="lineNum">      57 </span>            : 
+<span class="lineNum">      58 </span><span class="lineCov">    6078939 : int Communicator::Get_rank()const {</span>
+<span class="lineNum">      59 </span><span class="lineCov">    6078939 :   int r=0;</span>
+<span class="lineNum">      60 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      61 </span><span class="lineCov">    6078939 :   if(initialized()) MPI_Comm_rank(communicator,&amp;r);</span>
+<span class="lineNum">      62 </span>            : #endif
+<span class="lineNum">      63 </span><span class="lineCov">    6078939 :   return r;</span>
+<a name="64"><span class="lineNum">      64 </span>            : }</a>
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span><span class="lineCov">    2269989 : int Communicator::Get_size()const {</span>
+<span class="lineNum">      67 </span><span class="lineCov">    2269989 :   int s=1;</span>
+<span class="lineNum">      68 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      69 </span><span class="lineCov">    2269989 :   if(initialized()) MPI_Comm_size(communicator,&amp;s);</span>
+<span class="lineNum">      70 </span>            : #endif
+<span class="lineNum">      71 </span><span class="lineCov">    2269989 :   return s;</span>
+<a name="72"><span class="lineNum">      72 </span>            : }</a>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineCov">       1943 : void Communicator::Set_comm(MPI_Comm c) {</span>
+<span class="lineNum">      75 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      76 </span><span class="lineCov">       1943 :   if(initialized()) {</span>
+<span class="lineNum">      77 </span><span class="lineCov">       1612 :     if(communicator!=MPI_COMM_SELF &amp;&amp; communicator!=MPI_COMM_WORLD) MPI_Comm_free(&amp;communicator);</span>
+<span class="lineNum">      78 </span><span class="lineCov">       1612 :     if(c!=MPI_COMM_SELF) MPI_Comm_dup(c,&amp;communicator);</span>
+<span class="lineNum">      79 </span>            :   }
+<span class="lineNum">      80 </span>            : #else
+<span class="lineNum">      81 </span>            :   (void) c;
+<span class="lineNum">      82 </span>            : #endif
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">       1943 : }</span></a>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineCov">      18283 : Communicator::~Communicator() {</span>
+<span class="lineNum">      86 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      87 </span><span class="lineCov">      11062 :   if(initialized() &amp;&amp; communicator!=MPI_COMM_SELF &amp;&amp; communicator!=MPI_COMM_WORLD) MPI_Comm_free(&amp;communicator);</span>
+<span class="lineNum">      88 </span>            : #endif
+<a name="89"><span class="lineNum">      89 </span><span class="lineCov">      18283 : }</span></a>
+<span class="lineNum">      90 </span>            : 
+<span class="lineNum">      91 </span><span class="lineCov">       1221 : void Communicator::Set_comm(void*val) {</span>
+<span class="lineNum">      92 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">      93 </span><span class="lineCov">       1221 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">      94 </span><span class="lineCov">       1221 :   if(val) Set_comm(*(MPI_Comm*)val);</span>
+<span class="lineNum">      95 </span>            : #else
+<span class="lineNum">      96 </span>            :   (void) val;
+<span class="lineNum">      97 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">      98 </span>            : #endif
+<a name="99"><span class="lineNum">      99 </span><span class="lineCov">       1221 : }</span></a>
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 : void Communicator::Set_fcomm(void*val) {</span>
+<span class="lineNum">     102 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     103 </span><span class="lineNoCov">          0 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     104 </span><span class="lineNoCov">          0 :   if(val) {</span>
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :     MPI_Comm comm=MPI_Comm_f2c(*(MPI_Fint*)val);</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :     Set_comm(comm);</span>
+<span class="lineNum">     107 </span>            :   }
+<span class="lineNum">     108 </span>            : #else
+<span class="lineNum">     109 </span>            :   (void) val;
+<span class="lineNum">     110 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     111 </span>            : #endif
+<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineNoCov">          0 : void Communicator::Abort(int errorcode) {</span>
+<span class="lineNum">     115 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     116 </span><span class="lineNoCov">          0 :   if(initialized()) {</span>
+<span class="lineNum">     117 </span><span class="lineNoCov">          0 :     MPI_Abort(communicator,errorcode);</span>
+<span class="lineNum">     118 </span>            :   }
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :   std::exit(errorcode);</span>
+<span class="lineNum">     120 </span>            : #else
+<span class="lineNum">     121 </span>            :   std::exit(errorcode);
+<span class="lineNum">     122 </span>            : #endif
+<a name="123"><span class="lineNum">     123 </span>            : }</a>
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span><span class="lineCov">    4132443 : void Communicator::Bcast(Data data,int root) {</span>
+<span class="lineNum">     126 </span>            : #if defined(__PLUMED_HAS_MPI)
+<span class="lineNum">     127 </span><span class="lineCov">    4132443 :   if(initialized()) MPI_Bcast(data.pointer,data.size,data.type,root,communicator);</span>
+<span class="lineNum">     128 </span>            : #else
+<span class="lineNum">     129 </span>            :   (void) data;
+<span class="lineNum">     130 </span>            :   (void) root;
+<span class="lineNum">     131 </span>            : #endif
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">    4132443 : }</span></a>
+<span class="lineNum">     133 </span>            : 
+<span class="lineNum">     134 </span><span class="lineCov">    3917814 : void Communicator::Sum(Data data) {</span>
+<span class="lineNum">     135 </span>            : #if defined(__PLUMED_HAS_MPI)
+<span class="lineNum">     136 </span><span class="lineCov">    3917814 :   if(initialized()) MPI_Allreduce(MPI_IN_PLACE,data.pointer,data.size,data.type,MPI_SUM,communicator);</span>
+<span class="lineNum">     137 </span>            : #else
+<span class="lineNum">     138 </span>            :   (void) data;
+<span class="lineNum">     139 </span>            : #endif
+<a name="140"><span class="lineNum">     140 </span><span class="lineCov">    3917814 : }</span></a>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span><span class="lineCov">      15206 : Communicator::Request Communicator::Isend(ConstData data,int source,int tag) {</span>
+<span class="lineNum">     143 </span>            :   Request req;
+<span class="lineNum">     144 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     145 </span><span class="lineCov">      15206 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     146 </span><span class="lineCov">      15206 :   void*s=const_cast&lt;void*&gt;((const void*)data.pointer);</span>
+<span class="lineNum">     147 </span><span class="lineCov">      15206 :   MPI_Isend(s,data.size,data.type,source,tag,communicator,&amp;req.r);</span>
+<span class="lineNum">     148 </span>            : #else
+<span class="lineNum">     149 </span>            :   (void) data;
+<span class="lineNum">     150 </span>            :   (void) source;
+<span class="lineNum">     151 </span>            :   (void) tag;
+<span class="lineNum">     152 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     153 </span>            : #endif
+<span class="lineNum">     154 </span><span class="lineCov">      15206 :   return req;</span>
+<a name="155"><span class="lineNum">     155 </span>            : }</a>
+<span class="lineNum">     156 </span>            : 
+<span class="lineNum">     157 </span><span class="lineCov">       2270 : void Communicator::Allgatherv(ConstData in,Data out,const int*recvcounts,const int*displs) {</span>
+<span class="lineNum">     158 </span>            : #if defined(__PLUMED_HAS_MPI)
+<span class="lineNum">     159 </span><span class="lineCov">       2270 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     160 </span><span class="lineCov">       2270 :   void*s=const_cast&lt;void*&gt;((const void*)in.pointer);</span>
+<span class="lineNum">     161 </span><span class="lineCov">       2270 :   void*r=const_cast&lt;void*&gt;((const void*)out.pointer);</span>
+<span class="lineNum">     162 </span><span class="lineCov">       2270 :   int*rc=const_cast&lt;int*&gt;(recvcounts);</span>
+<span class="lineNum">     163 </span><span class="lineCov">       2270 :   int*di=const_cast&lt;int*&gt;(displs);</span>
+<span class="lineNum">     164 </span><span class="lineCov">       2270 :   if(s==NULL)s=MPI_IN_PLACE;</span>
+<span class="lineNum">     165 </span><span class="lineCov">       2270 :   MPI_Allgatherv(s,in.size,in.type,r,rc,di,out.type,communicator);</span>
+<span class="lineNum">     166 </span>            : #else
+<span class="lineNum">     167 </span>            :   (void) in;
+<span class="lineNum">     168 </span>            :   (void) out;
+<span class="lineNum">     169 </span>            :   (void) recvcounts;
+<span class="lineNum">     170 </span>            :   (void) displs;
+<span class="lineNum">     171 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     172 </span>            : #endif
+<a name="173"><span class="lineNum">     173 </span><span class="lineCov">       2270 : }</span></a>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineCov">      22979 : void Communicator::Allgather(ConstData in,Data out) {</span>
+<span class="lineNum">     176 </span>            : #if defined(__PLUMED_HAS_MPI)
+<span class="lineNum">     177 </span><span class="lineCov">      22979 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     178 </span><span class="lineCov">      22979 :   void*s=const_cast&lt;void*&gt;((const void*)in.pointer);</span>
+<span class="lineNum">     179 </span><span class="lineCov">      22979 :   void*r=const_cast&lt;void*&gt;((const void*)out.pointer);</span>
+<span class="lineNum">     180 </span><span class="lineCov">      22979 :   if(s==NULL)s=MPI_IN_PLACE;</span>
+<span class="lineNum">     181 </span><span class="lineCov">      22979 :   MPI_Allgather(s,in.size,in.type,r,out.size/Get_size(),out.type,communicator);</span>
+<span class="lineNum">     182 </span>            : #else
+<span class="lineNum">     183 </span>            :   (void) in;
+<span class="lineNum">     184 </span>            :   (void) out;
+<span class="lineNum">     185 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     186 </span>            : #endif
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">      22979 : }</span></a>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineCov">      15206 : void Communicator::Recv(Data data,int source,int tag,Status&amp;status) {</span>
+<span class="lineNum">     190 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     191 </span><span class="lineCov">      15206 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     192 </span><span class="lineCov">      15206 :   if(&amp;status==&amp;StatusIgnore) MPI_Recv(data.pointer,data.size,data.type,source,tag,communicator,MPI_STATUS_IGNORE);</span>
+<span class="lineNum">     193 </span><span class="lineCov">       7541 :   else                       MPI_Recv(data.pointer,data.size,data.type,source,tag,communicator,&amp;status.s);</span>
+<span class="lineNum">     194 </span>            : #else
+<span class="lineNum">     195 </span>            :   (void) data;
+<span class="lineNum">     196 </span>            :   (void) source;
+<span class="lineNum">     197 </span>            :   (void) tag;
+<span class="lineNum">     198 </span>            :   (void) status;
+<span class="lineNum">     199 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     200 </span>            : #endif
+<span class="lineNum">     201 </span><span class="lineCov">      15206 : }</span>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span>            : 
+<a name="205"><span class="lineNum">     205 </span>            : </a>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineCov">    4039085 : void Communicator::Barrier()const {</span>
+<span class="lineNum">     208 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     209 </span><span class="lineCov">    4039085 :   if(initialized()) MPI_Barrier(communicator);</span>
+<span class="lineNum">     210 </span>            : #endif
+<a name="211"><span class="lineNum">     211 </span><span class="lineCov">    4039085 : }</span></a>
+<span class="lineNum">     212 </span>            : 
+<span class="lineNum">     213 </span><span class="lineCov">       1375 : MPI_Comm &amp; Communicator::Get_comm() {</span>
+<span class="lineNum">     214 </span><span class="lineCov">       1375 :   return communicator;</span>
+<a name="215"><span class="lineNum">     215 </span>            : }</a>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span><span class="lineCov">   20531617 : bool Communicator::initialized() {</span>
+<span class="lineNum">     218 </span>            : #if defined(__PLUMED_HAS_MPI)
+<span class="lineNum">     219 </span><span class="lineCov">   20531617 :   int flag=0;</span>
+<span class="lineNum">     220 </span><span class="lineCov">   20531617 :   MPI_Initialized(&amp;flag);</span>
+<span class="lineNum">     221 </span><span class="lineCov">   20531617 :   if(flag) return true;</span>
+<span class="lineNum">     222 </span><span class="lineCov">   11743337 :   else return false;</span>
+<span class="lineNum">     223 </span>            : #endif
+<span class="lineNum">     224 </span>            :   return false;
+<a name="225"><span class="lineNum">     225 </span>            : }</a>
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span><span class="lineCov">      14814 : void Communicator::Request::wait(Status&amp;s) {</span>
+<span class="lineNum">     228 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     229 </span><span class="lineCov">      14814 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     230 </span><span class="lineCov">      14814 :   if(&amp;s==&amp;StatusIgnore) MPI_Wait(&amp;r,MPI_STATUS_IGNORE);</span>
+<span class="lineNum">     231 </span><span class="lineCov">          1 :   else MPI_Wait(&amp;r,&amp;s.s);</span>
+<span class="lineNum">     232 </span>            : #else
+<span class="lineNum">     233 </span>            :   (void) s;
+<span class="lineNum">     234 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     235 </span>            : #endif
+<span class="lineNum">     236 </span><span class="lineCov">      14814 : }</span>
+<a name="237"><span class="lineNum">     237 </span>            : </a>
+<a name="238"><span class="lineNum">     238 </span>            : #ifdef __PLUMED_HAS_MPI</a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;float&gt;() { return MPI_FLOAT;}</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineCov">    4059673 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;double&gt;() { return MPI_DOUBLE;}</span></a>
+<a name="241"><span class="lineNum">     241 </span><span class="lineCov">      33307 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;int&gt;()   { return MPI_INT;}</span></a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineCov">        234 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;char&gt;()   { return MPI_CHAR;}</span></a>
+<span class="lineNum">     243 </span><span class="lineCov">      10876 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;unsigned&gt;()   { return MPI_UNSIGNED;}</span>
+<span class="lineNum">     244 </span><span class="lineCov">    4034618 : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;long unsigned&gt;()   { return MPI_UNSIGNED_LONG;}</span>
+<span class="lineNum">     245 </span>            : #else
+<span class="lineNum">     246 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;float&gt;() { return MPI_Datatype();}
+<span class="lineNum">     247 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;double&gt;() { return MPI_Datatype();}
+<span class="lineNum">     248 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;int&gt;() { return MPI_Datatype();}
+<span class="lineNum">     249 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;char&gt;() { return MPI_Datatype();}
+<span class="lineNum">     250 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;unsigned&gt;() { return MPI_Datatype();}
+<span class="lineNum">     251 </span>            : template&lt;&gt; MPI_Datatype Communicator::getMPIType&lt;long unsigned&gt;() { return MPI_Datatype();}
+<span class="lineNum">     252 </span>            : #endif
+<a name="253"><span class="lineNum">     253 </span>            : </a>
+<span class="lineNum">     254 </span>            : 
+<span class="lineNum">     255 </span><span class="lineCov">        398 : void Communicator::Split(int color,int key,Communicator&amp;pc)const {</span>
+<span class="lineNum">     256 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     257 </span><span class="lineCov">        398 :   MPI_Comm_split(communicator,color,key,&amp;pc.communicator);</span>
+<span class="lineNum">     258 </span>            : #else
+<span class="lineNum">     259 </span>            :   (void) color;
+<span class="lineNum">     260 </span>            :   (void) key;
+<span class="lineNum">     261 </span>            :   (void) pc;
+<span class="lineNum">     262 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     263 </span>            : #endif
+<a name="264"><span class="lineNum">     264 </span><span class="lineCov">        398 : }</span></a>
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span><span class="lineCov">       7541 : int Communicator::Status::Get_count(MPI_Datatype type)const {</span>
+<span class="lineNum">     267 </span>            :   int i;
+<span class="lineNum">     268 </span>            : #ifdef __PLUMED_HAS_MPI
+<span class="lineNum">     269 </span><span class="lineCov">       7541 :   plumed_massert(initialized(),&quot;you are trying to use an MPI function, but MPI is not initialized&quot;);</span>
+<span class="lineNum">     270 </span><span class="lineCov">       7541 :   MPI_Get_count(const_cast&lt;MPI_Status*&gt;(&amp;s),type,&amp;i);</span>
+<span class="lineNum">     271 </span>            : #else
+<span class="lineNum">     272 </span>            :   i=0;
+<span class="lineNum">     273 </span>            :   plumed_merror(&quot;you are trying to use an MPI function, but PLUMED has been compiled without MPI support&quot;);
+<span class="lineNum">     274 </span>            : #endif
+<span class="lineNum">     275 </span><span class="lineCov">       7541 :   return i;</span>
+<a name="276"><span class="lineNum">     276 </span>            : }</a>
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span><span class="lineCov">       5415 : }</span>
+<span class="lineNum">     279 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

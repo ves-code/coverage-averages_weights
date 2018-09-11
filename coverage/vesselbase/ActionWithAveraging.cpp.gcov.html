@@ -1,0 +1,277 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - vesselbase/ActionWithAveraging.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">vesselbase</a> - ActionWithAveraging.cpp<span style="font-size: 80%;"> (source / <a href="ActionWithAveraging.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">104</td>
+            <td class="headerCovTableEntry">110</td>
+            <td class="headerCovTableEntryHi">94.5 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntryMed">81.2 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2016-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #include &quot;ActionWithAveraging.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;analysis/DataCollectionObject.h&quot;
+<span class="lineNum">      24 </span>            : #include &quot;analysis/ReadAnalysisFrames.h&quot;
+<span class="lineNum">      25 </span>            : #include &quot;core/PlumedMain.h&quot;
+<span class="lineNum">      26 </span>            : #include &quot;core/ActionSet.h&quot;
+<span class="lineNum">      27 </span>            : #include &quot;bias/ReweightBase.h&quot;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace PLMD {
+<a name="30"><span class="lineNum">      30 </span>            : namespace vesselbase {</a>
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span><span class="lineCov">        125 : void ActionWithAveraging::registerKeywords( Keywords&amp; keys ) {</span>
+<span class="lineNum">      33 </span><span class="lineCov">        125 :   Action::registerKeywords( keys ); ActionPilot::registerKeywords( keys ); ActionAtomistic::registerKeywords( keys );</span>
+<span class="lineNum">      34 </span><span class="lineCov">        125 :   ActionWithArguments::registerKeywords( keys ); ActionWithValue::registerKeywords( keys ); ActionWithVessel::registerKeywords( keys );</span>
+<span class="lineNum">      35 </span><span class="lineCov">        125 :   keys.add(&quot;compulsory&quot;,&quot;STRIDE&quot;,&quot;1&quot;,&quot;the frequency with which the data should be collected and added to the quantity being averaged&quot;);</span>
+<span class="lineNum">      36 </span>            :   keys.add(&quot;compulsory&quot;,&quot;CLEAR&quot;,&quot;0&quot;,&quot;the frequency with which to clear all the accumulated data.  The default value &quot;
+<span class="lineNum">      37 </span><span class="lineCov">        125 :            &quot;of 0 implies that all the data will be used and that the grid will never be cleared&quot;);</span>
+<span class="lineNum">      38 </span><span class="lineCov">        125 :   keys.add(&quot;optional&quot;,&quot;LOGWEIGHTS&quot;,&quot;list of actions that calculates log weights that should be used to weight configurations when calculating averages&quot;);</span>
+<span class="lineNum">      39 </span><span class="lineCov">        125 :   keys.add(&quot;compulsory&quot;,&quot;NORMALIZATION&quot;,&quot;true&quot;,&quot;This controls how the data is normalized it can be set equal to true, false or ndata.  The differences between these options are explained in the manual page for \\ref HISTOGRAM&quot;);</span>
+<span class="lineNum">      40 </span><span class="lineCov">        125 :   keys.remove(&quot;NUMERICAL_DERIVATIVES&quot;);</span>
+<a name="41"><span class="lineNum">      41 </span><span class="lineCov">        125 : }</span></a>
+<span class="lineNum">      42 </span>            : 
+<span class="lineNum">      43 </span><span class="lineCov">        115 : ActionWithAveraging::ActionWithAveraging( const ActionOptions&amp; ao ):</span>
+<span class="lineNum">      44 </span>            :   Action(ao),
+<span class="lineNum">      45 </span>            :   ActionPilot(ao),
+<span class="lineNum">      46 </span>            :   ActionAtomistic(ao),
+<span class="lineNum">      47 </span>            :   ActionWithArguments(ao),
+<span class="lineNum">      48 </span>            :   ActionWithValue(ao),
+<span class="lineNum">      49 </span>            :   ActionWithVessel(ao),
+<span class="lineNum">      50 </span>            :   myaverage(NULL),
+<span class="lineNum">      51 </span>            :   activated(false),
+<span class="lineNum">      52 </span>            :   my_analysis_object(NULL),
+<span class="lineNum">      53 </span>            :   normalization(t),
+<span class="lineNum">      54 </span>            :   useRunAllTasks(false),
+<span class="lineNum">      55 </span>            :   clearstride(0),
+<span class="lineNum">      56 </span><span class="lineCov">        115 :   lweight(0),cweight(0)</span>
+<span class="lineNum">      57 </span>            : {
+<span class="lineNum">      58 </span><span class="lineCov">        115 :   if( keywords.exists(&quot;CLEAR&quot;) ) {</span>
+<span class="lineNum">      59 </span><span class="lineCov">         78 :     parse(&quot;CLEAR&quot;,clearstride);</span>
+<span class="lineNum">      60 </span><span class="lineCov">         78 :     if( clearstride&gt;0 ) {</span>
+<span class="lineNum">      61 </span><span class="lineCov">         12 :       if( clearstride%getStride()!=0 ) error(&quot;CLEAR parameter must be a multiple of STRIDE&quot;);</span>
+<span class="lineNum">      62 </span><span class="lineCov">         12 :       log.printf(&quot;  clearing grid every %u steps \n&quot;,clearstride);</span>
+<span class="lineNum">      63 </span>            :     }
+<span class="lineNum">      64 </span>            :   }
+<span class="lineNum">      65 </span><span class="lineCov">        115 :   if( getNumberOfArguments()&gt;0 ) {</span>
+<span class="lineNum">      66 </span><span class="lineCov">         51 :     my_analysis_object=dynamic_cast&lt;analysis::AnalysisBase*&gt;( getPntrToArgument(0)-&gt;getPntrToAction() );</span>
+<span class="lineNum">      67 </span><span class="lineCov">         59 :     for(unsigned i=1; i&lt;getNumberOfArguments(); i++) {</span>
+<span class="lineNum">      68 </span><span class="lineCov">          8 :       if( my_analysis_object &amp;&amp; my_analysis_object-&gt;getLabel()!=(getPntrToArgument(i)-&gt;getPntrToAction())-&gt;getLabel() ) {</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :         error(&quot;all arguments should be from one single analysis object&quot;);</span>
+<span class="lineNum">      70 </span>            :       }
+<span class="lineNum">      71 </span>            :     }
+<span class="lineNum">      72 </span><span class="lineCov">         51 :     if( my_analysis_object ) {</span>
+<span class="lineNum">      73 </span><span class="lineCov">         33 :       if( getStride()!=1 ) error(&quot;stride should not have been set when calculating average from analysis data&quot;);</span>
+<span class="lineNum">      74 </span><span class="lineCov">         33 :       setStride(0); addDependency( my_analysis_object );</span>
+<span class="lineNum">      75 </span>            :     }
+<span class="lineNum">      76 </span>            :   }
+<span class="lineNum">      77 </span><span class="lineCov">        115 :   if( keywords.exists(&quot;LOGWEIGHTS&quot;) ) {</span>
+<span class="lineNum">      78 </span><span class="lineCov">         78 :     std::vector&lt;std::string&gt; wwstr; parseVector(&quot;LOGWEIGHTS&quot;,wwstr);</span>
+<span class="lineNum">      79 </span><span class="lineCov">         78 :     if( wwstr.size()&gt;0 ) log.printf(&quot;  reweighting using weights from &quot;);</span>
+<span class="lineNum">      80 </span><span class="lineCov">        156 :     std::vector&lt;Value*&gt; arg( getArguments() );</span>
+<span class="lineNum">      81 </span><span class="lineCov">         83 :     for(unsigned i=0; i&lt;wwstr.size(); ++i) {</span>
+<span class="lineNum">      82 </span><span class="lineCov">          5 :       ActionWithValue* val = plumed.getActionSet().selectWithLabel&lt;ActionWithValue*&gt;(wwstr[i]);</span>
+<span class="lineNum">      83 </span><span class="lineCov">          5 :       if( !val ) error(&quot;could not find value named&quot;);</span>
+<span class="lineNum">      84 </span><span class="lineCov">          5 :       bias::ReweightBase* iswham=dynamic_cast&lt;bias::ReweightBase*&gt;( val );</span>
+<span class="lineNum">      85 </span><span class="lineCov">          5 :       if( iswham-&gt;buildsWeightStore() ) error(&quot;to use wham you must gather data using COLLECT_FRAMES&quot;);</span>
+<span class="lineNum">      86 </span><span class="lineCov">          5 :       weights.push_back( val-&gt;copyOutput(val-&gt;getLabel()) );</span>
+<span class="lineNum">      87 </span><span class="lineCov">          5 :       arg.push_back( val-&gt;copyOutput(val-&gt;getLabel()) );</span>
+<span class="lineNum">      88 </span><span class="lineCov">          5 :       log.printf(&quot;%s &quot;,wwstr[i].c_str() );</span>
+<span class="lineNum">      89 </span>            :     }
+<span class="lineNum">      90 </span><span class="lineCov">         78 :     if( wwstr.size()&gt;0 ) log.printf(&quot;\n&quot;);</span>
+<span class="lineNum">      91 </span><span class="lineCov">         73 :     else log.printf(&quot;  weights are all equal to one\n&quot;);</span>
+<span class="lineNum">      92 </span><span class="lineCov">        156 :     requestArguments( arg );</span>
+<span class="lineNum">      93 </span>            :   }
+<span class="lineNum">      94 </span><span class="lineCov">        115 :   if( keywords.exists(&quot;NORMALIZATION&quot;) ) {</span>
+<span class="lineNum">      95 </span><span class="lineCov">         78 :     std::string normstr; parse(&quot;NORMALIZATION&quot;,normstr);</span>
+<span class="lineNum">      96 </span><span class="lineCov">         78 :     if( normstr==&quot;true&quot; ) normalization=t;</span>
+<span class="lineNum">      97 </span><span class="lineCov">         57 :     else if( normstr==&quot;false&quot; ) normalization=f;</span>
+<span class="lineNum">      98 </span><span class="lineCov">         48 :     else if( normstr==&quot;ndata&quot; ) normalization=ndata;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :     else error(&quot;invalid instruction for NORMALIZATION flag should be true, false, or ndata&quot;);</span>
+<span class="lineNum">     100 </span>            :   }
+<a name="101"><span class="lineNum">     101 </span><span class="lineCov">        115 : }</span></a>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span><span class="lineCov">        110 : bool ActionWithAveraging::ignoreNormalization() const {</span>
+<span class="lineNum">     104 </span><span class="lineCov">        110 :   if( normalization==f ) return true;</span>
+<span class="lineNum">     105 </span><span class="lineCov">        101 :   return false;</span>
+<a name="106"><span class="lineNum">     106 </span>            : }</a>
+<span class="lineNum">     107 </span>            : 
+<span class="lineNum">     108 </span><span class="lineCov">        110 : void ActionWithAveraging::setAveragingAction( std::unique_ptr&lt;AveragingVessel&gt; av_vessel, const bool&amp; usetasks ) {</span>
+<span class="lineNum">     109 </span><span class="lineCov">        110 :   myaverage=av_vessel.get();</span>
+<span class="lineNum">     110 </span><span class="lineCov">        110 :   addVessel( std::move(av_vessel) );</span>
+<span class="lineNum">     111 </span><span class="lineCov">        110 :   useRunAllTasks=usetasks; resizeFunctions();</span>
+<a name="112"><span class="lineNum">     112 </span><span class="lineCov">        110 : }</span></a>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span><span class="lineCov">        184 : void ActionWithAveraging::lockRequests() {</span>
+<span class="lineNum">     115 </span><span class="lineCov">        184 :   ActionAtomistic::lockRequests();</span>
+<span class="lineNum">     116 </span><span class="lineCov">        184 :   ActionWithArguments::lockRequests();</span>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">        184 : }</span></a>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span><span class="lineCov">        184 : void ActionWithAveraging::unlockRequests() {</span>
+<span class="lineNum">     120 </span><span class="lineCov">        184 :   ActionAtomistic::unlockRequests();</span>
+<span class="lineNum">     121 </span><span class="lineCov">        184 :   ActionWithArguments::unlockRequests();</span>
+<a name="122"><span class="lineNum">     122 </span><span class="lineCov">        184 : }</span></a>
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span><span class="lineCov">        309 : unsigned ActionWithAveraging::getNumberOfQuantities() const {</span>
+<span class="lineNum">     125 </span><span class="lineCov">        309 :   if( my_analysis_object ) return getNumberOfArguments()+2;</span>
+<span class="lineNum">     126 </span><span class="lineCov">        179 :   return 2;</span>
+<a name="127"><span class="lineNum">     127 </span>            : }</a>
+<span class="lineNum">     128 </span>            : 
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 : void ActionWithAveraging::calculateNumericalDerivatives(PLMD::ActionWithValue*) {</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :   error(&quot;not possible to compute numerical derivatives for this action&quot;);</span>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineCov">        250 : void ActionWithAveraging::update() {</span>
+<span class="lineNum">     134 </span><span class="lineCov">        325 :   if( (clearstride!=1 &amp;&amp; getStep()==0) || (!onStep() &amp;&amp; !my_analysis_object) ) return;</span>
+<span class="lineNum">     135 </span><span class="lineCov">        175 :   if( my_analysis_object ) {</span>
+<span class="lineNum">     136 </span><span class="lineCov">         33 :     analysis::ReadAnalysisFrames* myfram = dynamic_cast&lt;analysis::ReadAnalysisFrames*&gt;( my_analysis_object );</span>
+<span class="lineNum">     137 </span><span class="lineCov">         33 :     if( !activated &amp;&amp; !myfram &amp;&amp; !onStep() ) return ;</span>
+<span class="lineNum">     138 </span><span class="lineCov">         33 :     else if( !activated &amp;&amp; !my_analysis_object-&gt;onStep() ) return ;</span>
+<span class="lineNum">     139 </span>            :   }
+<span class="lineNum">     140 </span>            : 
+<span class="lineNum">     141 </span>            :   // Clear if it is time to reset
+<span class="lineNum">     142 </span><span class="lineCov">        175 :   if( myaverage ) {</span>
+<span class="lineNum">     143 </span><span class="lineCov">        174 :     if( myaverage-&gt;wasreset() ) clearAverage();</span>
+<span class="lineNum">     144 </span>            :   }
+<span class="lineNum">     145 </span>            :   // Calculate the weight for all reweighting
+<span class="lineNum">     146 </span><span class="lineCov">        175 :   if ( weights.size()&gt;0 &amp;&amp; !my_analysis_object ) {</span>
+<span class="lineNum">     147 </span><span class="lineCov">          7 :     double sum=0; for(unsigned i=0; i&lt;weights.size(); ++i) sum+=weights[i]-&gt;get();</span>
+<span class="lineNum">     148 </span><span class="lineCov">          7 :     lweight=sum; cweight = exp( sum );</span>
+<span class="lineNum">     149 </span>            :   } else {
+<span class="lineNum">     150 </span><span class="lineCov">        168 :     lweight=0; cweight=1.0;</span>
+<span class="lineNum">     151 </span>            :   }
+<span class="lineNum">     152 </span>            :   // Prepare the task list for averaging
+<span class="lineNum">     153 </span><span class="lineCov">        175 :   if( my_analysis_object ) {</span>
+<span class="lineNum">     154 </span><span class="lineCov">         33 :     for(unsigned i=getFullNumberOfTasks(); i&lt;my_analysis_object-&gt;getNumberOfDataPoints(); ++i) addTaskToList(i);</span>
+<span class="lineNum">     155 </span><span class="lineCov">         33 :     deactivateAllTasks(); cweight=0;</span>
+<span class="lineNum">     156 </span><span class="lineCov">      11267 :     for(unsigned i=0; i&lt;my_analysis_object-&gt;getNumberOfDataPoints(); ++i) {</span>
+<span class="lineNum">     157 </span><span class="lineCov">      11234 :       taskFlags[i]=1; cweight += my_analysis_object-&gt;getWeight(i);</span>
+<span class="lineNum">     158 </span>            :     }
+<span class="lineNum">     159 </span><span class="lineCov">         33 :     lockContributors();</span>
+<span class="lineNum">     160 </span>            :   }
+<span class="lineNum">     161 </span>            :   // Prepare to do the averaging
+<span class="lineNum">     162 </span><span class="lineCov">        175 :   prepareForAveraging();</span>
+<span class="lineNum">     163 </span>            :   // Run all the tasks (if required
+<span class="lineNum">     164 </span><span class="lineCov">        175 :   if( my_analysis_object || useRunAllTasks ) runAllTasks();</span>
+<span class="lineNum">     165 </span>            :   // This the averaging if it is not done using task list
+<span class="lineNum">     166 </span><span class="lineCov">         28 :   else performOperations( true );</span>
+<span class="lineNum">     167 </span>            :   // Update the norm
+<span class="lineNum">     168 </span><span class="lineCov">        175 :   double normt = cweight; if( !my_analysis_object &amp;&amp; normalization==ndata ) normt = 1;</span>
+<span class="lineNum">     169 </span><span class="lineCov">        175 :   if( myaverage &amp;&amp; my_analysis_object ) myaverage-&gt;setNorm( normt );</span>
+<span class="lineNum">     170 </span><span class="lineCov">        142 :   else if( myaverage ) myaverage-&gt;setNorm( normt + myaverage-&gt;getNorm() );</span>
+<span class="lineNum">     171 </span>            :   // Finish the averaging
+<span class="lineNum">     172 </span><span class="lineCov">        175 :   finishAveraging();</span>
+<span class="lineNum">     173 </span>            :   // By resetting here we are ensuring that the grid will be cleared at the start of the next step
+<span class="lineNum">     174 </span><span class="lineCov">        175 :   if( myaverage ) {</span>
+<span class="lineNum">     175 </span><span class="lineCov">        174 :     if( getStride()==0 || (clearstride&gt;0 &amp;&amp; getStep()%clearstride==0) ) myaverage-&gt;reset();</span>
+<span class="lineNum">     176 </span>            :   }
+<a name="177"><span class="lineNum">     177 </span>            : }</a>
+<span class="lineNum">     178 </span>            : 
+<span class="lineNum">     179 </span><span class="lineCov">      61326 : void ActionWithAveraging::performTask( const unsigned&amp; task_index, const unsigned&amp; current, MultiValue&amp; myvals ) const {</span>
+<span class="lineNum">     180 </span><span class="lineCov">      61326 :   if( my_analysis_object ) {</span>
+<span class="lineNum">     181 </span><span class="lineCov">      11232 :     analysis::DataCollectionObject&amp; mystore=my_analysis_object-&gt;getStoredData( current, false );</span>
+<span class="lineNum">     182 </span><span class="lineCov">      11233 :     for(unsigned i=0; i&lt;getNumberOfArguments(); ++i) myvals.setValue( 1+i, mystore.getArgumentValue( ActionWithArguments::getArguments()[i]-&gt;getName() ) );</span>
+<span class="lineNum">     183 </span><span class="lineCov">      11234 :     myvals.setValue( 0, my_analysis_object-&gt;getWeight(current) );</span>
+<span class="lineNum">     184 </span><span class="lineCov">      11234 :     if( normalization==f ) myvals.setValue( 1+getNumberOfArguments(), 1.0 ); else myvals.setValue( 1+getNumberOfArguments(), 1.0 / cweight );</span>
+<span class="lineNum">     185 </span><span class="lineCov">      11234 :     accumulateAverage( myvals );</span>
+<span class="lineNum">     186 </span>            :   } else {
+<span class="lineNum">     187 </span><span class="lineCov">      50094 :     runTask( current, myvals );</span>
+<span class="lineNum">     188 </span>            :   }
+<a name="189"><span class="lineNum">     189 </span><span class="lineCov">      61353 : }</span></a>
+<span class="lineNum">     190 </span>            : 
+<a name="191"><span class="lineNum">     191 </span><span class="lineCov">        144 : void ActionWithAveraging::clearAverage() { plumed_assert( myaverage-&gt;wasreset() ); myaverage-&gt;clear(); }</span></a>
+<span class="lineNum">     192 </span>            : 
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 : void ActionWithAveraging::performOperations( const bool&amp; from_update ) { plumed_error(); }</span></a>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span><span class="lineCov">         78 : void ActionWithAveraging::runFinalJobs() {</span>
+<span class="lineNum">     196 </span><span class="lineCov">         78 :   if( my_analysis_object &amp;&amp; getStride()==0 ) { activated=true; update(); }</span>
+<span class="lineNum">     197 </span><span class="lineCov">         78 : }</span>
+<a name="198"><span class="lineNum">     198 </span>            : </a>
+<span class="lineNum">     199 </span>            : }
+<span class="lineNum">     200 </span><span class="lineCov">       5415 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

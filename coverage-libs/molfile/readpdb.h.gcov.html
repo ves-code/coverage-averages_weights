@@ -1,0 +1,524 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage (other modules) - molfile/readpdb.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">molfile</a> - readpdb.h<span style="font-size: 80%;"> (source / <a href="readpdb.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage (other modules)</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">54</td>
+            <td class="headerCovTableEntry">159</td>
+            <td class="headerCovTableEntryLo">34.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:58</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">8</td>
+            <td class="headerCovTableEntryLo">37.5 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            : University of Illinois Open Source License
+<span class="lineNum">       3 </span>            : Copyright 2003 Theoretical and Computational Biophysics Group, 
+<span class="lineNum">       4 </span>            : All rights reserved.
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : Developed by:           Theoretical and Computational Biophysics Group
+<span class="lineNum">       7 </span>            :                         University of Illinois at Urbana-Champaign
+<span class="lineNum">       8 </span>            :                         http://www.ks.uiuc.edu/
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : Permission is hereby granted, free of charge, to any person obtaining a copy of
+<span class="lineNum">      11 </span>            : this software and associated documentation files (the Software), to deal with 
+<span class="lineNum">      12 </span>            : the Software without restriction, including without limitation the rights to 
+<span class="lineNum">      13 </span>            : use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+<span class="lineNum">      14 </span>            : of the Software, and to permit persons to whom the Software is furnished to 
+<span class="lineNum">      15 </span>            : do so, subject to the following conditions:
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : Redistributions of source code must retain the above copyright notice, 
+<span class="lineNum">      18 </span>            : this list of conditions and the following disclaimers.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : Redistributions in binary form must reproduce the above copyright notice, 
+<span class="lineNum">      21 </span>            : this list of conditions and the following disclaimers in the documentation 
+<span class="lineNum">      22 </span>            : and/or other materials provided with the distribution.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : Neither the names of Theoretical and Computational Biophysics Group, 
+<span class="lineNum">      25 </span>            : University of Illinois at Urbana-Champaign, nor the names of its contributors 
+<span class="lineNum">      26 </span>            : may be used to endorse or promote products derived from this Software without 
+<span class="lineNum">      27 </span>            : specific prior written permission.
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+<span class="lineNum">      30 </span>            : IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+<span class="lineNum">      31 </span>            : FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+<span class="lineNum">      32 </span>            : THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+<span class="lineNum">      33 </span>            : OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+<span class="lineNum">      34 </span>            : ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+<span class="lineNum">      35 </span>            : OTHER DEALINGS WITH THE SOFTWARE.
+<span class="lineNum">      36 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      37 </span>            : #ifndef __PLUMED_molfile_readpdb_h
+<span class="lineNum">      38 </span>            : #define __PLUMED_molfile_readpdb_h
+<span class="lineNum">      39 </span>            : /***************************************************************************
+<span class="lineNum">      40 </span>            :  *cr
+<span class="lineNum">      41 </span>            :  *cr            (C) Copyright 1995-2016 The Board of Trustees of the
+<span class="lineNum">      42 </span>            :  *cr                        University of Illinois
+<span class="lineNum">      43 </span>            :  *cr                         All Rights Reserved
+<span class="lineNum">      44 </span>            :  *cr
+<span class="lineNum">      45 </span>            :  ***************************************************************************/
+<span class="lineNum">      46 </span>            : 
+<span class="lineNum">      47 </span>            : /***************************************************************************
+<span class="lineNum">      48 </span>            :  * RCS INFORMATION:
+<span class="lineNum">      49 </span>            :  *
+<span class="lineNum">      50 </span>            :  *      $RCSfile: readpdb.h,v $
+<span class="lineNum">      51 </span>            :  *      $Author: johns $       $Locker:  $             $State: Exp $
+<span class="lineNum">      52 </span>            :  *      $Revision: 1.43 $       $Date: 2016/11/28 05:01:54 $
+<span class="lineNum">      53 </span>            :  *
+<span class="lineNum">      54 </span>            :  ***************************************************************************/
+<span class="lineNum">      55 </span>            : 
+<span class="lineNum">      56 </span>            : #ifndef READ_PDB_H
+<span class="lineNum">      57 </span>            : #define READ_PDB_H
+<span class="lineNum">      58 </span>            : 
+<span class="lineNum">      59 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">      60 </span>            : #include &lt;stdlib.h&gt;
+<span class="lineNum">      61 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">      62 </span>            : 
+<span class="lineNum">      63 </span>            : namespace PLMD{
+<span class="lineNum">      64 </span>            : namespace molfile{
+<span class="lineNum">      65 </span>            : 
+<span class="lineNum">      66 </span>            : #define PDB_RECORD_LENGTH   80   /* actual record size */
+<span class="lineNum">      67 </span>            : #define PDB_BUFFER_LENGTH   83   /* size need to buffer + CR, LF, and NUL */
+<span class="lineNum">      68 </span>            : 
+<span class="lineNum">      69 </span>            : #define VMDUSECONECTRECORDS 1
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : /*  record type defines */
+<span class="lineNum">      72 </span>            : enum {
+<span class="lineNum">      73 </span>            :   PDB_HEADER, PDB_REMARK, PDB_ATOM, PDB_CONECT, PDB_UNKNOWN, PDB_END, PDB_EOF, PDB_CRYST1
+<span class="lineNum">      74 </span>            : };
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span>            : /* read the next record from the specified pdb file, and put the string found
+<span class="lineNum">      77 </span>            :    in the given string pointer (the caller must provide adequate (81 chars)
+<a name="78"><span class="lineNum">      78 </span>            :    buffer space); return the type of record found</a>
+<span class="lineNum">      79 </span>            : */
+<span class="lineNum">      80 </span><span class="lineCov">      77508 : static int read_pdb_record(FILE *f, char *retStr) {</span>
+<span class="lineNum">      81 </span>            :   int ch;
+<span class="lineNum">      82 </span>            :   char inbuf[PDB_BUFFER_LENGTH]; /* space for line + cr + lf + NUL */
+<span class="lineNum">      83 </span><span class="lineCov">      77508 :   int recType = PDB_UNKNOWN;</span>
+<span class="lineNum">      84 </span>            :  
+<span class="lineNum">      85 </span>            :   /* XXX This PDB record reading code breaks with files that use
+<span class="lineNum">      86 </span>            :    * Mac or DOS style line breaks with ctrl-M characters.  We need
+<span class="lineNum">      87 </span>            :    * to replace the use of fgets() and comparisons against \n with
+<span class="lineNum">      88 </span>            :    * code that properly handles the other cases.
+<span class="lineNum">      89 </span>            :    */
+<span class="lineNum">      90 </span>            :  
+<span class="lineNum">      91 </span>            :   /* read the next line, including any ending cr/lf char */
+<span class="lineNum">      92 </span><span class="lineCov">      77508 :   if (inbuf != fgets(inbuf, PDB_RECORD_LENGTH + 2, f)) {</span>
+<span class="lineNum">      93 </span><span class="lineCov">         21 :     retStr[0] = '\0';</span>
+<span class="lineNum">      94 </span><span class="lineCov">         21 :     recType = PDB_EOF;</span>
+<span class="lineNum">      95 </span>            :   } else {
+<span class="lineNum">      96 </span>            : #if 0
+<span class="lineNum">      97 </span>            :     /* XXX disabled this code since \n chars are desirable in remarks */
+<span class="lineNum">      98 </span>            :     /* and to make the behavior consistent with webpdbplugin          */
+<span class="lineNum">      99 </span>            : 
+<span class="lineNum">     100 </span>            :     /* remove the newline character, if there is one */
+<span class="lineNum">     101 </span>            :     if (inbuf[strlen(inbuf)-1] == '\n')
+<span class="lineNum">     102 </span>            :       inbuf[strlen(inbuf)-1] = '\0';
+<span class="lineNum">     103 </span>            : #endif
+<span class="lineNum">     104 </span>            : 
+<span class="lineNum">     105 </span>            :     /* atom records are the most common */
+<span class="lineNum">     106 </span><span class="lineCov">      77487 :     if (!strncmp(inbuf, &quot;ATOM &quot;,  5) || !strncmp(inbuf, &quot;HETATM&quot;, 6)) {</span>
+<span class="lineNum">     107 </span>            :       /* Note that by only comparing 5 chars for &quot;ATOM &quot; rather than 6,     */
+<span class="lineNum">     108 </span>            :       /* we allow PDB files containing &gt; 99,999 atoms generated by AMBER    */
+<span class="lineNum">     109 </span>            :       /* to load which would otherwise fail.  Not needed for HETATM since   */
+<span class="lineNum">     110 </span>            :       /* those aren't going to show up in files produced for/by MD engines. */
+<span class="lineNum">     111 </span><span class="lineCov">      77220 :       recType = PDB_ATOM;</span>
+<span class="lineNum">     112 </span><span class="lineCov">        267 :     } else if (!strncmp(inbuf, &quot;CONECT&quot;, 6)) {</span>
+<span class="lineNum">     113 </span><span class="lineNoCov">          0 :       recType = PDB_CONECT;</span>
+<span class="lineNum">     114 </span><span class="lineCov">        267 :     } else if (!strncmp(inbuf, &quot;REMARK&quot;, 6)) {</span>
+<span class="lineNum">     115 </span><span class="lineCov">         62 :       recType = PDB_REMARK;</span>
+<span class="lineNum">     116 </span><span class="lineCov">        205 :     } else if (!strncmp(inbuf, &quot;CRYST1&quot;, 6)) {</span>
+<span class="lineNum">     117 </span><span class="lineCov">         36 :       recType = PDB_CRYST1;</span>
+<span class="lineNum">     118 </span><span class="lineCov">        169 :     } else if (!strncmp(inbuf, &quot;HEADER&quot;, 6)) {</span>
+<span class="lineNum">     119 </span><span class="lineNoCov">          0 :       recType = PDB_HEADER;</span>
+<span class="lineNum">     120 </span><span class="lineCov">        169 :     } else if (!strncmp(inbuf, &quot;END&quot;, 3)) {  /* very permissive */</span>
+<span class="lineNum">     121 </span>            :       /* XXX we treat any &quot;ENDxxx&quot; record as an end, to simplify testing */
+<span class="lineNum">     122 </span>            :       /*     since we don't remove trailing '\n' chars                   */
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :       /* the only two legal END records are &quot;END   &quot; and &quot;ENDMDL&quot; */
+<span class="lineNum">     125 </span><span class="lineCov">         47 :       recType = PDB_END;</span>
+<span class="lineNum">     126 </span>            :     } 
+<span class="lineNum">     127 </span>            : 
+<span class="lineNum">     128 </span>            : #if 0
+<span class="lineNum">     129 </span>            :     /* XXX disable record type checking for now */
+<span class="lineNum">     130 </span>            :     if (recType == PDB_ATOM || 
+<span class="lineNum">     131 </span>            :         recType == PDB_CONECT || 
+<span class="lineNum">     132 </span>            :         recType == PDB_REMARK || 
+<span class="lineNum">     133 </span>            :         recType == PDB_HEADER || 
+<span class="lineNum">     134 </span>            :         recType == PDB_CRYST1) {
+<span class="lineNum">     135 </span>            :       strcpy(retStr, inbuf);
+<span class="lineNum">     136 </span>            :     } else {
+<span class="lineNum">     137 </span>            :       retStr[0] = '\0';
+<span class="lineNum">     138 </span>            :     }
+<span class="lineNum">     139 </span>            : #else
+<span class="lineNum">     140 </span><span class="lineCov">      77487 :     strcpy(retStr, inbuf);</span>
+<span class="lineNum">     141 </span>            : #endif
+<span class="lineNum">     142 </span>            :   }
+<span class="lineNum">     143 </span>            : 
+<span class="lineNum">     144 </span>            :   /* read the '\r', if there was one */
+<span class="lineNum">     145 </span><span class="lineCov">      77508 :   ch = fgetc(f);</span>
+<span class="lineNum">     146 </span><span class="lineCov">      77508 :   if (ch != '\r')</span>
+<span class="lineNum">     147 </span><span class="lineCov">      77508 :     ungetc(ch, f);</span>
+<span class="lineNum">     148 </span>            :   
+<span class="lineNum">     149 </span><span class="lineCov">      77508 :   return recType;</span>
+<span class="lineNum">     150 </span>            : }
+<span class="lineNum">     151 </span>            : 
+<a name="152"><span class="lineNum">     152 </span>            : </a>
+<span class="lineNum">     153 </span>            : /* Extract the alpha/beta/gamma a/b/c unit cell info from a CRYST1 record */
+<span class="lineNum">     154 </span><span class="lineCov">         19 : static void get_pdb_cryst1(const char *record, </span>
+<span class="lineNum">     155 </span>            :                            float *alpha, float *beta, float *gamma, 
+<span class="lineNum">     156 </span>            :                            float *a, float *b, float *c) {
+<span class="lineNum">     157 </span>            :   char tmp[PDB_RECORD_LENGTH+3]; /* space for line + cr + lf + NUL */
+<span class="lineNum">     158 </span>            :   char ch, *s;
+<span class="lineNum">     159 </span><span class="lineCov">         19 :   memset(tmp, 0, sizeof(tmp));</span>
+<span class="lineNum">     160 </span><span class="lineCov">         19 :   strncpy(tmp, record, PDB_RECORD_LENGTH);</span>
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span><span class="lineCov">         19 :   s = tmp+6 ;          ch = tmp[15]; tmp[15] = 0;</span>
+<span class="lineNum">     163 </span><span class="lineCov">         19 :   *a = (float) atof(s);</span>
+<span class="lineNum">     164 </span><span class="lineCov">         19 :   s = tmp+15; *s = ch; ch = tmp[24]; tmp[24] = 0;</span>
+<span class="lineNum">     165 </span><span class="lineCov">         19 :   *b = (float) atof(s);</span>
+<span class="lineNum">     166 </span><span class="lineCov">         19 :   s = tmp+24; *s = ch; ch = tmp[33]; tmp[33] = 0;</span>
+<span class="lineNum">     167 </span><span class="lineCov">         19 :   *c = (float) atof(s);</span>
+<span class="lineNum">     168 </span><span class="lineCov">         19 :   s = tmp+33; *s = ch; ch = tmp[40]; tmp[40] = 0;</span>
+<span class="lineNum">     169 </span><span class="lineCov">         19 :   *alpha = (float) atof(s);</span>
+<span class="lineNum">     170 </span><span class="lineCov">         19 :   s = tmp+40; *s = ch; ch = tmp[47]; tmp[47] = 0;</span>
+<span class="lineNum">     171 </span><span class="lineCov">         19 :   *beta = (float) atof(s);</span>
+<span class="lineNum">     172 </span><span class="lineCov">         19 :   s = tmp+47; *s = ch; ch = tmp[54]; tmp[54] = 0;</span>
+<span class="lineNum">     173 </span><span class="lineCov">         19 :   *gamma = (float) atof(s);</span>
+<span class="lineNum">     174 </span><span class="lineCov">         19 : }</span>
+<span class="lineNum">     175 </span>            : 
+<a name="176"><span class="lineNum">     176 </span>            : </a>
+<span class="lineNum">     177 </span>            : /* Extract the x,y,z coords, occupancy, and beta from an ATOM record */
+<span class="lineNum">     178 </span><span class="lineCov">      40161 : static void get_pdb_coordinates(const char *record, </span>
+<span class="lineNum">     179 </span>            :                                 float *x, float *y, float *z,
+<span class="lineNum">     180 </span>            :                                 float *occup, float *beta) {
+<span class="lineNum">     181 </span>            :   char numstr[50]; /* store all fields in one array to save memset calls */
+<span class="lineNum">     182 </span><span class="lineCov">      40161 :   memset(numstr, 0, sizeof(numstr));</span>
+<span class="lineNum">     183 </span>            : 
+<span class="lineNum">     184 </span><span class="lineCov">      40161 :   if (x != NULL) {</span>
+<span class="lineNum">     185 </span><span class="lineCov">      40161 :     strncpy(numstr, record + 30, 8);</span>
+<span class="lineNum">     186 </span><span class="lineCov">      40161 :     *x = (float) atof(numstr);</span>
+<span class="lineNum">     187 </span>            :   }
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span><span class="lineCov">      40161 :   if (y != NULL) {</span>
+<span class="lineNum">     190 </span><span class="lineCov">      40161 :     strncpy(numstr+10, record + 38, 8);</span>
+<span class="lineNum">     191 </span><span class="lineCov">      40161 :     *y = (float) atof(numstr+10);</span>
+<span class="lineNum">     192 </span>            :   }
+<span class="lineNum">     193 </span>            : 
+<span class="lineNum">     194 </span><span class="lineCov">      40161 :   if (z != NULL) {</span>
+<span class="lineNum">     195 </span><span class="lineCov">      40161 :     strncpy(numstr+20, record + 46, 8);</span>
+<span class="lineNum">     196 </span><span class="lineCov">      40161 :     *z = (float) atof(numstr+20);</span>
+<span class="lineNum">     197 </span>            :   }
+<span class="lineNum">     198 </span>            : 
+<span class="lineNum">     199 </span><span class="lineCov">      40161 :   if (occup != NULL) {</span>
+<span class="lineNum">     200 </span><span class="lineCov">      40161 :     strncpy(numstr+30, record + 54, 6);</span>
+<span class="lineNum">     201 </span><span class="lineCov">      40161 :     *occup = (float) atof(numstr+30);</span>
+<span class="lineNum">     202 </span>            :   }
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineCov">      40161 :   if (beta != NULL) {</span>
+<span class="lineNum">     205 </span><span class="lineCov">      40161 :     strncpy(numstr+40, record + 60, 6);</span>
+<span class="lineNum">     206 </span><span class="lineCov">      40161 :     *beta = (float) atof(numstr+40);</span>
+<span class="lineNum">     207 </span>            :   }
+<span class="lineNum">     208 </span><span class="lineCov">      40161 : }</span>
+<span class="lineNum">     209 </span>            : 
+<a name="210"><span class="lineNum">     210 </span>            : </a>
+<span class="lineNum">     211 </span>            : /* remove leading and trailing spaces from PDB fields */
+<span class="lineNum">     212 </span><span class="lineNoCov">          0 : static void adjust_pdb_field_string(char *field) {</span>
+<span class="lineNum">     213 </span>            :   int i, len;
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :   len = strlen(field);</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :   while (len &gt; 0 &amp;&amp; field[len-1] == ' ') {</span>
+<span class="lineNum">     217 </span><span class="lineNoCov">          0 :     field[len-1] = '\0';</span>
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :     len--;</span>
+<span class="lineNum">     219 </span>            :   }
+<span class="lineNum">     220 </span>            : 
+<span class="lineNum">     221 </span><span class="lineNoCov">          0 :   while (len &gt; 0 &amp;&amp; field[0] == ' ') {</span>
+<span class="lineNum">     222 </span><span class="lineNoCov">          0 :     for (i=0; i &lt; len; i++)</span>
+<span class="lineNum">     223 </span><span class="lineNoCov">          0 :       field[i] = field[i+1];</span>
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :     len--;</span>
+<span class="lineNum">     225 </span>            :   }
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span><span class="lineNoCov">          0 : static void get_pdb_header(const char *record, char *pdbcode, char *date,</span>
+<span class="lineNum">     229 </span>            :                            char *classification) {
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :   if (date != NULL) {</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     strncpy(date, record + 50, 9);</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :     date[9] = '\0';</span>
+<span class="lineNum">     233 </span>            :   }
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span><span class="lineNoCov">          0 :   if (classification != NULL) {</span>
+<span class="lineNum">     236 </span><span class="lineNoCov">          0 :     strncpy(classification, record + 10, 40);</span>
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     classification[40] = '\0';</span>
+<span class="lineNum">     238 </span>            :   }
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span><span class="lineNoCov">          0 :   if (pdbcode != NULL) {</span>
+<span class="lineNum">     241 </span><span class="lineNoCov">          0 :     strncpy(pdbcode, record + 62, 4);</span>
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :     pdbcode[4] = '\0';</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :     adjust_pdb_field_string(pdbcode); /* remove spaces from accession code */</span>
+<span class="lineNum">     244 </span>            :   }
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 : }</span>
+<a name="246"><span class="lineNum">     246 </span>            : </a>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span><span class="lineNoCov">          0 : static void get_pdb_conect(const char *record, int natoms, int *idxmap,</span>
+<span class="lineNum">     249 </span>            :                            int *maxbnum, int *nbonds, int **from, int **to) {
+<span class="lineNum">     250 </span>            :   int bondto[11], numbonds, i;
+<span class="lineNum">     251 </span>            : 
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 :   int reclen = strlen(record);</span>
+<span class="lineNum">     253 </span><span class="lineNoCov">          0 :   for (numbonds=0, i=0; i&lt;11; i++) {</span>
+<span class="lineNum">     254 </span>            :     char bondstr[6];
+<span class="lineNum">     255 </span><span class="lineNoCov">          0 :     const int fieldwidth = 5;</span>
+<span class="lineNum">     256 </span><span class="lineNoCov">          0 :     int start = 6 + i*fieldwidth;</span>
+<span class="lineNum">     257 </span><span class="lineNoCov">          0 :     int end = start + fieldwidth;</span>
+<span class="lineNum">     258 </span>            : 
+<span class="lineNum">     259 </span><span class="lineNoCov">          0 :     if (end &gt;= reclen)</span>
+<span class="lineNum">     260 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     261 </span>            : 
+<span class="lineNum">     262 </span><span class="lineNoCov">          0 :     memcpy(bondstr, record + start, fieldwidth);</span>
+<span class="lineNum">     263 </span><span class="lineNoCov">          0 :     bondstr[5] = '\0';</span>
+<span class="lineNum">     264 </span><span class="lineNoCov">          0 :     if (sscanf(bondstr, &quot;%d&quot;, &amp;bondto[numbonds]) &lt; 0)</span>
+<span class="lineNum">     265 </span><span class="lineNoCov">          0 :       break;</span>
+<span class="lineNum">     266 </span><span class="lineNoCov">          0 :     numbonds++; </span>
+<span class="lineNum">     267 </span>            :   }
+<span class="lineNum">     268 </span>            : 
+<span class="lineNum">     269 </span><span class="lineNoCov">          0 :   for (i=0; i&lt;numbonds; i++) {</span>
+<span class="lineNum">     270 </span>            :     /* only add one bond per pair, PDBs list them redundantly */ 
+<span class="lineNum">     271 </span><span class="lineNoCov">          0 :     if (bondto[i] &gt; bondto[0]) {</span>
+<span class="lineNum">     272 </span><span class="lineNoCov">          0 :       int newnbonds = *nbonds + 1; /* add a new bond */</span>
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            :       /* allocate more bondlist space if necessary */
+<span class="lineNum">     275 </span><span class="lineNoCov">          0 :       if (newnbonds &gt;= *maxbnum) {</span>
+<span class="lineNum">     276 </span>            :         int newmax;
+<span class="lineNum">     277 </span>            :         int *newfromlist, *newtolist;
+<span class="lineNum">     278 </span><span class="lineNoCov">          0 :         newmax = (newnbonds + 11) * 1.25;</span>
+<span class="lineNum">     279 </span>            : 
+<span class="lineNum">     280 </span><span class="lineNoCov">          0 :         newfromlist = (int *) realloc(*from, newmax * sizeof(int));</span>
+<span class="lineNum">     281 </span><span class="lineNoCov">          0 :         newtolist = (int *) realloc(*to, newmax * sizeof(int));</span>
+<span class="lineNum">     282 </span>            : 
+<span class="lineNum">     283 </span><span class="lineNoCov">          0 :         if (newfromlist != NULL || newtolist != NULL) {</span>
+<span class="lineNum">     284 </span><span class="lineNoCov">          0 :           *maxbnum = newmax;</span>
+<span class="lineNum">     285 </span><span class="lineNoCov">          0 :           *from = newfromlist;</span>
+<span class="lineNum">     286 </span><span class="lineNoCov">          0 :           *to = newtolist;</span>
+<span class="lineNum">     287 </span>            :         } else {
+<span class="lineNum">     288 </span><span class="lineNoCov">          0 :           printf(&quot;readpdb) failed to allocate memory for bondlists\n&quot;);</span>
+<span class="lineNum">     289 </span><span class="lineNoCov">          0 :           return; /* abort */</span>
+<span class="lineNum">     290 </span>            :         }
+<span class="lineNum">     291 </span>            :       }
+<span class="lineNum">     292 </span>            : 
+<span class="lineNum">     293 </span><span class="lineNoCov">          0 :       *nbonds = newnbonds;</span>
+<span class="lineNum">     294 </span><span class="lineNoCov">          0 :       (*from)[newnbonds-1] = idxmap[bondto[0]] + 1;</span>
+<span class="lineNum">     295 </span><span class="lineNoCov">          0 :       (*to)[newnbonds-1] = idxmap[bondto[i]] + 1;</span>
+<span class="lineNum">     296 </span>            :     }
+<span class="lineNum">     297 </span>            :   }
+<span class="lineNum">     298 </span>            : }
+<span class="lineNum">     299 </span>            : 
+<span class="lineNum">     300 </span>            : /* ATOM field format according to PDB standard v2.2
+<span class="lineNum">     301 </span>            :   COLUMNS        DATA TYPE       FIELD         DEFINITION
+<span class="lineNum">     302 </span>            : ---------------------------------------------------------------------------------
+<span class="lineNum">     303 </span>            :  1 -  6        Record name     &quot;ATOM  &quot;
+<span class="lineNum">     304 </span>            :  7 - 11        Integer         serial        Atom serial number.
+<span class="lineNum">     305 </span>            : 13 - 16        Atom            name          Atom name.
+<span class="lineNum">     306 </span>            : 17             Character       altLoc        Alternate location indicator.
+<span class="lineNum">     307 </span>            : 18 - 20        Residue name    resName       Residue name.
+<span class="lineNum">     308 </span>            : 22             Character       chainID       Chain identifier.
+<span class="lineNum">     309 </span>            : 23 - 26        Integer         resSeq        Residue sequence number.
+<span class="lineNum">     310 </span>            : 27             AChar           iCode         Code for insertion of residues.
+<span class="lineNum">     311 </span>            : 31 - 38        Real(8.3)       x             Orthogonal coordinates for X in Angstroms.
+<span class="lineNum">     312 </span>            : 39 - 46        Real(8.3)       y             Orthogonal coordinates for Y in Angstroms.
+<span class="lineNum">     313 </span>            : 47 - 54        Real(8.3)       z             Orthogonal coordinates for Z in Angstroms.
+<span class="lineNum">     314 </span>            : 55 - 60        Real(6.2)       occupancy     Occupancy.
+<span class="lineNum">     315 </span>            : 61 - 66        Real(6.2)       tempFactor    Temperature factor.
+<span class="lineNum">     316 </span>            : 73 - 76        LString(4)      segID         Segment identifier, left-justified.
+<span class="lineNum">     317 </span>            : 77 - 78        LString(2)      element       Element symbol, right-justified.
+<span class="lineNum">     318 </span>            : 79 - 80        LString(2)      charge        Charge on the atom.
+<span class="lineNum">     319 </span>            :  */
+<span class="lineNum">     320 </span>            : 
+<span class="lineNum">     321 </span>            : /* Break a pdb ATOM record into its fields.  The user must provide the
+<span class="lineNum">     322 </span>            :    necessary space to store the atom name, residue name, and segment name.
+<a name="323"><span class="lineNum">     323 </span>            :    Character strings will be null-terminated.</a>
+<span class="lineNum">     324 </span>            : */
+<span class="lineNum">     325 </span><span class="lineNoCov">          0 : static void get_pdb_fields(const char *record, int reclength, int *serial,</span>
+<span class="lineNum">     326 </span>            :                            char *name, char *resname, char *chain, 
+<span class="lineNum">     327 </span>            :                            char *segname, char *resid, char *insertion, 
+<span class="lineNum">     328 </span>            :                            char *altloc, char *elementsymbol,
+<span class="lineNum">     329 </span>            :                            float *x, float *y, float *z, 
+<span class="lineNum">     330 </span>            :                            float *occup, float *beta) {
+<span class="lineNum">     331 </span>            :   char serialbuf[6];
+<span class="lineNum">     332 </span>            : 
+<span class="lineNum">     333 </span>            :   /* get atom serial number */
+<span class="lineNum">     334 </span><span class="lineNoCov">          0 :   strncpy(serialbuf, record + 6, 5);</span>
+<span class="lineNum">     335 </span><span class="lineNoCov">          0 :   serialbuf[5] = '\0';</span>
+<span class="lineNum">     336 </span><span class="lineNoCov">          0 :   *serial = 0;</span>
+<span class="lineNum">     337 </span><span class="lineNoCov">          0 :   sscanf(serialbuf, &quot;%5d&quot;, serial);</span>
+<span class="lineNum">     338 </span>            :   
+<span class="lineNum">     339 </span>            :   /* get atom name */
+<span class="lineNum">     340 </span><span class="lineNoCov">          0 :   strncpy(name, record + 12, 4);</span>
+<span class="lineNum">     341 </span><span class="lineNoCov">          0 :   name[4] = '\0';</span>
+<span class="lineNum">     342 </span><span class="lineNoCov">          0 :   adjust_pdb_field_string(name); /* remove spaces from the name */</span>
+<span class="lineNum">     343 </span>            : 
+<span class="lineNum">     344 </span>            :   /* get alternate location identifier */
+<span class="lineNum">     345 </span><span class="lineNoCov">          0 :   strncpy(altloc, record + 16, 1);</span>
+<span class="lineNum">     346 </span><span class="lineNoCov">          0 :   altloc[1] = '\0';</span>
+<span class="lineNum">     347 </span>            : 
+<span class="lineNum">     348 </span>            :   /* get residue name */
+<span class="lineNum">     349 </span><span class="lineNoCov">          0 :   strncpy(resname, record + 17, 4);</span>
+<span class="lineNum">     350 </span><span class="lineNoCov">          0 :   resname[4] = '\0';</span>
+<span class="lineNum">     351 </span><span class="lineNoCov">          0 :   adjust_pdb_field_string(resname); /* remove spaces from the resname */</span>
+<span class="lineNum">     352 </span>            : 
+<span class="lineNum">     353 </span>            :   /* get chain name */
+<span class="lineNum">     354 </span><span class="lineNoCov">          0 :   chain[0] = record[21];</span>
+<span class="lineNum">     355 </span><span class="lineNoCov">          0 :   chain[1] = '\0';</span>
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span>            :   /* get residue id number */
+<span class="lineNum">     358 </span><span class="lineNoCov">          0 :   strncpy(resid, record + 22, 4);</span>
+<span class="lineNum">     359 </span><span class="lineNoCov">          0 :   resid[4] = '\0';</span>
+<span class="lineNum">     360 </span><span class="lineNoCov">          0 :   adjust_pdb_field_string(resid); /* remove spaces from the resid */</span>
+<span class="lineNum">     361 </span>            : 
+<span class="lineNum">     362 </span>            :   /* get the insertion code */
+<span class="lineNum">     363 </span><span class="lineNoCov">          0 :   insertion[0] = record[26];</span>
+<span class="lineNum">     364 </span><span class="lineNoCov">          0 :   insertion[1] = '\0';</span>
+<span class="lineNum">     365 </span>            : 
+<span class="lineNum">     366 </span>            :   /* get x, y, and z coordinates */
+<span class="lineNum">     367 </span><span class="lineNoCov">          0 :   get_pdb_coordinates(record, x, y, z, occup, beta);</span>
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            :   /* get segment name */
+<span class="lineNum">     370 </span><span class="lineNoCov">          0 :   if (reclength &gt;= 73) {</span>
+<span class="lineNum">     371 </span><span class="lineNoCov">          0 :     strncpy(segname, record + 72, 4);</span>
+<span class="lineNum">     372 </span><span class="lineNoCov">          0 :     segname[4] = '\0';</span>
+<span class="lineNum">     373 </span><span class="lineNoCov">          0 :     adjust_pdb_field_string(segname); /* remove spaces from the segname */</span>
+<span class="lineNum">     374 </span>            :   } else {
+<span class="lineNum">     375 </span><span class="lineNoCov">          0 :     segname[0] = '\0';</span>
+<span class="lineNum">     376 </span>            :   }
+<span class="lineNum">     377 </span>            : 
+<span class="lineNum">     378 </span>            :   /* get the atomic element symbol */
+<span class="lineNum">     379 </span><span class="lineNoCov">          0 :   if (reclength &gt;= 77) {</span>
+<span class="lineNum">     380 </span><span class="lineNoCov">          0 :     strncpy(elementsymbol, record + 76, 2);</span>
+<span class="lineNum">     381 </span><span class="lineNoCov">          0 :     elementsymbol[2] = '\0';</span>
+<span class="lineNum">     382 </span>            :   } else {
+<span class="lineNum">     383 </span><span class="lineNoCov">          0 :     elementsymbol[0] = '\0';</span>
+<span class="lineNum">     384 </span>            :   }
+<span class="lineNum">     385 </span><span class="lineNoCov">          0 : }  </span>
+<span class="lineNum">     386 </span>            : 
+<a name="387"><span class="lineNum">     387 </span>            : </a>
+<span class="lineNum">     388 </span>            : /* Write PDB data to given file descriptor; return success. */
+<span class="lineNum">     389 </span><span class="lineNoCov">          0 : static int write_raw_pdb_record(FILE *fd, const char *recordname,</span>
+<span class="lineNum">     390 </span>            :     int index,const char *atomname, const char *resname,int resid, 
+<span class="lineNum">     391 </span>            :     const char *insertion, const char *altloc, const char *elementsymbol,
+<span class="lineNum">     392 </span>            :     float x, float y, float z, float occ, float beta, 
+<span class="lineNum">     393 </span>            :     const char *chain, const char *segname) {
+<span class="lineNum">     394 </span>            :   int rc;
+<span class="lineNum">     395 </span>            :   char indexbuf[32];
+<span class="lineNum">     396 </span>            :   char residbuf[32];
+<span class="lineNum">     397 </span>            :   char segnamebuf[5];
+<span class="lineNum">     398 </span>            :   char resnamebuf[5];
+<span class="lineNum">     399 </span>            :   char altlocchar;
+<span class="lineNum">     400 </span>            : 
+<span class="lineNum">     401 </span>            :   /* XXX                                                          */
+<span class="lineNum">     402 </span>            :   /* if the atom or residue indices exceed the legal PDB spec, we */
+<span class="lineNum">     403 </span>            :   /* start emitting asterisks or hexadecimal strings rather than  */
+<span class="lineNum">     404 </span>            :   /* aborting.  This is not really legal, but is an accepted hack */
+<span class="lineNum">     405 </span>            :   /* among various other programs that deal with large PDB files  */
+<span class="lineNum">     406 </span>            :   /* If we run out of hexadecimal indices, then we just print     */
+<span class="lineNum">     407 </span>            :   /* asterisks.                                                   */
+<span class="lineNum">     408 </span><span class="lineNoCov">          0 :   if (index &lt; 100000) {</span>
+<span class="lineNum">     409 </span><span class="lineNoCov">          0 :     sprintf(indexbuf, &quot;%5d&quot;, index);</span>
+<span class="lineNum">     410 </span><span class="lineNoCov">          0 :   } else if (index &lt; 1048576) {</span>
+<span class="lineNum">     411 </span><span class="lineNoCov">          0 :     sprintf(indexbuf, &quot;%05x&quot;, index);</span>
+<span class="lineNum">     412 </span>            :   } else {
+<span class="lineNum">     413 </span><span class="lineNoCov">          0 :     sprintf(indexbuf, &quot;*****&quot;);</span>
+<span class="lineNum">     414 </span>            :   }
+<span class="lineNum">     415 </span>            : 
+<span class="lineNum">     416 </span><span class="lineNoCov">          0 :   if (resid &lt; 10000) {</span>
+<span class="lineNum">     417 </span><span class="lineNoCov">          0 :     sprintf(residbuf, &quot;%4d&quot;, resid);</span>
+<span class="lineNum">     418 </span><span class="lineNoCov">          0 :   } else if (resid &lt; 65536) {</span>
+<span class="lineNum">     419 </span><span class="lineNoCov">          0 :     sprintf(residbuf, &quot;%04x&quot;, resid);</span>
+<span class="lineNum">     420 </span>            :   } else { 
+<span class="lineNum">     421 </span><span class="lineNoCov">          0 :     sprintf(residbuf, &quot;****&quot;);</span>
+<span class="lineNum">     422 </span>            :   }
+<span class="lineNum">     423 </span>            : 
+<span class="lineNum">     424 </span><span class="lineNoCov">          0 :   altlocchar = altloc[0];</span>
+<span class="lineNum">     425 </span><span class="lineNoCov">          0 :   if (altlocchar == '\0') {</span>
+<span class="lineNum">     426 </span><span class="lineNoCov">          0 :     altlocchar = ' ';</span>
+<span class="lineNum">     427 </span>            :   }
+<span class="lineNum">     428 </span>            : 
+<span class="lineNum">     429 </span>            :   /* make sure the segname or resname do not overflow the format */ 
+<span class="lineNum">     430 </span><span class="lineNoCov">          0 :   strncpy(segnamebuf,segname,4);</span>
+<span class="lineNum">     431 </span><span class="lineNoCov">          0 :   segnamebuf[4] = '\0';</span>
+<span class="lineNum">     432 </span><span class="lineNoCov">          0 :   strncpy(resnamebuf,resname,4);</span>
+<span class="lineNum">     433 </span><span class="lineNoCov">          0 :   resnamebuf[4] = '\0';</span>
+<span class="lineNum">     434 </span>            : 
+<span class="lineNum">     435 </span>            :  
+<span class="lineNum">     436 </span>            :   rc = fprintf(fd,
+<span class="lineNum">     437 </span>            :          &quot;%-6s%5s %4s%c%-4s%c%4s%c   %8.3f%8.3f%8.3f%6.2f%6.2f      %-4s%2s\n&quot;,
+<span class="lineNum">     438 </span><span class="lineNoCov">          0 :          recordname, indexbuf, atomname, altlocchar, resnamebuf, chain[0], </span>
+<span class="lineNum">     439 </span><span class="lineNoCov">          0 :          residbuf, insertion[0], x, y, z, occ, beta, segnamebuf, elementsymbol);</span>
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span><span class="lineNoCov">          0 :   return (rc &gt; 0);</span>
+<span class="lineNum">     442 </span>            : }
+<span class="lineNum">     443 </span>            : 
+<span class="lineNum">     444 </span>            : }
+<span class="lineNum">     445 </span>            : }
+<span class="lineNum">     446 </span>            : #endif
+<span class="lineNum">     447 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

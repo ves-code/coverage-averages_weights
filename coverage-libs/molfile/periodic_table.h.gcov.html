@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage (other modules) - molfile/periodic_table.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">molfile</a> - periodic_table.h<span style="font-size: 80%;"> (source / <a href="periodic_table.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage (other modules)</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">36</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:58</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            : University of Illinois Open Source License
+<span class="lineNum">       3 </span>            : Copyright 2003 Theoretical and Computational Biophysics Group, 
+<span class="lineNum">       4 </span>            : All rights reserved.
+<span class="lineNum">       5 </span>            : 
+<span class="lineNum">       6 </span>            : Developed by:           Theoretical and Computational Biophysics Group
+<span class="lineNum">       7 </span>            :                         University of Illinois at Urbana-Champaign
+<span class="lineNum">       8 </span>            :                         http://www.ks.uiuc.edu/
+<span class="lineNum">       9 </span>            : 
+<span class="lineNum">      10 </span>            : Permission is hereby granted, free of charge, to any person obtaining a copy of
+<span class="lineNum">      11 </span>            : this software and associated documentation files (the Software), to deal with 
+<span class="lineNum">      12 </span>            : the Software without restriction, including without limitation the rights to 
+<span class="lineNum">      13 </span>            : use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies 
+<span class="lineNum">      14 </span>            : of the Software, and to permit persons to whom the Software is furnished to 
+<span class="lineNum">      15 </span>            : do so, subject to the following conditions:
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : Redistributions of source code must retain the above copyright notice, 
+<span class="lineNum">      18 </span>            : this list of conditions and the following disclaimers.
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : Redistributions in binary form must reproduce the above copyright notice, 
+<span class="lineNum">      21 </span>            : this list of conditions and the following disclaimers in the documentation 
+<span class="lineNum">      22 </span>            : and/or other materials provided with the distribution.
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : Neither the names of Theoretical and Computational Biophysics Group, 
+<span class="lineNum">      25 </span>            : University of Illinois at Urbana-Champaign, nor the names of its contributors 
+<span class="lineNum">      26 </span>            : may be used to endorse or promote products derived from this Software without 
+<span class="lineNum">      27 </span>            : specific prior written permission.
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : THE SOFTWARE IS PROVIDED AS IS, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+<span class="lineNum">      30 </span>            : IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+<span class="lineNum">      31 </span>            : FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL 
+<span class="lineNum">      32 </span>            : THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR 
+<span class="lineNum">      33 </span>            : OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, 
+<span class="lineNum">      34 </span>            : ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR 
+<span class="lineNum">      35 </span>            : OTHER DEALINGS WITH THE SOFTWARE.
+<span class="lineNum">      36 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      37 </span>            : #ifndef __PLUMED_molfile_periodic_table_h
+<span class="lineNum">      38 </span>            : #define __PLUMED_molfile_periodic_table_h
+<span class="lineNum">      39 </span>            : /***************************************************************************
+<span class="lineNum">      40 </span>            :  * RCS INFORMATION:
+<span class="lineNum">      41 </span>            :  *
+<span class="lineNum">      42 </span>            :  *      $RCSfile: periodic_table.h,v $
+<span class="lineNum">      43 </span>            :  *      $Author: johns $       $Locker:  $             $State: Exp $
+<span class="lineNum">      44 </span>            :  *      $Revision: 1.12 $       $Date: 2009/01/21 17:45:41 $
+<span class="lineNum">      45 </span>            :  *
+<span class="lineNum">      46 </span>            :  ***************************************************************************/
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span>            : /*
+<span class="lineNum">      49 </span>            :  * periodic table of elements and helper functions to convert
+<span class="lineNum">      50 </span>            :  * ordinal numbers to labels and back.
+<span class="lineNum">      51 </span>            :  * all tables and functions are declared static, so that it
+<span class="lineNum">      52 </span>            :  * can be safely included by all plugins that may need it.
+<span class="lineNum">      53 </span>            :  *
+<span class="lineNum">      54 </span>            :  * 2002-2009 akohlmey@cmm.chem.upenn.edu, vmd@ks.uiuc.edu
+<span class="lineNum">      55 </span>            :  */
+<span class="lineNum">      56 </span>            : 
+<span class="lineNum">      57 </span>            : #include &lt;string.h&gt;
+<span class="lineNum">      58 </span>            : #include &lt;ctype.h&gt;
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : namespace PLMD{
+<span class="lineNum">      61 </span>            : namespace molfile{
+<span class="lineNum">      62 </span>            : /* periodic table of elements for translation of ordinal to atom type */
+<span class="lineNum">      63 </span>            : static const char *pte_label[] = { 
+<span class="lineNum">      64 </span>            :     &quot;X&quot;,  &quot;H&quot;,  &quot;He&quot;, &quot;Li&quot;, &quot;Be&quot;, &quot;B&quot;,  &quot;C&quot;,  &quot;N&quot;,  &quot;O&quot;,  &quot;F&quot;,  &quot;Ne&quot;,
+<span class="lineNum">      65 </span>            :     &quot;Na&quot;, &quot;Mg&quot;, &quot;Al&quot;, &quot;Si&quot;, &quot;P&quot; , &quot;S&quot;,  &quot;Cl&quot;, &quot;Ar&quot;, &quot;K&quot;,  &quot;Ca&quot;, &quot;Sc&quot;,
+<span class="lineNum">      66 </span>            :     &quot;Ti&quot;, &quot;V&quot;,  &quot;Cr&quot;, &quot;Mn&quot;, &quot;Fe&quot;, &quot;Co&quot;, &quot;Ni&quot;, &quot;Cu&quot;, &quot;Zn&quot;, &quot;Ga&quot;, &quot;Ge&quot;, 
+<span class="lineNum">      67 </span>            :     &quot;As&quot;, &quot;Se&quot;, &quot;Br&quot;, &quot;Kr&quot;, &quot;Rb&quot;, &quot;Sr&quot;, &quot;Y&quot;,  &quot;Zr&quot;, &quot;Nb&quot;, &quot;Mo&quot;, &quot;Tc&quot;,
+<span class="lineNum">      68 </span>            :     &quot;Ru&quot;, &quot;Rh&quot;, &quot;Pd&quot;, &quot;Ag&quot;, &quot;Cd&quot;, &quot;In&quot;, &quot;Sn&quot;, &quot;Sb&quot;, &quot;Te&quot;, &quot;I&quot;,  &quot;Xe&quot;,
+<span class="lineNum">      69 </span>            :     &quot;Cs&quot;, &quot;Ba&quot;, &quot;La&quot;, &quot;Ce&quot;, &quot;Pr&quot;, &quot;Nd&quot;, &quot;Pm&quot;, &quot;Sm&quot;, &quot;Eu&quot;, &quot;Gd&quot;, &quot;Tb&quot;,
+<span class="lineNum">      70 </span>            :     &quot;Dy&quot;, &quot;Ho&quot;, &quot;Er&quot;, &quot;Tm&quot;, &quot;Yb&quot;, &quot;Lu&quot;, &quot;Hf&quot;, &quot;Ta&quot;, &quot;W&quot;,  &quot;Re&quot;, &quot;Os&quot;,
+<span class="lineNum">      71 </span>            :     &quot;Ir&quot;, &quot;Pt&quot;, &quot;Au&quot;, &quot;Hg&quot;, &quot;Tl&quot;, &quot;Pb&quot;, &quot;Bi&quot;, &quot;Po&quot;, &quot;At&quot;, &quot;Rn&quot;, &quot;Fr&quot;,
+<span class="lineNum">      72 </span>            :     &quot;Ra&quot;, &quot;Ac&quot;, &quot;Th&quot;, &quot;Pa&quot;, &quot;U&quot;,  &quot;Np&quot;, &quot;Pu&quot;, &quot;Am&quot;, &quot;Cm&quot;, &quot;Bk&quot;, &quot;Cf&quot;,
+<span class="lineNum">      73 </span>            :     &quot;Es&quot;, &quot;Fm&quot;, &quot;Md&quot;, &quot;No&quot;, &quot;Lr&quot;, &quot;Rf&quot;, &quot;Db&quot;, &quot;Sg&quot;, &quot;Bh&quot;, &quot;Hs&quot;, &quot;Mt&quot;,
+<span class="lineNum">      74 </span>            :     &quot;Ds&quot;, &quot;Rg&quot;
+<span class="lineNum">      75 </span>            : };
+<span class="lineNum">      76 </span>            : static const int nr_pte_entries = sizeof(pte_label) / sizeof(char *);
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : /* corresponding table of masses. */
+<span class="lineNum">      79 </span>            : static const float pte_mass[] = { 
+<span class="lineNum">      80 </span>            :     /* X  */ 0.00000, 1.00794, 4.00260, 6.941, 9.012182, 10.811,  
+<span class="lineNum">      81 </span>            :     /* C  */ 12.0107, 14.0067, 15.9994, 18.9984032, 20.1797, 
+<span class="lineNum">      82 </span>            :     /* Na */ 22.989770, 24.3050, 26.981538, 28.0855, 30.973761,
+<span class="lineNum">      83 </span>            :     /* S  */ 32.065, 35.453, 39.948, 39.0983, 40.078, 44.955910,
+<span class="lineNum">      84 </span>            :     /* Ti */ 47.867, 50.9415, 51.9961, 54.938049, 55.845, 58.9332,
+<span class="lineNum">      85 </span>            :     /* Ni */ 58.6934, 63.546, 65.409, 69.723, 72.64, 74.92160, 
+<span class="lineNum">      86 </span>            :     /* Se */ 78.96, 79.904, 83.798, 85.4678, 87.62, 88.90585, 
+<span class="lineNum">      87 </span>            :     /* Zr */ 91.224, 92.90638, 95.94, 98.0, 101.07, 102.90550,
+<span class="lineNum">      88 </span>            :     /* Pd */ 106.42, 107.8682, 112.411, 114.818, 118.710, 121.760, 
+<span class="lineNum">      89 </span>            :     /* Te */ 127.60, 126.90447, 131.293, 132.90545, 137.327, 
+<span class="lineNum">      90 </span>            :     /* La */ 138.9055, 140.116, 140.90765, 144.24, 145.0, 150.36,
+<span class="lineNum">      91 </span>            :     /* Eu */ 151.964, 157.25, 158.92534, 162.500, 164.93032, 
+<span class="lineNum">      92 </span>            :     /* Er */ 167.259, 168.93421, 173.04, 174.967, 178.49, 180.9479,
+<span class="lineNum">      93 </span>            :     /* W  */ 183.84, 186.207, 190.23, 192.217, 195.078, 196.96655, 
+<span class="lineNum">      94 </span>            :     /* Hg */ 200.59, 204.3833, 207.2, 208.98038, 209.0, 210.0, 222.0, 
+<span class="lineNum">      95 </span>            :     /* Fr */ 223.0, 226.0, 227.0, 232.0381, 231.03588, 238.02891,
+<span class="lineNum">      96 </span>            :     /* Np */ 237.0, 244.0, 243.0, 247.0, 247.0, 251.0, 252.0, 257.0,
+<span class="lineNum">      97 </span>            :     /* Md */ 258.0, 259.0, 262.0, 261.0, 262.0, 266.0, 264.0, 269.0,
+<span class="lineNum">      98 </span>            :     /* Mt */ 268.0, 271.0, 272.0
+<span class="lineNum">      99 </span>            : };
+<span class="lineNum">     100 </span>            : 
+<span class="lineNum">     101 </span>            : /*
+<span class="lineNum">     102 </span>            :  * corresponding table of VDW radii.
+<span class="lineNum">     103 </span>            :  * van der Waals radii are taken from A. Bondi, 
+<span class="lineNum">     104 </span>            :  * J. Phys. Chem., 68, 441 - 452, 1964, 
+<span class="lineNum">     105 </span>            :  * except the value for H, which is taken from R.S. Rowland &amp; R. Taylor, 
+<span class="lineNum">     106 </span>            :  * J.Phys.Chem., 100, 7384 - 7391, 1996. Radii that are not available in 
+<span class="lineNum">     107 </span>            :  * either of these publications have RvdW = 2.00 Å.
+<span class="lineNum">     108 </span>            :  * The radii for Ions (Na, K, Cl, Ca, Mg, and Cs are based on the CHARMM27 
+<span class="lineNum">     109 </span>            :  * Rmin/2 parameters for (SOD, POT, CLA, CAL, MG, CES) by default.
+<span class="lineNum">     110 </span>            :  */
+<span class="lineNum">     111 </span>            : static const float pte_vdw_radius[] = { 
+<span class="lineNum">     112 </span>            :     /* X  */ 1.5, 1.2, 1.4, 1.82, 2.0, 2.0,  
+<span class="lineNum">     113 </span>            :     /* C  */ 1.7, 1.55, 1.52, 1.47, 1.54, 
+<span class="lineNum">     114 </span>            :     /* Na */ 1.36, 1.18, 2.0, 2.1, 1.8,
+<span class="lineNum">     115 </span>            :     /* S  */ 1.8, 2.27, 1.88, 1.76, 1.37, 2.0,
+<span class="lineNum">     116 </span>            :     /* Ti */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     117 </span>            :     /* Ni */ 1.63, 1.4, 1.39, 1.07, 2.0, 1.85,
+<span class="lineNum">     118 </span>            :     /* Se */ 1.9, 1.85, 2.02, 2.0, 2.0, 2.0, 
+<span class="lineNum">     119 </span>            :     /* Zr */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     120 </span>            :     /* Pd */ 1.63, 1.72, 1.58, 1.93, 2.17, 2.0, 
+<span class="lineNum">     121 </span>            :     /* Te */ 2.06, 1.98, 2.16, 2.1, 2.0,
+<span class="lineNum">     122 </span>            :     /* La */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     123 </span>            :     /* Eu */ 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     124 </span>            :     /* Er */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     125 </span>            :     /* W  */ 2.0, 2.0, 2.0, 2.0, 1.72, 1.66,
+<span class="lineNum">     126 </span>            :     /* Hg */ 1.55, 1.96, 2.02, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     127 </span>            :     /* Fr */ 2.0, 2.0, 2.0, 2.0, 2.0, 1.86,
+<span class="lineNum">     128 </span>            :     /* Np */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     129 </span>            :     /* Md */ 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0,
+<span class="lineNum">     130 </span>            :     /* Mt */ 2.0, 2.0, 2.0
+<span class="lineNum">     131 </span>            : };
+<span class="lineNum">     132 </span>            : 
+<a name="133"><span class="lineNum">     133 </span>            : /* lookup functions */</a>
+<span class="lineNum">     134 </span>            : 
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 : static const char *get_pte_label(const int idx)</span>
+<span class="lineNum">     136 </span>            : {
+<span class="lineNum">     137 </span><span class="lineNoCov">          0 :     if ((idx &lt; 1) || (idx &gt;= nr_pte_entries)) return pte_label[0];</span>
+<span class="lineNum">     138 </span>            : 
+<span class="lineNum">     139 </span><span class="lineNoCov">          0 :     return pte_label[idx];</span>
+<a name="140"><span class="lineNum">     140 </span>            : }</a>
+<span class="lineNum">     141 </span>            : 
+<span class="lineNum">     142 </span><span class="lineNoCov">          0 : static float get_pte_mass(const int idx)</span>
+<span class="lineNum">     143 </span>            : {
+<span class="lineNum">     144 </span><span class="lineNoCov">          0 :     if ((idx &lt; 1) || (idx &gt;= nr_pte_entries)) return pte_mass[0];</span>
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span><span class="lineNoCov">          0 :     return pte_mass[idx];</span>
+<a name="147"><span class="lineNum">     147 </span>            : }</a>
+<span class="lineNum">     148 </span>            : 
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 : static float get_pte_vdw_radius(const int idx)</span>
+<span class="lineNum">     150 </span>            : {
+<span class="lineNum">     151 </span><span class="lineNoCov">          0 :     if ((idx &lt; 1) || (idx &gt;= nr_pte_entries)) return pte_vdw_radius[0];</span>
+<span class="lineNum">     152 </span>            : 
+<span class="lineNum">     153 </span>            : #if 1
+<span class="lineNum">     154 </span>            :     /* Replace with Hydrogen radius with an &quot;all-atom&quot; radius */
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :     if (idx == 1)</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :       return 1.0;    /* H  */</span>
+<span class="lineNum">     157 </span>            : #else
+<span class="lineNum">     158 </span>            :     /* Replace with old VMD atom radii values */
+<span class="lineNum">     159 </span>            :     switch (idx) {
+<span class="lineNum">     160 </span>            :       case  1: return 1.0;    /* H  */
+<span class="lineNum">     161 </span>            :       case  6: return 1.5;    /* C  */
+<span class="lineNum">     162 </span>            :       case  7: return 1.4;    /* N  */
+<span class="lineNum">     163 </span>            :       case  8: return 1.3;    /* O  */
+<span class="lineNum">     164 </span>            :       case  9: return 1.2;    /* F  */
+<span class="lineNum">     165 </span>            :       case 15: return 1.5;    /* P  */
+<span class="lineNum">     166 </span>            :       case 16: return 1.9;    /* S  */ 
+<span class="lineNum">     167 </span>            :     }
+<span class="lineNum">     168 </span>            : #endif
+<span class="lineNum">     169 </span>            : 
+<span class="lineNum">     170 </span><span class="lineNoCov">          0 :     return pte_vdw_radius[idx];</span>
+<a name="171"><span class="lineNum">     171 </span>            : }</a>
+<span class="lineNum">     172 </span>            : 
+<span class="lineNum">     173 </span><span class="lineNoCov">          0 : static int get_pte_idx(const char *label)</span>
+<span class="lineNum">     174 </span>            : {
+<span class="lineNum">     175 </span>            :     int i;
+<span class="lineNum">     176 </span>            :     char atom[3];
+<span class="lineNum">     177 </span>            :     
+<span class="lineNum">     178 </span>            :     /* zap string */
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :     atom[0] = (char) 0;</span>
+<span class="lineNum">     180 </span><span class="lineNoCov">          0 :     atom[1] = (char) 0;</span>
+<span class="lineNum">     181 </span><span class="lineNoCov">          0 :     atom[2] = (char) 0;</span>
+<span class="lineNum">     182 </span>            :     /* if we don't have a null-pointer, there must be at least two 
+<span class="lineNum">     183 </span>            :      * chars, which is all we need. we convert to the capitalization 
+<span class="lineNum">     184 </span>            :      * convention of the table above during assignment. */
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :     if (label != NULL) {</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :         atom[0] = (char) toupper((int) label[0]);</span>
+<span class="lineNum">     187 </span><span class="lineNoCov">          0 :         atom[1] = (char) tolower((int) label[1]);</span>
+<span class="lineNum">     188 </span>            :     }
+<span class="lineNum">     189 </span>            :     /* discard numbers in atom label */
+<span class="lineNum">     190 </span><span class="lineNoCov">          0 :     if (isdigit(atom[1])) atom[1] = (char) 0;</span>
+<span class="lineNum">     191 </span>            :     
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :     for (i=0; i &lt; nr_pte_entries; ++i) {</span>
+<span class="lineNum">     193 </span><span class="lineNoCov">          0 :         if ( (pte_label[i][0] == atom[0])</span>
+<span class="lineNum">     194 </span><span class="lineNoCov">          0 :              &amp;&amp; (pte_label[i][1] == atom[1]) ) return i;</span>
+<span class="lineNum">     195 </span>            :     }
+<span class="lineNum">     196 </span>            :     
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     return 0;</span>
+<a name="198"><span class="lineNum">     198 </span>            : }</a>
+<span class="lineNum">     199 </span>            : 
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 : static int get_pte_idx_from_string(const char *label) {</span>
+<span class="lineNum">     201 </span>            :   int i, ind;
+<span class="lineNum">     202 </span>            :   char atom[3];
+<span class="lineNum">     203 </span>            : 
+<span class="lineNum">     204 </span><span class="lineNoCov">          0 :   if (label != NULL) {</span>
+<span class="lineNum">     205 </span>            :     /* zap string */
+<span class="lineNum">     206 </span><span class="lineNoCov">          0 :     atom[0] = atom[1] = atom[2] = '\0';</span>
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :     for (ind=0,i=0; (ind&lt;2) &amp;&amp; (label[i]!='\0'); i++) {</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :       if (label[i] != ' ') {</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :         atom[ind] = toupper(label[i]);</span>
+<span class="lineNum">     211 </span><span class="lineNoCov">          0 :         ind++;</span>
+<span class="lineNum">     212 </span>            :       }
+<span class="lineNum">     213 </span>            :     }
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineNoCov">          0 :     if (ind &lt; 1)</span>
+<span class="lineNum">     216 </span><span class="lineNoCov">          0 :       return 0; /* no non-whitespace characters */</span>
+<span class="lineNum">     217 </span>            :  
+<span class="lineNum">     218 </span><span class="lineNoCov">          0 :     for (i=0; i &lt; nr_pte_entries; ++i) {</span>
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :       if ((toupper(pte_label[i][0]) == atom[0]) &amp;&amp; (toupper(pte_label[i][1]) == atom[1])) </span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :         return i;</span>
+<span class="lineNum">     221 </span>            :     }
+<span class="lineNum">     222 </span>            :   }  
+<span class="lineNum">     223 </span>            : 
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :   return 0;</span>
+<span class="lineNum">     225 </span>            : }
+<span class="lineNum">     226 </span>            : 
+<span class="lineNum">     227 </span>            : #if 0
+<span class="lineNum">     228 </span>            : #include &lt;stdio.h&gt;
+<span class="lineNum">     229 </span>            : 
+<span class="lineNum">     230 </span>            : int main() {
+<span class="lineNum">     231 </span>            :   int i;
+<span class="lineNum">     232 </span>            : 
+<span class="lineNum">     233 </span>            :   printf(&quot;Periodic table check/dump\n&quot;);
+<span class="lineNum">     234 </span>            :   printf(&quot;  Table contains data for %d elements\n&quot;, nr_pte_entries);
+<span class="lineNum">     235 </span>            :   printf(&quot;   Mass table size check: %d\n&quot;, sizeof(pte_mass) / sizeof(float));
+<span class="lineNum">     236 </span>            :   printf(&quot;    VDW table size check: %d\n&quot;, sizeof(pte_vdw_radius) / sizeof(float));
+<span class="lineNum">     237 </span>            :   printf(&quot;\n&quot;);
+<span class="lineNum">     238 </span>            :   printf(&quot;Symbol Num    Mass   rVDW\n&quot;);
+<span class="lineNum">     239 </span>            :   for (i=0; i&lt;nr_pte_entries; i++) {
+<span class="lineNum">     240 </span>            :     printf(&quot;   %-2s  %3d  %6.2f  %4.2f\n&quot;,
+<span class="lineNum">     241 </span>            :       get_pte_label(i), i, get_pte_mass(i), get_pte_vdw_radius(i));
+<span class="lineNum">     242 </span>            :   } 
+<span class="lineNum">     243 </span>            :   return 0;
+<span class="lineNum">     244 </span>            : }
+<span class="lineNum">     245 </span>            : #endif
+<span class="lineNum">     246 </span>            : }
+<span class="lineNum">     247 </span>            : }
+<span class="lineNum">     248 </span>            : #endif
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

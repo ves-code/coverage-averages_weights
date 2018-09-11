@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - tools/SwitchingFunction.h</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">tools</a> - SwitchingFunction.h<span style="font-size: 80%;"> (source / <a href="SwitchingFunction.h.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntry">1</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">3</td>
+            <td class="headerCovTableEntry">4</td>
+            <td class="headerCovTableEntryMed">75.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2011-2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #ifndef __PLUMED_tools_SwitchingFunction_h
+<span class="lineNum">      23 </span>            : #define __PLUMED_tools_SwitchingFunction_h
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : #include &lt;string&gt;
+<span class="lineNum">      26 </span>            : #include &lt;vector&gt;
+<span class="lineNum">      27 </span>            : #include &quot;lepton/Lepton.h&quot;
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : namespace PLMD {
+<span class="lineNum">      30 </span>            : 
+<span class="lineNum">      31 </span>            : class Log;
+<span class="lineNum">      32 </span>            : class Keywords;
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : /// \ingroup TOOLBOX
+<span class="lineNum">      35 </span>            : /// Small class to compure switching functions.
+<span class="lineNum">      36 </span>            : /// Switching functions are created using set() and
+<span class="lineNum">      37 </span>            : /// then can be used with function calculate() or calculateSqr().
+<span class="lineNum">      38 </span>            : /// Since this is typically computed on a distance vector,
+<span class="lineNum">      39 </span>            : /// the second all (calculateSqr()) allows to skip the calculation
+<a name="40"><span class="lineNum">      40 </span>            : /// of a square root in some case, thus potentially increasing</a>
+<span class="lineNum">      41 </span>            : /// performances.
+<span class="lineNum">      42 </span><span class="lineCov">  333454459 : class SwitchingFunction {</span>
+<span class="lineNum">      43 </span>            : /// This is to check that switching function has been initialized
+<span class="lineNum">      44 </span>            :   bool init=false;
+<span class="lineNum">      45 </span>            : /// Type of function
+<span class="lineNum">      46 </span>            :   enum {rational,exponential,gaussian,smap,cubic,tanh,matheval,leptontype,nativeq} type=rational;
+<span class="lineNum">      47 </span>            : /// Inverse of scaling length.
+<span class="lineNum">      48 </span>            : /// We store the inverse to avoid a division
+<span class="lineNum">      49 </span>            :   double invr0=0.0;
+<span class="lineNum">      50 </span>            : /// Minimum distance (before this, function is one)
+<span class="lineNum">      51 </span>            :   double d0=0.0;
+<span class="lineNum">      52 </span>            : /// Maximum distance (after this, function is zero)
+<span class="lineNum">      53 </span>            :   double dmax=0.0;
+<span class="lineNum">      54 </span>            : /// Exponents for rational function
+<span class="lineNum">      55 </span>            :   int nn=6;
+<span class="lineNum">      56 </span>            :   int mm=0;
+<span class="lineNum">      57 </span>            : /// Parameters for smap function
+<span class="lineNum">      58 </span>            :   int a=0;
+<span class="lineNum">      59 </span>            :   int b=0;
+<span class="lineNum">      60 </span>            :   double c=0.0;
+<span class="lineNum">      61 </span>            :   double d=0.0;
+<span class="lineNum">      62 </span>            : // nativeq
+<span class="lineNum">      63 </span>            :   double lambda=0.0;
+<span class="lineNum">      64 </span>            :   double beta=0.0;
+<span class="lineNum">      65 </span>            :   double ref=0.0;
+<span class="lineNum">      66 </span>            : /// Square of invr0, useful in calculateSqr()
+<span class="lineNum">      67 </span>            :   double invr0_2=0.0;
+<span class="lineNum">      68 </span>            : /// Square of dmax, useful in calculateSqr()
+<span class="lineNum">      69 </span>            :   double dmax_2=0.0;
+<span class="lineNum">      70 </span>            : /// Parameters for stretching the function to zero at d_max
+<span class="lineNum">      71 </span>            :   double stretch=1.0;
+<span class="lineNum">      72 </span>            :   double shift=0.0;
+<span class="lineNum">      73 </span>            : /// Low-level tool to compute rational functions.
+<span class="lineNum">      74 </span>            : /// It is separated since it is called both by calculate() and calculateSqr()
+<span class="lineNum">      75 </span>            :   double do_rational(double rdist,double&amp;dfunc,int nn,int mm)const;
+<span class="lineNum">      76 </span>            : /// Function for lepton;
+<span class="lineNum">      77 </span>            :   std::string lepton_func;
+<span class="lineNum">      78 </span>            : /// Lepton expression.
+<span class="lineNum">      79 </span>            : /// \warning Since lepton::CompiledExpression is mutable, a vector is necessary for multithreading!
+<span class="lineNum">      80 </span>            :   std::vector&lt;lepton::CompiledExpression&gt; expression;
+<span class="lineNum">      81 </span>            : /// Lepton expression for derivative
+<span class="lineNum">      82 </span>            : /// \warning Since lepton::CompiledExpression is mutable, a vector is necessary for multithreading!
+<span class="lineNum">      83 </span>            :   std::vector&lt;lepton::CompiledExpression&gt; expression_deriv;
+<span class="lineNum">      84 </span>            :   std::vector&lt;double*&gt; lepton_ref;
+<span class="lineNum">      85 </span>            :   std::vector&lt;double*&gt; lepton_ref_deriv;
+<span class="lineNum">      86 </span>            : /// Set to true for fast rational functions (depending on x**2 only)
+<span class="lineNum">      87 </span>            :   bool fastrational=false;
+<span class="lineNum">      88 </span>            : /// Set to true if lepton only uses x2
+<span class="lineNum">      89 </span>            :   bool leptonx2=false;
+<span class="lineNum">      90 </span>            : public:
+<span class="lineNum">      91 </span>            :   static void registerKeywords( Keywords&amp; keys );
+<span class="lineNum">      92 </span>            : /// Set a &quot;rational&quot; switching function.
+<span class="lineNum">      93 </span>            : /// Notice that a d_max is set automatically to a value such that
+<span class="lineNum">      94 </span>            : /// f(d_max)=0.00001.
+<span class="lineNum">      95 </span>            :   void set(int nn,int mm,double r_0,double d_0);
+<span class="lineNum">      96 </span>            : /// Set an arbitrary switching function.
+<span class="lineNum">      97 </span>            : /// Parse the string in definition and possibly returns errors
+<span class="lineNum">      98 </span>            : /// in the errormsg string
+<span class="lineNum">      99 </span>            :   void set(const std::string&amp; definition, std::string&amp; errormsg);
+<span class="lineNum">     100 </span>            : /// Returns a string with a description of the switching function
+<span class="lineNum">     101 </span>            :   std::string description() const ;
+<span class="lineNum">     102 </span>            : /// Compute the switching function.
+<span class="lineNum">     103 </span>            : /// Returns s(x). df will be set to the value of the derivative
+<span class="lineNum">     104 </span>            : /// of the switching function _divided_by_x
+<span class="lineNum">     105 </span>            :   double calculate(double x,double&amp;df)const;
+<span class="lineNum">     106 </span>            : /// Compute the switching function.
+<span class="lineNum">     107 </span>            : /// Returns \f$ s(\sqrt{x})\f$ .
+<span class="lineNum">     108 </span>            : /// df will be set to the \f$ \frac{1}{\sqrt{x}}\frac{ds}{d\sqrt{x}}= 2 \frac{ds}{dx}\f$
+<span class="lineNum">     109 </span>            : /// (same as calculate()).
+<span class="lineNum">     110 </span>            : /// The advantage is that in some case the expensive square root can be avoided
+<span class="lineNum">     111 </span>            : /// (namely for rational functions, if nn and mm are even and d0 is zero)
+<span class="lineNum">     112 </span>            :   double calculateSqr(double distance2,double&amp;dfunc)const;
+<span class="lineNum">     113 </span>            : /// Returns d0
+<span class="lineNum">     114 </span>            :   double get_d0() const;
+<span class="lineNum">     115 </span>            : /// Returns r0
+<span class="lineNum">     116 </span>            :   double get_r0() const;
+<span class="lineNum">     117 </span>            : /// Return dmax
+<span class="lineNum">     118 </span>            :   double get_dmax() const;
+<span class="lineNum">     119 </span>            : /// Return dmax squared
+<span class="lineNum">     120 </span>            :   double get_dmax2() const;
+<span class="lineNum">     121 </span>            : };
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            : }
+<span class="lineNum">     124 </span>            : 
+<span class="lineNum">     125 </span>            : #endif
+<span class="lineNum">     126 </span>            : 
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

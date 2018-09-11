@@ -1,0 +1,538 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage (other modules) - lepton/CompiledExpression.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">lepton</a> - CompiledExpression.cpp<span style="font-size: 80%;"> (source / <a href="CompiledExpression.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage (other modules)</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">92</td>
+            <td class="headerCovTableEntry">95</td>
+            <td class="headerCovTableEntryHi">96.8 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:58</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntry">13</td>
+            <td class="headerCovTableEntryHi">100.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">       3 </span>            :  *                                   Lepton                                   *
+<span class="lineNum">       4 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">       5 </span>            :  * This is part of the Lepton expression parser originating from              *
+<span class="lineNum">       6 </span>            :  * Simbios, the NIH National Center for Physics-Based Simulation of           *
+<span class="lineNum">       7 </span>            :  * Biological Structures at Stanford, funded under the NIH Roadmap for        *
+<span class="lineNum">       8 </span>            :  * Medical Research, grant U54 GM072970. See https://simtk.org.               *
+<span class="lineNum">       9 </span>            :  *                                                                            *
+<span class="lineNum">      10 </span>            :  * Portions copyright (c) 2013-2016 Stanford University and the Authors.      *
+<span class="lineNum">      11 </span>            :  * Authors: Peter Eastman                                                     *
+<span class="lineNum">      12 </span>            :  * Contributors:                                                              *
+<span class="lineNum">      13 </span>            :  *                                                                            *
+<span class="lineNum">      14 </span>            :  * Permission is hereby granted, free of charge, to any person obtaining a    *
+<span class="lineNum">      15 </span>            :  * copy of this software and associated documentation files (the &quot;Software&quot;), *
+<span class="lineNum">      16 </span>            :  * to deal in the Software without restriction, including without limitation  *
+<span class="lineNum">      17 </span>            :  * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+<span class="lineNum">      18 </span>            :  * and/or sell copies of the Software, and to permit persons to whom the      *
+<span class="lineNum">      19 </span>            :  * Software is furnished to do so, subject to the following conditions:       *
+<span class="lineNum">      20 </span>            :  *                                                                            *
+<span class="lineNum">      21 </span>            :  * The above copyright notice and this permission notice shall be included in *
+<span class="lineNum">      22 </span>            :  * all copies or substantial portions of the Software.                        *
+<span class="lineNum">      23 </span>            :  *                                                                            *
+<span class="lineNum">      24 </span>            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+<span class="lineNum">      25 </span>            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   *
+<span class="lineNum">      26 </span>            :  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    *
+<span class="lineNum">      27 </span>            :  * THE AUTHORS, CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,    *
+<span class="lineNum">      28 </span>            :  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
+<span class="lineNum">      29 </span>            :  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
+<span class="lineNum">      30 </span>            :  * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
+<span class="lineNum">      31 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">      32 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      33 </span>            : /* -------------------------------------------------------------------------- *
+<span class="lineNum">      34 </span>            :  *                                   lepton                                   *
+<span class="lineNum">      35 </span>            :  * -------------------------------------------------------------------------- *
+<span class="lineNum">      36 </span>            :  * This is part of the lepton expression parser originating from              *
+<span class="lineNum">      37 </span>            :  * Simbios, the NIH National Center for Physics-Based Simulation of           *
+<span class="lineNum">      38 </span>            :  * Biological Structures at Stanford, funded under the NIH Roadmap for        *
+<span class="lineNum">      39 </span>            :  * Medical Research, grant U54 GM072970. See https://simtk.org.               *
+<span class="lineNum">      40 </span>            :  *                                                                            *
+<span class="lineNum">      41 </span>            :  * Portions copyright (c) 2013-2016 Stanford University and the Authors.      *
+<span class="lineNum">      42 </span>            :  * Authors: Peter Eastman                                                     *
+<span class="lineNum">      43 </span>            :  * Contributors:                                                              *
+<span class="lineNum">      44 </span>            :  *                                                                            *
+<span class="lineNum">      45 </span>            :  * Permission is hereby granted, free of charge, to any person obtaining a    *
+<span class="lineNum">      46 </span>            :  * copy of this software and associated documentation files (the &quot;Software&quot;), *
+<span class="lineNum">      47 </span>            :  * to deal in the Software without restriction, including without limitation  *
+<span class="lineNum">      48 </span>            :  * the rights to use, copy, modify, merge, publish, distribute, sublicense,   *
+<span class="lineNum">      49 </span>            :  * and/or sell copies of the Software, and to permit persons to whom the      *
+<span class="lineNum">      50 </span>            :  * Software is furnished to do so, subject to the following conditions:       *
+<span class="lineNum">      51 </span>            :  *                                                                            *
+<span class="lineNum">      52 </span>            :  * The above copyright notice and this permission notice shall be included in *
+<span class="lineNum">      53 </span>            :  * all copies or substantial portions of the Software.                        *
+<span class="lineNum">      54 </span>            :  *                                                                            *
+<span class="lineNum">      55 </span>            :  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR *
+<span class="lineNum">      56 </span>            :  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   *
+<span class="lineNum">      57 </span>            :  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    *
+<span class="lineNum">      58 </span>            :  * THE AUTHORS, CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,    *
+<span class="lineNum">      59 </span>            :  * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR      *
+<span class="lineNum">      60 </span>            :  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE  *
+<span class="lineNum">      61 </span>            :  * USE OR OTHER DEALINGS IN THE SOFTWARE.                                     *
+<span class="lineNum">      62 </span>            :  * -------------------------------------------------------------------------- */
+<span class="lineNum">      63 </span>            : 
+<span class="lineNum">      64 </span>            : #include &quot;CompiledExpression.h&quot;
+<span class="lineNum">      65 </span>            : #include &quot;Operation.h&quot;
+<span class="lineNum">      66 </span>            : #include &quot;ParsedExpression.h&quot;
+<span class="lineNum">      67 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">      68 </span>            :     #include &quot;asmjit/asmjit.h&quot;
+<span class="lineNum">      69 </span>            : #endif
+<span class="lineNum">      70 </span>            : #include &lt;utility&gt;
+<span class="lineNum">      71 </span>            : 
+<span class="lineNum">      72 </span>            : namespace PLMD {
+<span class="lineNum">      73 </span>            : using namespace lepton;
+<span class="lineNum">      74 </span>            : using namespace std;
+<span class="lineNum">      75 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">      76 </span>            :     using namespace asmjit;
+<a name="77"><span class="lineNum">      77 </span>            : #endif</a>
+<span class="lineNum">      78 </span>            : 
+<span class="lineNum">      79 </span><span class="lineCov">    3686004 : AsmJitRuntimePtr::AsmJitRuntimePtr()</span>
+<span class="lineNum">      80 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">      81 </span>            :   : ptr(new asmjit::JitRuntime)
+<span class="lineNum">      82 </span>            : #endif
+<a name="83"><span class="lineNum">      83 </span><span class="lineCov">    3686004 : {}</span></a>
+<span class="lineNum">      84 </span>            : 
+<span class="lineNum">      85 </span><span class="lineCov">    3686004 : AsmJitRuntimePtr::~AsmJitRuntimePtr()</span>
+<span class="lineNum">      86 </span>            : {
+<span class="lineNum">      87 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">      88 </span>            :   delete static_cast&lt;asmjit::JitRuntime*&gt;(ptr);
+<span class="lineNum">      89 </span>            : #endif
+<a name="90"><span class="lineNum">      90 </span><span class="lineCov">    3686004 : }</span></a>
+<span class="lineNum">      91 </span>            : 
+<span class="lineNum">      92 </span><span class="lineCov">        802 : CompiledExpression::CompiledExpression() : jitCode(NULL) {</span>
+<a name="93"><span class="lineNum">      93 </span><span class="lineCov">        802 : }</span></a>
+<span class="lineNum">      94 </span>            : 
+<span class="lineNum">      95 </span><span class="lineCov">        774 : CompiledExpression::CompiledExpression(const ParsedExpression&amp; expression) : jitCode(NULL) {</span>
+<span class="lineNum">      96 </span><span class="lineCov">        774 :     ParsedExpression expr = expression.optimize(); // Just in case it wasn't already optimized.</span>
+<span class="lineNum">      97 </span><span class="lineCov">       1548 :     vector&lt;pair&lt;ExpressionTreeNode, int&gt; &gt; temps;</span>
+<span class="lineNum">      98 </span><span class="lineCov">        774 :     compileExpression(expr.getRootNode(), temps);</span>
+<span class="lineNum">      99 </span><span class="lineCov">        774 :     int maxArguments = 1;</span>
+<span class="lineNum">     100 </span><span class="lineCov">       5583 :     for (int i = 0; i &lt; (int) operation.size(); i++)</span>
+<span class="lineNum">     101 </span><span class="lineCov">       4809 :         if (operation[i]-&gt;getNumArguments() &gt; maxArguments)</span>
+<span class="lineNum">     102 </span><span class="lineCov">        519 :             maxArguments = operation[i]-&gt;getNumArguments();</span>
+<span class="lineNum">     103 </span><span class="lineCov">       1548 :     argValues.resize(maxArguments);</span>
+<span class="lineNum">     104 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">     105 </span>            :     generateJitCode();
+<span class="lineNum">     106 </span>            : #endif
+<a name="107"><span class="lineNum">     107 </span><span class="lineCov">        774 : }</span></a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span><span class="lineCov">    7372008 : CompiledExpression::~CompiledExpression() {</span>
+<span class="lineNum">     110 </span><span class="lineCov">   13900435 :     for (int i = 0; i &lt; (int) operation.size(); i++)</span>
+<span class="lineNum">     111 </span><span class="lineCov">   10214431 :         if (operation[i] != NULL)</span>
+<span class="lineNum">     112 </span><span class="lineCov">   10214431 :             delete operation[i];</span>
+<a name="113"><span class="lineNum">     113 </span><span class="lineCov">    3686004 : }</span></a>
+<span class="lineNum">     114 </span>            : 
+<span class="lineNum">     115 </span><span class="lineCov">    3684428 : CompiledExpression::CompiledExpression(const CompiledExpression&amp; expression) : jitCode(NULL) {</span>
+<span class="lineNum">     116 </span><span class="lineCov">    3684428 :     *this = expression;</span>
+<a name="117"><span class="lineNum">     117 </span><span class="lineCov">    3684428 : }</span></a>
+<span class="lineNum">     118 </span>            : 
+<span class="lineNum">     119 </span><span class="lineCov">    3685202 : CompiledExpression&amp; CompiledExpression::operator=(const CompiledExpression&amp; expression) {</span>
+<span class="lineNum">     120 </span><span class="lineCov">    3685202 :     arguments = expression.arguments;</span>
+<span class="lineNum">     121 </span><span class="lineCov">    3685202 :     target = expression.target;</span>
+<span class="lineNum">     122 </span><span class="lineCov">    3685202 :     variableIndices = expression.variableIndices;</span>
+<span class="lineNum">     123 </span><span class="lineCov">    3685202 :     variableNames = expression.variableNames;</span>
+<span class="lineNum">     124 </span><span class="lineCov">    3685202 :     workspace.resize(expression.workspace.size());</span>
+<span class="lineNum">     125 </span><span class="lineCov">    3685202 :     argValues.resize(expression.argValues.size());</span>
+<span class="lineNum">     126 </span><span class="lineCov">    3685202 :     operation.resize(expression.operation.size());</span>
+<span class="lineNum">     127 </span><span class="lineCov">   13894824 :     for (int i = 0; i &lt; (int) operation.size(); i++)</span>
+<span class="lineNum">     128 </span><span class="lineCov">   10209622 :         operation[i] = expression.operation[i]-&gt;clone();</span>
+<span class="lineNum">     129 </span><span class="lineCov">    3685202 :     setVariableLocations(variablePointers);</span>
+<span class="lineNum">     130 </span><span class="lineCov">    3685202 :     return *this;</span>
+<a name="131"><span class="lineNum">     131 </span>            : }</a>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineCov">       7329 : void CompiledExpression::compileExpression(const ExpressionTreeNode&amp; node, vector&lt;pair&lt;ExpressionTreeNode, int&gt; &gt;&amp; temps) {</span>
+<span class="lineNum">     134 </span><span class="lineCov">       7329 :     if (findTempIndex(node, temps) != -1)</span>
+<span class="lineNum">     135 </span><span class="lineCov">       8972 :         return; // We have already processed a node identical to this one.</span>
+<span class="lineNum">     136 </span>            :     
+<span class="lineNum">     137 </span>            :     // Process the child nodes.
+<span class="lineNum">     138 </span>            :     
+<span class="lineNum">     139 </span><span class="lineCov">       5686 :     vector&lt;int&gt; args;</span>
+<span class="lineNum">     140 </span><span class="lineCov">      12241 :     for (int i = 0; i &lt; node.getChildren().size(); i++) {</span>
+<span class="lineNum">     141 </span><span class="lineCov">       6555 :         compileExpression(node.getChildren()[i], temps);</span>
+<span class="lineNum">     142 </span><span class="lineCov">       6555 :         args.push_back(findTempIndex(node.getChildren()[i], temps));</span>
+<span class="lineNum">     143 </span>            :     }
+<span class="lineNum">     144 </span>            :     
+<span class="lineNum">     145 </span>            :     // Process this node.
+<span class="lineNum">     146 </span>            :     
+<span class="lineNum">     147 </span><span class="lineCov">       5686 :     if (node.getOperation().getId() == Operation::VARIABLE) {</span>
+<span class="lineNum">     148 </span><span class="lineCov">        877 :         variableIndices[node.getOperation().getName()] = (int) workspace.size();</span>
+<span class="lineNum">     149 </span><span class="lineCov">        877 :         variableNames.insert(node.getOperation().getName());</span>
+<span class="lineNum">     150 </span>            :     }
+<span class="lineNum">     151 </span>            :     else {
+<span class="lineNum">     152 </span><span class="lineCov">       4809 :         int stepIndex = (int) arguments.size();</span>
+<span class="lineNum">     153 </span><span class="lineCov">       4809 :         arguments.push_back(vector&lt;int&gt;());</span>
+<span class="lineNum">     154 </span><span class="lineCov">       4809 :         target.push_back((int) workspace.size());</span>
+<span class="lineNum">     155 </span><span class="lineCov">       4809 :         operation.push_back(node.getOperation().clone());</span>
+<span class="lineNum">     156 </span><span class="lineCov">       4809 :         if (args.size() == 0)</span>
+<span class="lineNum">     157 </span><span class="lineCov">         66 :             arguments[stepIndex].push_back(0); // The value won't actually be used.  We just need something there.</span>
+<span class="lineNum">     158 </span>            :         else {
+<span class="lineNum">     159 </span>            :             // If the arguments are sequential, we can just pass a pointer to the first one.
+<span class="lineNum">     160 </span>            :             
+<span class="lineNum">     161 </span><span class="lineCov">       4743 :             bool sequential = true;</span>
+<span class="lineNum">     162 </span><span class="lineCov">       6555 :             for (int i = 1; i &lt; args.size(); i++)</span>
+<span class="lineNum">     163 </span><span class="lineCov">       1812 :                 if (args[i] != args[i-1]+1)</span>
+<span class="lineNum">     164 </span><span class="lineCov">       1065 :                     sequential = false;</span>
+<span class="lineNum">     165 </span><span class="lineCov">       4743 :             if (sequential)</span>
+<span class="lineNum">     166 </span><span class="lineCov">       3678 :                 arguments[stepIndex].push_back(args[0]);</span>
+<span class="lineNum">     167 </span>            :             else
+<span class="lineNum">     168 </span><span class="lineCov">       1065 :                 arguments[stepIndex] = args;</span>
+<span class="lineNum">     169 </span>            :         }
+<span class="lineNum">     170 </span>            :     }
+<span class="lineNum">     171 </span><span class="lineCov">       5686 :     temps.push_back(make_pair(node, (int) workspace.size()));</span>
+<span class="lineNum">     172 </span><span class="lineCov">       5686 :     workspace.push_back(0.0);</span>
+<a name="173"><span class="lineNum">     173 </span>            : }</a>
+<span class="lineNum">     174 </span>            : 
+<span class="lineNum">     175 </span><span class="lineCov">      13884 : int CompiledExpression::findTempIndex(const ExpressionTreeNode&amp; node, vector&lt;pair&lt;ExpressionTreeNode, int&gt; &gt;&amp; temps) {</span>
+<span class="lineNum">     176 </span><span class="lineCov">      53896 :     for (int i = 0; i &lt; (int) temps.size(); i++)</span>
+<span class="lineNum">     177 </span><span class="lineCov">      48210 :         if (temps[i].first == node)</span>
+<span class="lineNum">     178 </span><span class="lineCov">       8198 :             return i;</span>
+<span class="lineNum">     179 </span><span class="lineCov">       5686 :     return -1;</span>
+<a name="180"><span class="lineNum">     180 </span>            : }</a>
+<span class="lineNum">     181 </span>            : 
+<span class="lineNum">     182 </span><span class="lineCov">        327 : const set&lt;string&gt;&amp; CompiledExpression::getVariables() const {</span>
+<span class="lineNum">     183 </span><span class="lineCov">        327 :     return variableNames;</span>
+<a name="184"><span class="lineNum">     184 </span>            : }</a>
+<span class="lineNum">     185 </span>            : 
+<span class="lineNum">     186 </span><span class="lineCov">    3790373 : double&amp; CompiledExpression::getVariableReference(const string&amp; name) {</span>
+<span class="lineNum">     187 </span><span class="lineCov">    3790373 :     map&lt;string, double*&gt;::iterator pointer = variablePointers.find(name);</span>
+<span class="lineNum">     188 </span><span class="lineCov">    3790373 :     if (pointer != variablePointers.end())</span>
+<span class="lineNum">     189 </span><span class="lineNoCov">          0 :         return *pointer-&gt;second;</span>
+<span class="lineNum">     190 </span><span class="lineCov">    3790373 :     map&lt;string, int&gt;::iterator index = variableIndices.find(name);</span>
+<span class="lineNum">     191 </span><span class="lineCov">    3790373 :     if (index == variableIndices.end())</span>
+<span class="lineNum">     192 </span><span class="lineCov">     391726 :         throw Exception(&quot;getVariableReference: Unknown variable '&quot;+name+&quot;'&quot;);</span>
+<span class="lineNum">     193 </span><span class="lineCov">    3398647 :     return workspace[index-&gt;second];</span>
+<a name="194"><span class="lineNum">     194 </span>            : }</a>
+<span class="lineNum">     195 </span>            : 
+<span class="lineNum">     196 </span><span class="lineCov">    3685202 : void CompiledExpression::setVariableLocations(map&lt;string, double*&gt;&amp; variableLocations) {</span>
+<span class="lineNum">     197 </span><span class="lineCov">    3685202 :     variablePointers = variableLocations;</span>
+<span class="lineNum">     198 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">     199 </span>            :     // Rebuild the JIT code.
+<span class="lineNum">     200 </span>            :     
+<span class="lineNum">     201 </span>            :     if (workspace.size() &gt; 0)
+<span class="lineNum">     202 </span>            :         generateJitCode();
+<span class="lineNum">     203 </span>            : #else
+<span class="lineNum">     204 </span>            :     // Make a list of all variables we will need to copy before evaluating the expression.
+<span class="lineNum">     205 </span>            :     
+<span class="lineNum">     206 </span><span class="lineCov">    3685202 :     variablesToCopy.clear();</span>
+<span class="lineNum">     207 </span><span class="lineCov">    6981356 :     for (map&lt;string, int&gt;::const_iterator iter = variableIndices.begin(); iter != variableIndices.end(); ++iter) {</span>
+<span class="lineNum">     208 </span><span class="lineCov">    3296154 :         map&lt;string, double*&gt;::iterator pointer = variablePointers.find(iter-&gt;first);</span>
+<span class="lineNum">     209 </span><span class="lineCov">    3296154 :         if (pointer != variablePointers.end())</span>
+<span class="lineNum">     210 </span><span class="lineNoCov">          0 :             variablesToCopy.push_back(make_pair(&amp;workspace[iter-&gt;second], pointer-&gt;second));</span>
+<span class="lineNum">     211 </span>            :     }
+<span class="lineNum">     212 </span>            : #endif
+<a name="213"><span class="lineNum">     213 </span><span class="lineCov">    3685202 : }</span></a>
+<span class="lineNum">     214 </span>            : 
+<span class="lineNum">     215 </span><span class="lineCov">   15832640 : double CompiledExpression::evaluate() const {</span>
+<span class="lineNum">     216 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">     217 </span>            :     return ((double (*)()) jitCode)();
+<span class="lineNum">     218 </span>            : #else
+<span class="lineNum">     219 </span><span class="lineCov">   15832640 :     for (int i = 0; i &lt; variablesToCopy.size(); i++)</span>
+<span class="lineNum">     220 </span><span class="lineNoCov">          0 :         *variablesToCopy[i].first = *variablesToCopy[i].second;</span>
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            :     // Loop over the operations and evaluate each one.
+<span class="lineNum">     223 </span>            :     
+<span class="lineNum">     224 </span><span class="lineCov">   80715793 :     for (int step = 0; step &lt; operation.size(); step++) {</span>
+<span class="lineNum">     225 </span><span class="lineCov">   64861986 :         const vector&lt;int&gt;&amp; args = arguments[step];</span>
+<span class="lineNum">     226 </span><span class="lineCov">   64942334 :         if (args.size() == 1)</span>
+<span class="lineNum">     227 </span><span class="lineCov">   59404844 :             workspace[target[step]] = operation[step]-&gt;evaluate(&amp;workspace[args[0]], dummyVariables);</span>
+<span class="lineNum">     228 </span>            :         else {
+<span class="lineNum">     229 </span><span class="lineCov">   16973370 :             for (int i = 0; i &lt; args.size(); i++)</span>
+<span class="lineNum">     230 </span><span class="lineCov">   11317378 :                 argValues[i] = workspace[args[i]];</span>
+<span class="lineNum">     231 </span><span class="lineCov">    5660394 :             workspace[target[step]] = operation[step]-&gt;evaluate(&amp;argValues[0], dummyVariables);</span>
+<span class="lineNum">     232 </span>            :         }
+<span class="lineNum">     233 </span>            :     }
+<span class="lineNum">     234 </span><span class="lineCov">   15832907 :     return workspace[workspace.size()-1];</span>
+<span class="lineNum">     235 </span>            : #endif
+<span class="lineNum">     236 </span>            : }
+<span class="lineNum">     237 </span>            : 
+<span class="lineNum">     238 </span>            : #ifdef __PLUMED_HAS_ASMJIT
+<span class="lineNum">     239 </span>            : static double evaluateOperation(Operation* op, double* args) {
+<span class="lineNum">     240 </span>            :     static map&lt;string, double&gt; dummyVariables;
+<span class="lineNum">     241 </span>            :     return op-&gt;evaluate(args, dummyVariables);
+<span class="lineNum">     242 </span>            : }
+<span class="lineNum">     243 </span>            : 
+<span class="lineNum">     244 </span>            : static void generateSingleArgCall(X86Compiler&amp; c, X86Xmm&amp; dest, X86Xmm&amp; arg, double (*function)(double));
+<span class="lineNum">     245 </span>            : 
+<span class="lineNum">     246 </span>            : void CompiledExpression::generateJitCode() {
+<span class="lineNum">     247 </span>            :     CodeHolder code;
+<span class="lineNum">     248 </span>            :     auto &amp; runtime(*static_cast&lt;asmjit::JitRuntime*&gt;(runtimeptr.get()));
+<span class="lineNum">     249 </span>            :     code.init(runtime.getCodeInfo());
+<span class="lineNum">     250 </span>            :     X86Assembler a(&amp;code);
+<span class="lineNum">     251 </span>            :     X86Compiler c(&amp;code);
+<span class="lineNum">     252 </span>            :     c.addFunc(FuncSignature0&lt;double&gt;());
+<span class="lineNum">     253 </span>            :     vector&lt;X86Xmm&gt; workspaceVar(workspace.size());
+<span class="lineNum">     254 </span>            :     for (int i = 0; i &lt; (int) workspaceVar.size(); i++)
+<span class="lineNum">     255 </span>            :         workspaceVar[i] = c.newXmmSd();
+<span class="lineNum">     256 </span>            :     X86Gp argsPointer = c.newIntPtr();
+<span class="lineNum">     257 </span>            :     c.mov(argsPointer, imm_ptr(&amp;argValues[0]));
+<span class="lineNum">     258 </span>            :     
+<span class="lineNum">     259 </span>            :     // Load the arguments into variables.
+<span class="lineNum">     260 </span>            :     
+<span class="lineNum">     261 </span>            :     for (set&lt;string&gt;::const_iterator iter = variableNames.begin(); iter != variableNames.end(); ++iter) {
+<span class="lineNum">     262 </span>            :         map&lt;string, int&gt;::iterator index = variableIndices.find(*iter);
+<span class="lineNum">     263 </span>            :         X86Gp variablePointer = c.newIntPtr();
+<span class="lineNum">     264 </span>            :         c.mov(variablePointer, imm_ptr(&amp;getVariableReference(index-&gt;first)));
+<span class="lineNum">     265 </span>            :         c.movsd(workspaceVar[index-&gt;second], x86::ptr(variablePointer, 0, 0));
+<span class="lineNum">     266 </span>            :     }
+<span class="lineNum">     267 </span>            : 
+<span class="lineNum">     268 </span>            :     // Make a list of all constants that will be needed for evaluation.
+<span class="lineNum">     269 </span>            :     
+<span class="lineNum">     270 </span>            :     vector&lt;int&gt; operationConstantIndex(operation.size(), -1);
+<span class="lineNum">     271 </span>            :     for (int step = 0; step &lt; (int) operation.size(); step++) {
+<span class="lineNum">     272 </span>            :         // Find the constant value (if any) used by this operation.
+<span class="lineNum">     273 </span>            :         
+<span class="lineNum">     274 </span>            :         Operation&amp; op = *operation[step];
+<span class="lineNum">     275 </span>            :         double value;
+<span class="lineNum">     276 </span>            :         if (op.getId() == Operation::CONSTANT)
+<span class="lineNum">     277 </span>            :             value = dynamic_cast&lt;Operation::Constant&amp;&gt;(op).getValue();
+<span class="lineNum">     278 </span>            :         else if (op.getId() == Operation::ADD_CONSTANT)
+<span class="lineNum">     279 </span>            :             value = dynamic_cast&lt;Operation::AddConstant&amp;&gt;(op).getValue();
+<span class="lineNum">     280 </span>            :         else if (op.getId() == Operation::MULTIPLY_CONSTANT)
+<span class="lineNum">     281 </span>            :             value = dynamic_cast&lt;Operation::MultiplyConstant&amp;&gt;(op).getValue();
+<span class="lineNum">     282 </span>            :         else if (op.getId() == Operation::RECIPROCAL)
+<span class="lineNum">     283 </span>            :             value = 1.0;
+<span class="lineNum">     284 </span>            :         else if (op.getId() == Operation::STEP)
+<span class="lineNum">     285 </span>            :             value = 1.0;
+<span class="lineNum">     286 </span>            :         else if (op.getId() == Operation::DELTA)
+<span class="lineNum">     287 </span>            :             value = 1.0;
+<span class="lineNum">     288 </span>            :         else
+<span class="lineNum">     289 </span>            :             continue;
+<span class="lineNum">     290 </span>            :         
+<span class="lineNum">     291 </span>            :         // See if we already have a variable for this constant.
+<span class="lineNum">     292 </span>            :         
+<span class="lineNum">     293 </span>            :         for (int i = 0; i &lt; (int) constants.size(); i++)
+<span class="lineNum">     294 </span>            :             if (value == constants[i]) {
+<span class="lineNum">     295 </span>            :                 operationConstantIndex[step] = i;
+<span class="lineNum">     296 </span>            :                 break;
+<span class="lineNum">     297 </span>            :             }
+<span class="lineNum">     298 </span>            :         if (operationConstantIndex[step] == -1) {
+<span class="lineNum">     299 </span>            :             operationConstantIndex[step] = constants.size();
+<span class="lineNum">     300 </span>            :             constants.push_back(value);
+<span class="lineNum">     301 </span>            :         }
+<span class="lineNum">     302 </span>            :     }
+<span class="lineNum">     303 </span>            :     
+<span class="lineNum">     304 </span>            :     // Load constants into variables.
+<span class="lineNum">     305 </span>            :     
+<span class="lineNum">     306 </span>            :     vector&lt;X86Xmm&gt; constantVar(constants.size());
+<span class="lineNum">     307 </span>            :     if (constants.size() &gt; 0) {
+<span class="lineNum">     308 </span>            :         X86Gp constantsPointer = c.newIntPtr();
+<span class="lineNum">     309 </span>            :         c.mov(constantsPointer, imm_ptr(&amp;constants[0]));
+<span class="lineNum">     310 </span>            :         for (int i = 0; i &lt; (int) constants.size(); i++) {
+<span class="lineNum">     311 </span>            :             constantVar[i] = c.newXmmSd();
+<span class="lineNum">     312 </span>            :             c.movsd(constantVar[i], x86::ptr(constantsPointer, 8*i, 0));
+<span class="lineNum">     313 </span>            :         }
+<span class="lineNum">     314 </span>            :     }
+<span class="lineNum">     315 </span>            :     
+<span class="lineNum">     316 </span>            :     // Evaluate the operations.
+<span class="lineNum">     317 </span>            :     
+<span class="lineNum">     318 </span>            :     for (int step = 0; step &lt; (int) operation.size(); step++) {
+<span class="lineNum">     319 </span>            :         Operation&amp; op = *operation[step];
+<span class="lineNum">     320 </span>            :         vector&lt;int&gt; args = arguments[step];
+<span class="lineNum">     321 </span>            :         if (args.size() == 1) {
+<span class="lineNum">     322 </span>            :             // One or more sequential arguments.  Fill out the list.
+<span class="lineNum">     323 </span>            :             
+<span class="lineNum">     324 </span>            :             for (int i = 1; i &lt; op.getNumArguments(); i++)
+<span class="lineNum">     325 </span>            :                 args.push_back(args[0]+i);
+<span class="lineNum">     326 </span>            :         }
+<span class="lineNum">     327 </span>            :         
+<span class="lineNum">     328 </span>            :         // Generate instructions to execute this operation.
+<span class="lineNum">     329 </span>            :         
+<span class="lineNum">     330 </span>            :         switch (op.getId()) {
+<span class="lineNum">     331 </span>            :             case Operation::CONSTANT:
+<span class="lineNum">     332 </span>            :                 c.movsd(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     333 </span>            :                 break;
+<span class="lineNum">     334 </span>            :             case Operation::ADD:
+<span class="lineNum">     335 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     336 </span>            :                 c.addsd(workspaceVar[target[step]], workspaceVar[args[1]]);
+<span class="lineNum">     337 </span>            :                 break;
+<span class="lineNum">     338 </span>            :             case Operation::SUBTRACT:
+<span class="lineNum">     339 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     340 </span>            :                 c.subsd(workspaceVar[target[step]], workspaceVar[args[1]]);
+<span class="lineNum">     341 </span>            :                 break;
+<span class="lineNum">     342 </span>            :             case Operation::MULTIPLY:
+<span class="lineNum">     343 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     344 </span>            :                 c.mulsd(workspaceVar[target[step]], workspaceVar[args[1]]);
+<span class="lineNum">     345 </span>            :                 break;
+<span class="lineNum">     346 </span>            :             case Operation::DIVIDE:
+<span class="lineNum">     347 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     348 </span>            :                 c.divsd(workspaceVar[target[step]], workspaceVar[args[1]]);
+<span class="lineNum">     349 </span>            :                 break;
+<span class="lineNum">     350 </span>            :             case Operation::NEGATE:
+<span class="lineNum">     351 </span>            :                 c.xorps(workspaceVar[target[step]], workspaceVar[target[step]]);
+<span class="lineNum">     352 </span>            :                 c.subsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     353 </span>            :                 break;
+<span class="lineNum">     354 </span>            :             case Operation::SQRT:
+<span class="lineNum">     355 </span>            :                 c.sqrtsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     356 </span>            :                 break;
+<span class="lineNum">     357 </span>            :             case Operation::EXP:
+<span class="lineNum">     358 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], exp);
+<span class="lineNum">     359 </span>            :                 break;
+<span class="lineNum">     360 </span>            :             case Operation::LOG:
+<span class="lineNum">     361 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], log);
+<span class="lineNum">     362 </span>            :                 break;
+<span class="lineNum">     363 </span>            :             case Operation::SIN:
+<span class="lineNum">     364 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], sin);
+<span class="lineNum">     365 </span>            :                 break;
+<span class="lineNum">     366 </span>            :             case Operation::COS:
+<span class="lineNum">     367 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], cos);
+<span class="lineNum">     368 </span>            :                 break;
+<span class="lineNum">     369 </span>            :             case Operation::TAN:
+<span class="lineNum">     370 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], tan);
+<span class="lineNum">     371 </span>            :                 break;
+<span class="lineNum">     372 </span>            :             case Operation::ASIN:
+<span class="lineNum">     373 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], asin);
+<span class="lineNum">     374 </span>            :                 break;
+<span class="lineNum">     375 </span>            :             case Operation::ACOS:
+<span class="lineNum">     376 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], acos);
+<span class="lineNum">     377 </span>            :                 break;
+<span class="lineNum">     378 </span>            :             case Operation::ATAN:
+<span class="lineNum">     379 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], atan);
+<span class="lineNum">     380 </span>            :                 break;
+<span class="lineNum">     381 </span>            :             case Operation::SINH:
+<span class="lineNum">     382 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], sinh);
+<span class="lineNum">     383 </span>            :                 break;
+<span class="lineNum">     384 </span>            :             case Operation::COSH:
+<span class="lineNum">     385 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], cosh);
+<span class="lineNum">     386 </span>            :                 break;
+<span class="lineNum">     387 </span>            :             case Operation::TANH:
+<span class="lineNum">     388 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], tanh);
+<span class="lineNum">     389 </span>            :                 break;
+<span class="lineNum">     390 </span>            :             case Operation::STEP:
+<span class="lineNum">     391 </span>            :                 c.xorps(workspaceVar[target[step]], workspaceVar[target[step]]);
+<span class="lineNum">     392 </span>            :                 c.cmpsd(workspaceVar[target[step]], workspaceVar[args[0]], imm(18)); // Comparison mode is _CMP_LE_OQ = 18
+<span class="lineNum">     393 </span>            :                 c.andps(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     394 </span>            :                 break;
+<span class="lineNum">     395 </span>            :             case Operation::DELTA:
+<span class="lineNum">     396 </span>            :                 c.xorps(workspaceVar[target[step]], workspaceVar[target[step]]);
+<span class="lineNum">     397 </span>            :                 c.cmpsd(workspaceVar[target[step]], workspaceVar[args[0]], imm(16)); // Comparison mode is _CMP_EQ_OS = 16
+<span class="lineNum">     398 </span>            :                 c.andps(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     399 </span>            :                 break;
+<span class="lineNum">     400 </span>            :             case Operation::SQUARE:
+<span class="lineNum">     401 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     402 </span>            :                 c.mulsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     403 </span>            :                 break;
+<span class="lineNum">     404 </span>            :             case Operation::CUBE:
+<span class="lineNum">     405 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     406 </span>            :                 c.mulsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     407 </span>            :                 c.mulsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     408 </span>            :                 break;
+<span class="lineNum">     409 </span>            :             case Operation::RECIPROCAL:
+<span class="lineNum">     410 </span>            :                 c.movsd(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     411 </span>            :                 c.divsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     412 </span>            :                 break;
+<span class="lineNum">     413 </span>            :             case Operation::ADD_CONSTANT:
+<span class="lineNum">     414 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     415 </span>            :                 c.addsd(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     416 </span>            :                 break;
+<span class="lineNum">     417 </span>            :             case Operation::MULTIPLY_CONSTANT:
+<span class="lineNum">     418 </span>            :                 c.movsd(workspaceVar[target[step]], workspaceVar[args[0]]);
+<span class="lineNum">     419 </span>            :                 c.mulsd(workspaceVar[target[step]], constantVar[operationConstantIndex[step]]);
+<span class="lineNum">     420 </span>            :                 break;
+<span class="lineNum">     421 </span>            :             case Operation::ABS:
+<span class="lineNum">     422 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], fabs);
+<span class="lineNum">     423 </span>            :                 break;
+<span class="lineNum">     424 </span>            :             case Operation::FLOOR:
+<span class="lineNum">     425 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], floor);
+<span class="lineNum">     426 </span>            :                 break;
+<span class="lineNum">     427 </span>            :             case Operation::CEIL:
+<span class="lineNum">     428 </span>            :                 generateSingleArgCall(c, workspaceVar[target[step]], workspaceVar[args[0]], ceil);
+<span class="lineNum">     429 </span>            :                 break;
+<span class="lineNum">     430 </span>            :             default:
+<span class="lineNum">     431 </span>            :                 // Just invoke evaluateOperation().
+<span class="lineNum">     432 </span>            :                 
+<span class="lineNum">     433 </span>            :                 for (int i = 0; i &lt; (int) args.size(); i++)
+<span class="lineNum">     434 </span>            :                     c.movsd(x86::ptr(argsPointer, 8*i, 0), workspaceVar[args[i]]);
+<span class="lineNum">     435 </span>            :                 X86Gp fn = c.newIntPtr();
+<span class="lineNum">     436 </span>            :                 c.mov(fn, imm_ptr((void*) evaluateOperation));
+<span class="lineNum">     437 </span>            :                 CCFuncCall* call = c.call(fn, FuncSignature2&lt;double, Operation*, double*&gt;(CallConv::kIdHost));
+<span class="lineNum">     438 </span>            :                 call-&gt;setArg(0, imm_ptr(&amp;op));
+<span class="lineNum">     439 </span>            :                 call-&gt;setArg(1, imm_ptr(&amp;argValues[0]));
+<span class="lineNum">     440 </span>            :                 call-&gt;setRet(0, workspaceVar[target[step]]);
+<span class="lineNum">     441 </span>            :         }
+<span class="lineNum">     442 </span>            :     }
+<span class="lineNum">     443 </span>            :     c.ret(workspaceVar[workspace.size()-1]);
+<span class="lineNum">     444 </span>            :     c.endFunc();
+<span class="lineNum">     445 </span>            :     c.finalize();
+<span class="lineNum">     446 </span>            :     typedef double (*Func0)(void);
+<span class="lineNum">     447 </span>            :     Func0 func0;
+<span class="lineNum">     448 </span>            :     Error err = runtime.add(&amp;func0,&amp;code);
+<span class="lineNum">     449 </span>            :     if(err) return;
+<span class="lineNum">     450 </span>            :     jitCode = (void*) func0;
+<span class="lineNum">     451 </span>            : }
+<span class="lineNum">     452 </span>            : 
+<span class="lineNum">     453 </span>            : void generateSingleArgCall(X86Compiler&amp; c, X86Xmm&amp; dest, X86Xmm&amp; arg, double (*function)(double)) {
+<span class="lineNum">     454 </span>            :     X86Gp fn = c.newIntPtr();
+<span class="lineNum">     455 </span>            :     c.mov(fn, imm_ptr((void*) function));
+<span class="lineNum">     456 </span>            :     CCFuncCall* call = c.call(fn, FuncSignature1&lt;double, double&gt;(CallConv::kIdHost));
+<span class="lineNum">     457 </span>            :     call-&gt;setArg(0, arg);
+<span class="lineNum">     458 </span>            :     call-&gt;setRet(0, dest);
+<span class="lineNum">     459 </span>            : }
+<span class="lineNum">     460 </span>            : #endif
+<span class="lineNum">     461 </span>            : }
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

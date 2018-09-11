@@ -1,0 +1,182 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+<meta name="robots" content="noindex">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - plumed test coverage - dimred/SketchMap.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">dimred</a> - SketchMap.cpp<span style="font-size: 80%;"> (source / <a href="SketchMap.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">plumed test coverage</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">16</td>
+            <td class="headerCovTableEntry">51</td>
+            <td class="headerCovTableEntryLo">31.4 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-09-11 12:00:55</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</a>
+<span class="lineNum">       2 </span>            :    Copyright (c) 2018 The plumed team
+<span class="lineNum">       3 </span>            :    (see the PEOPLE file at the root of the distribution for a list of names)
+<span class="lineNum">       4 </span>            : 
+<span class="lineNum">       5 </span>            :    See http://www.plumed.org for more information.
+<span class="lineNum">       6 </span>            : 
+<span class="lineNum">       7 </span>            :    This file is part of plumed, version 2.
+<span class="lineNum">       8 </span>            : 
+<span class="lineNum">       9 </span>            :    plumed is free software: you can redistribute it and/or modify
+<span class="lineNum">      10 </span>            :    it under the terms of the GNU Lesser General Public License as published by
+<span class="lineNum">      11 </span>            :    the Free Software Foundation, either version 3 of the License, or
+<span class="lineNum">      12 </span>            :    (at your option) any later version.
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            :    plumed is distributed in the hope that it will be useful,
+<span class="lineNum">      15 </span>            :    but WITHOUT ANY WARRANTY; without even the implied warranty of
+<span class="lineNum">      16 </span>            :    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<span class="lineNum">      17 </span>            :    GNU Lesser General Public License for more details.
+<span class="lineNum">      18 </span>            : 
+<span class="lineNum">      19 </span>            :    You should have received a copy of the GNU Lesser General Public License
+<span class="lineNum">      20 </span>            :    along with plumed.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+<span class="lineNum">      21 </span>            : +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
+<span class="lineNum">      22 </span>            : #include &quot;core/ActionShortcut.h&quot;
+<span class="lineNum">      23 </span>            : #include &quot;core/ActionRegister.h&quot;
+<span class="lineNum">      24 </span>            : 
+<span class="lineNum">      25 </span>            : namespace PLMD {
+<span class="lineNum">      26 </span>            : namespace dimred {
+<span class="lineNum">      27 </span>            : 
+<span class="lineNum">      28 </span>            : //+PLUMEDOC DIMRED SKETCH_MAP
+<span class="lineNum">      29 </span>            : /*
+<span class="lineNum">      30 </span>            : This can be used to output the data that has been stored in an Analysis object.
+<span class="lineNum">      31 </span>            : 
+<span class="lineNum">      32 </span>            : \par Examples
+<span class="lineNum">      33 </span>            : 
+<span class="lineNum">      34 </span>            : */
+<a name="35"><span class="lineNum">      35 </span>            : //+ENDPLUMEDOC</a>
+<span class="lineNum">      36 </span>            : 
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 : class SketchMap : public ActionShortcut {</span>
+<span class="lineNum">      38 </span>            : public:
+<span class="lineNum">      39 </span>            :   static void registerKeywords( Keywords&amp; keys );
+<span class="lineNum">      40 </span>            :   SketchMap( const ActionOptions&amp; );
+<a name="41"><span class="lineNum">      41 </span>            : };</a>
+<span class="lineNum">      42 </span>            : 
+<a name="43"><span class="lineNum">      43 </span><span class="lineCov">       5415 : PLUMED_REGISTER_ACTION(SketchMap,&quot;SKETCH_MAP&quot;)</span></a>
+<span class="lineNum">      44 </span>            : 
+<span class="lineNum">      45 </span><span class="lineCov">          1 : void SketchMap::registerKeywords( Keywords&amp; keys ) {</span>
+<span class="lineNum">      46 </span><span class="lineCov">          1 :   ActionShortcut::registerKeywords( keys );</span>
+<span class="lineNum">      47 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;NLOW_DIM&quot;,&quot;the dimension of the low dimensional space in which the projections will be constructed&quot;);</span>
+<span class="lineNum">      48 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;MATRIX&quot;,&quot;the matrix of distances between points that you want to reproduce in your sketch-map projection&quot;);</span>
+<span class="lineNum">      49 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;HIGH_DIM_FUNCTION&quot;,&quot;the parameters of the switching function in the high dimensional space&quot;);</span>
+<span class="lineNum">      50 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;LOW_DIM_FUNCTION&quot;,&quot;the parameters of the switching function in the low dimensional space&quot;);</span>
+<span class="lineNum">      51 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;ANNEAL_RATE&quot;,&quot;0.5&quot;,&quot;the rate at which to do the annealing&quot;);</span>
+<span class="lineNum">      52 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;ANNEAL_STEPS&quot;,&quot;10&quot;,&quot;the number of steps of annealing to do&quot;);</span>
+<span class="lineNum">      53 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;CGTOL&quot;,&quot;1E-6&quot;,&quot;the tolerance for the conjugate gradient minimisation&quot;);</span>
+<span class="lineNum">      54 </span>            : // Smap pointwise input
+<span class="lineNum">      55 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;NCYCLES&quot;,&quot;5&quot;,&quot;the number of cycles of global optimisation to attempt&quot;);</span>
+<span class="lineNum">      56 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;BUFFER&quot;,&quot;1.1&quot;,&quot;grid extent for search is (max projection - minimum projection) multiplied by this value&quot;);</span>
+<span class="lineNum">      57 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;CGRID_SIZE&quot;,&quot;10&quot;,&quot;number of points to use in each grid direction&quot;);</span>
+<span class="lineNum">      58 </span><span class="lineCov">          1 :   keys.add(&quot;compulsory&quot;,&quot;FGRID_SIZE&quot;,&quot;0&quot;,&quot;interpolate the grid onto this number of points -- only works in 2D&quot;);</span>
+<a name="59"><span class="lineNum">      59 </span><span class="lineCov">          1 : }</span></a>
+<span class="lineNum">      60 </span>            : 
+<span class="lineNum">      61 </span><span class="lineNoCov">          0 : SketchMap::SketchMap( const ActionOptions&amp; ao ) :</span>
+<span class="lineNum">      62 </span>            :   Action(ao),
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :   ActionShortcut(ao)</span>
+<span class="lineNum">      64 </span>            : {
+<span class="lineNum">      65 </span>            :   // Input for MDS
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :   std::string mds_line = getShortcutLabel() + &quot;_mds: CLASSICAL_MDS&quot;;</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :   std::string nlow; parse(&quot;NLOW_DIM&quot;,nlow); mds_line += &quot; NLOW_DIM=&quot; + nlow;</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :   std::string mat; parse(&quot;MATRIX&quot;,mat); mds_line += &quot; USE_OUTPUT_DATA_FROM=&quot; + mat;</span>
+<span class="lineNum">      69 </span><span class="lineNoCov">          0 :   readInputLine( mds_line );</span>
+<span class="lineNum">      70 </span>            :   // Create generic input for all conjgrad cycles
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :   std::string cgtol; parse(&quot;CGTOL&quot;,cgtol); std::string ncyc; parse(&quot;NCYCLES&quot;,ncyc); std::string buf; parse(&quot;BUFFER&quot;,buf);</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :   std::string cg_grid; parse(&quot;CGRID_SIZE&quot;,cg_grid); std::string fg_grid; parse(&quot;FGRID_SIZE&quot;,fg_grid);</span>
+<span class="lineNum">      73 </span><span class="lineNoCov">          0 :   std::string cg_step_input = &quot; CGTOL=&quot; + cgtol; unsigned nlow_dim; Tools::convert( nlow, nlow_dim );</span>
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :   std::string pw_step_input = cg_step_input + &quot; NCYCLES=&quot; + ncyc + &quot; BUFFER=&quot; + buf;</span>
+<span class="lineNum">      75 </span><span class="lineNoCov">          0 :   pw_step_input += &quot; CGRID_SIZE=&quot; + cg_grid; for(unsigned i=1; i&lt;nlow_dim; ++i) pw_step_input += &quot;,&quot; + cg_grid;</span>
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :   pw_step_input += &quot; FGRID_SIZE=&quot; + fg_grid; for(unsigned i=1; i&lt;nlow_dim; ++i) pw_step_input += &quot;,&quot; + fg_grid;</span>
+<span class="lineNum">      77 </span>            :   // Input for iterative distance matching
+<span class="lineNum">      78 </span><span class="lineNoCov">          0 :   std::string imds_line_cg = getShortcutLabel() + &quot;_smap1_cg: SKETCHMAP_CONJGRAD USE_OUTPUT_DATA_FROM=&quot; + getShortcutLabel() + &quot;_mds&quot;;</span>
+<span class="lineNum">      79 </span><span class="lineNoCov">          0 :   std::string hd_func; parse(&quot;HIGH_DIM_FUNCTION&quot;,hd_func); imds_line_cg += &quot; HIGH_DIM_FUNCTION={&quot; + hd_func + &quot;}&quot;;</span>
+<span class="lineNum">      80 </span><span class="lineNoCov">          0 :   std::string ld_func; parse(&quot;LOW_DIM_FUNCTION&quot;,ld_func); imds_line_cg += &quot; LOW_DIM_FUNCTION={&quot; + ld_func + &quot;}&quot;;</span>
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :   imds_line_cg += cg_step_input + &quot; MIXPARAM=1.0&quot;; readInputLine( imds_line_cg );</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :   std::string imds_line_pw = getShortcutLabel() + &quot;_smap1_pw: SKETCHMAP_POINTWISE USE_OUTPUT_DATA_FROM=&quot; + getShortcutLabel() + &quot;_smap1_cg&quot;;</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :   imds_line_pw += pw_step_input + &quot; MIXPARAM=1.0&quot;; readInputLine( imds_line_pw );</span>
+<span class="lineNum">      84 </span>            :   // Now sketch-map
+<span class="lineNum">      85 </span><span class="lineNoCov">          0 :   unsigned asteps; parse(&quot;ANNEAL_STEPS&quot;,asteps); std::string psmap = getShortcutLabel() + &quot;_smap1_pw&quot;;</span>
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :   if( asteps&gt;1 ) {</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     double smear; parse(&quot;ANNEAL_RATE&quot;, smear); double old_mix = 1.0; double new_mix = old_mix*smear;</span>
+<span class="lineNum">      88 </span><span class="lineNoCov">          0 :     for(unsigned i=0; i&lt;asteps; ++i) {</span>
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :       std::string omix; Tools::convert( old_mix, omix ); std::string nmix; Tools::convert( new_mix, nmix );</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :       imds_line_cg = getShortcutLabel() + &quot;_smap&quot; + nmix + &quot;_cg: SKETCHMAP_CONJGRAD USE_OUTPUT_DATA_FROM=&quot; + getShortcutLabel() + &quot;_smap&quot; + omix + &quot;_pw&quot;;</span>
+<span class="lineNum">      91 </span><span class="lineNoCov">          0 :       imds_line_cg += cg_step_input + &quot; MIXPARAM=&quot; + nmix; readInputLine( imds_line_cg );</span>
+<span class="lineNum">      92 </span><span class="lineNoCov">          0 :       imds_line_pw = getShortcutLabel() + &quot;_smap&quot; + nmix + &quot;_pw: SKETCHMAP_POINTWISE USE_OUTPUT_DATA_FROM=&quot; + getShortcutLabel() + &quot;_smap&quot; + omix + &quot;_cg&quot;;</span>
+<span class="lineNum">      93 </span><span class="lineNoCov">          0 :       imds_line_pw += pw_step_input + &quot; MIXPARAM=&quot; + nmix; readInputLine( imds_line_pw );</span>
+<span class="lineNum">      94 </span><span class="lineNoCov">          0 :       old_mix = new_mix; new_mix = old_mix*smear; psmap = getShortcutLabel() + &quot;_smap&quot; + nmix + &quot;_pw&quot;;</span>
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">      96 </span>            :   }
+<span class="lineNum">      97 </span>            :   // Final sketch-map with no mixing of distance matching
+<span class="lineNum">      98 </span><span class="lineNoCov">          0 :   imds_line_cg = getShortcutLabel() + &quot;_smap_cg: SKETCHMAP_CONJGRAD USE_OUTPUT_DATA_FROM=&quot; + psmap + cg_step_input;</span>
+<span class="lineNum">      99 </span><span class="lineNoCov">          0 :   readInputLine( imds_line_cg );</span>
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :   imds_line_pw = getShortcutLabel() + &quot;: SKETCHMAP_POINTWISE USE_OUTPUT_DATA_FROM=&quot; + getShortcutLabel() + &quot;_smap_cg&quot; + pw_step_input;</span>
+<span class="lineNum">     101 </span><span class="lineNoCov">          0 :   readInputLine( imds_line_pw );</span>
+<span class="lineNum">     102 </span><span class="lineNoCov">          0 : }</span>
+<a name="103"><span class="lineNum">     103 </span>            : </a>
+<span class="lineNum">     104 </span>            : }
+<span class="lineNum">     105 </span><span class="lineCov">       5415 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>
